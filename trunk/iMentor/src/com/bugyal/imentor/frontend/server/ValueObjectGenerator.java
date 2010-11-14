@@ -19,7 +19,7 @@ public class ValueObjectGenerator {
 	public static OpportunityVO create(Opportunity o) {
 		// TODO(raman): Dont send all of datastore key.
 		// TODO(raman): Understand if participant info has to be supplied.
-
+		// TODO(sudhakar): Add support for saying active vs. passive opportunity.
 		return new OpportunityVO(o.getKey().getId(), o.getSubjects(), o
 				.getRequiredMentors(), o.getPriority(), o.getLoc().getLatitude(),
 				o.getLoc().getLongitude(), o.getLoc().getActiveRadius(), o.getLoc().getLocationString());
