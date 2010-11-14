@@ -71,7 +71,7 @@ public class AddParticipantWidget extends Composite {
 	private void buildWidget() {
 		name = new TextBox();
 		nameL = new Label("Name : ");
-		subjectsL = new Label("Familiar subjects : ");
+		subjectsL = new Label("Known subjects : ");
 		subjects = new ListBox();
 
 		locationL = new Label("Mark your Location");
