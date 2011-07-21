@@ -2,19 +2,21 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" output="test-classes" path="test"/>
-	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
 	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/home/raman/local-appengine/appengine-api.jar"/>
-	<classpathentry kind="lib" path="/home/raman/local-appengine/appengine-api-labs.jar"/>
-	<classpathentry kind="lib" path="/home/raman/local-appengine/appengine-api-stubs.jar"/>
-	<classpathentry kind="lib" path="/home/raman/local-appengine/appengine-local-runtime.jar"/>
-	<classpathentry kind="lib" path="/home/raman/local-appengine/appengine-testing.jar"/>
-	<classpathentry kind="lib" path="/home/raman/GWT/gwt-maps-1.1.0/gwt-maps.jar"/>
-	<classpathentry kind="lib" path="/home/raman/GWT/gwt-incubator-20100204-r1747.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/geocell-0.0.3-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-lang-2.5.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-servlet.jar"/>
+	<classpathentry kind="lib" path="/home/ravi/Downloads/gwt-maps-1.1.1/gwt-maps.jar"/>
+	<classpathentry kind="lib" path="/home/ravi/Downloads/gwt-maps-1.1.1/gwt-maps-javadoc.jar"/>
+	<classpathentry kind="lib" path="/home/ravi/Downloads/gwt-maps-1.1.1/gwt-maps-noredist.jar"/>
+	<classpathentry kind="lib" path="/home/ravi/Downloads/lib jars/appengine-api.jar"/>
+	<classpathentry kind="lib" path="/home/ravi/Downloads/lib jars/appengine-api-labs.jar"/>
+	<classpathentry kind="lib" path="/home/ravi/Downloads/lib jars/appengine-api-stubs.jar"/>
+	<classpathentry kind="lib" path="/home/ravi/Downloads/lib jars/appengine-local-runtime.jar"/>
+	<classpathentry kind="lib" path="/home/ravi/Downloads/lib jars/appengine-testing.jar"/>
+	<classpathentry kind="lib" path="/home/ravi/Downloads/lib jars/gwt-incubator-20100204-r1747.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>
