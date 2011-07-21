@@ -22,4 +22,6 @@ public interface MentorService extends RemoteService {
 	
 	
 	List<OpportunityVO> find(List<String> subjects, ParticipantVO me) throws MeException;
+	
+	List<String> getSubjects() throws MeException;
 }

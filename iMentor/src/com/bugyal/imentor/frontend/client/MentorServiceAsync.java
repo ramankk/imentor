@@ -20,5 +20,7 @@ public interface MentorServiceAsync {
 
 	void updateOpportunity(OpportunityVO o,
 			AsyncCallback<OpportunityVO> callback);
+	
+	void getSubjects(AsyncCallback<List<String>> callback);
 
 }

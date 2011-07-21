@@ -13,6 +13,7 @@ import com.bugyal.imentor.server.OpportunityManager;
 import com.bugyal.imentor.server.data.Location;
 import com.bugyal.imentor.server.data.Opportunity;
 import com.bugyal.imentor.server.data.Participant;
+import com.bugyal.imentor.server.data.old.Subject;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
@@ -23,6 +24,14 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 @SuppressWarnings("serial")
 public class MentorServiceImpl extends RemoteServiceServlet implements
 		MentorService {
+	private static final List<String> SUBJECTS_LIST = new ArrayList<String>();
+
+	static {
+		SUBJECTS_LIST.add("Computers");
+		SUBJECTS_LIST.add("Physics");
+		SUBJECTS_LIST.add("Socialogy");
+		SUBJECTS_LIST.add("Mathematics");
+	}
 
 	@Override
 	public List<OpportunityVO> find(List<String> subjects, ParticipantVO me)
@@ -141,6 +150,19 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public OpportunityVO updateOpportunity(OpportunityVO o) throws MeException {
 		throw new MeException("Unimplemented !! - fix me");
+	}
+
+	@Override
+	public List<String> getSubjects() throws MeException {
+		List<String> list = new ArrayList<String>();
+
+		Subject sub[] = Subject.values();
+		
+		for(Subject s : sub)
+		{
+			list.add(s.toString());
+		}
+		return list;
 	}
 
 }
