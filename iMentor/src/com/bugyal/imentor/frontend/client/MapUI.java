@@ -165,4 +165,8 @@ public class MapUI extends Composite {
 
 		});
 	}
+	
+	public LocationData getLocationDetails(){
+		return lData;
+	}
 }
