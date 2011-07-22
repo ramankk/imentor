@@ -3,6 +3,7 @@ package com.bugyal.imentor.frontend.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -29,9 +30,12 @@ public class ProfileDialogBox extends DialogBox implements SelectionHandler,
 	TextArea textArea_1, textArea;
 	TextArea tbLocation = new TextArea();
 	Button btnSave, btnCancel;
+	Label lblName, lblGender, lblEmailId;
 	LocationData lData = new LocationData();
-	ArrayList<String> list = new ArrayList<String>();
-	ArrayList<String> list_1 = new ArrayList<String>();
+	ArrayList<String> hasSubjects = new ArrayList<String>();
+	ArrayList<String> needSubjects = new ArrayList<String>();
+	
+	MapUI mapUI;
 
 	public ProfileDialogBox() {
 
@@ -70,13 +74,13 @@ public class ProfileDialogBox extends DialogBox implements SelectionHandler,
 		horizontalPanel_1.add(verticalPanel_1);
 		verticalPanel_1.setSize("144px", "126px");
 
-		Label lblName = new Label("Name");
+		lblName = new Label("Name");
 		verticalPanel_1.add(lblName);
 
-		Label lblGender = new Label("Gender");
+		lblGender = new Label("Gender");
 		verticalPanel_1.add(lblGender);
 
-		Label lblEmailId = new Label("Email ID");
+		lblEmailId = new Label("Email ID");
 		verticalPanel_1.add(lblEmailId);
 
 		Label lblLocation = new Label("Location:");
@@ -123,8 +127,10 @@ public class ProfileDialogBox extends DialogBox implements SelectionHandler,
 		btnCancel = new Button("Cancel");
 		horizontalPanel_2.add(btnCancel);
 		btnCancel.addClickHandler(this);
+		
+		mapUI = new MapUI(true, tbLocation);
 
-		horizontalPanel.add(new MapUI(true, tbLocation));
+		horizontalPanel.add(mapUI);
 
 	}
 
@@ -133,8 +139,8 @@ public class ProfileDialogBox extends DialogBox implements SelectionHandler,
 
 		if (event.getSource() == suggestBox) {
 			String s1 = suggestBox.getText();
-			if (!list.contains(s1)) {
-				list.add(s1);
+			if (!hasSubjects.contains(s1)) {
+				hasSubjects.add(s1);
 				textArea.setText(textArea.getText() + suggestBox.getText()
 						+ ",");
 			}
@@ -143,8 +149,8 @@ public class ProfileDialogBox extends DialogBox implements SelectionHandler,
 		if (event.getSource() == suggestBox_1) {
 
 			String s2 = suggestBox_1.getText();
-			if (!list_1.contains(s2)) {
-				list_1.add(s2);
+			if (!needSubjects.contains(s2)) {
+				needSubjects.add(s2);
 				textArea_1.setText(textArea_1.getText()
 						+ suggestBox_1.getText() + ",");
 			}
@@ -157,13 +163,42 @@ public class ProfileDialogBox extends DialogBox implements SelectionHandler,
 	public void onClick(ClickEvent event) {
 
 		if (event.getSource() == btnSave) {
-			Window.alert(lData.getLocation() + "," + lData.getRadius() + ","
-					+ lData.getLatitude() + "," + lData.getLongitude());
+			lData = mapUI.getLocationDetails();
+			if ((hasSubjects.isEmpty() || needSubjects.isEmpty())
+					&& !(tbLocation.getText() != null)) {
+				
+				ParticipantVO partVO = new ParticipantVO((long) 1234566,
+						lblName.getText(), lblEmailId.getText(), lData
+								.getLatitude(), lData.getLongitude(),
+						tbLocation.getText(), lData.getRadius(), hasSubjects,
+						needSubjects);
+				service.create(partVO, new AsyncCallback<ParticipantVO>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Unable to save your data");
+
+					}
+
+					@Override
+					public void onSuccess(ParticipantVO result) {
+
+						Window.alert("Your data has been saved");
+						hideProfileDialog();
+					}
+
+				});
+			}
 		}
 		if (event.getSource() == btnCancel) {
 			this.hide();
 		}
 
+	}
+
+	protected void hideProfileDialog() {
+		this.hide();
+		
 	}
 
 }
