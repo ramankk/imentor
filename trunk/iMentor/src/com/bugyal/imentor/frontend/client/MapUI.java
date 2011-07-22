@@ -70,8 +70,8 @@ public class MapUI extends Composite {
 					marker.setLatLng(event.getLatLng());
 				}
 				getAddress(event.getLatLng());
-				lData.setLatitude(event.getOverlayLatLng().getLatitude());
-				lData.setLatitude(event.getOverlayLatLng().getLongitude());
+				lData.setLatitude(marker.getLatLng().getLatitude());
+				lData.setLatitude(marker.getLatLng().getLongitude());
 			}
 
 		});

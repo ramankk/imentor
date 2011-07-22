@@ -10,6 +10,7 @@ import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.bugyal.imentor.server.MentorManager;
 import com.bugyal.imentor.server.OpportunityManager;
+import com.bugyal.imentor.server.ParticipantManager;
 import com.bugyal.imentor.server.data.Location;
 import com.bugyal.imentor.server.data.Opportunity;
 import com.bugyal.imentor.server.data.Participant;
@@ -66,9 +67,16 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				.getLocationString(), p.getRadius());
 		Participant pi = null;
 		try {
-			pi = MentorManager.INSTANCE.getParticipantManager()
+			ParticipantManager participantManager = MentorManager.INSTANCE.getParticipantManager();
+			pi = participantManager
 					.createParticipant(p.getName(), location, p.getEmail());
-
+			for (String subject : p.getNeedSubjects()) {
+			  participantManager.addNeedKnowledge(pi, subject, 1, pi);
+			} 
+			for (String subject : p.getHasSubjects()) {
+			  participantManager.addHasKnowledge(pi, subject, 1, pi);
+			}
+			
 			save(pi, p);
 		} catch (MentorException m) {
 			throw new MeException(m.getMessage());
