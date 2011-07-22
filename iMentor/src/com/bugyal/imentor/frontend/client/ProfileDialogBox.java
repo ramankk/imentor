@@ -9,6 +9,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
+import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -34,7 +35,7 @@ public class ProfileDialogBox extends DialogBox implements SelectionHandler,
 	LocationData lData = new LocationData();
 	ArrayList<String> hasSubjects = new ArrayList<String>();
 	ArrayList<String> needSubjects = new ArrayList<String>();
-	
+
 	MapUI mapUI;
 
 	public ProfileDialogBox() {
@@ -82,6 +83,7 @@ public class ProfileDialogBox extends DialogBox implements SelectionHandler,
 
 		lblEmailId = new Label("Email ID");
 		verticalPanel_1.add(lblEmailId);
+		lblEmailId.setText("fakeemail" + Random.nextInt() + " @kawanan.com");
 
 		Label lblLocation = new Label("Location:");
 		verticalPanel.add(lblLocation);
@@ -127,7 +129,7 @@ public class ProfileDialogBox extends DialogBox implements SelectionHandler,
 		btnCancel = new Button("Cancel");
 		horizontalPanel_2.add(btnCancel);
 		btnCancel.addClickHandler(this);
-		
+
 		mapUI = new MapUI(true, tbLocation);
 
 		horizontalPanel.add(mapUI);
@@ -163,20 +165,22 @@ public class ProfileDialogBox extends DialogBox implements SelectionHandler,
 	public void onClick(ClickEvent event) {
 
 		if (event.getSource() == btnSave) {
+
 			lData = mapUI.getLocationDetails();
-			if ((hasSubjects.isEmpty() || needSubjects.isEmpty())
-					&& !(tbLocation.getText() != null)) {
-				
-				ParticipantVO partVO = new ParticipantVO((long) 1234566,
-						lblName.getText(), lblEmailId.getText(), lData
-								.getLatitude(), lData.getLongitude(),
-						tbLocation.getText(), lData.getRadius(), hasSubjects,
-						needSubjects);
+			if (!(hasSubjects.isEmpty() && needSubjects.isEmpty())
+					&& (tbLocation.getText() != null)) {
+				Window.alert("save button called  " + hasSubjects.size()
+						+ " :: " + needSubjects.size());
+				ParticipantVO partVO = new ParticipantVO(null, lblName
+						.getText(), lblEmailId.getText(), lData.getLatitude(),
+						lData.getLongitude(), tbLocation.getText(), lData
+								.getRadius(), hasSubjects, needSubjects);
 				service.create(partVO, new AsyncCallback<ParticipantVO>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						Window.alert("Unable to save your data");
+						Window.alert("Unable to save your data"
+								+ caught.getMessage());
 
 					}
 
@@ -198,7 +202,7 @@ public class ProfileDialogBox extends DialogBox implements SelectionHandler,
 
 	protected void hideProfileDialog() {
 		this.hide();
-		
+
 	}
 
 }
