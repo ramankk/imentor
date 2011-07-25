@@ -36,10 +36,24 @@ public class HeaderWidget extends Composite {
 		MenuItemSeparator separator_1 = new MenuItemSeparator();
 		menuBar.addSeparator(separator_1);
 		
-		MenuItem mntmBuzz = new MenuItem("Add Opportunity", false, (Command) null);
+		MenuItem mntmBuzz = new MenuItem("Add Opportunity", false, opportunityCommand());
 		menuBar.addItem(mntmBuzz);
 		
 		return horizontalPanel;
+	}
+
+	public Command opportunityCommand() {
+		return new Command(){
+
+			@Override
+			public void execute() {
+				
+				OpportunityDialogBox opportunityDialogBox = new OpportunityDialogBox();
+				opportunityDialogBox.show();
+				opportunityDialogBox.center();
+			}
+			
+		};
 	}
 
 	public Command homeCommand() {
@@ -68,15 +82,5 @@ public class HeaderWidget extends Composite {
 		};
 	}
 
-	public Command buzzCommand() {
-		return new Command(){
-
-			@Override
-			public void execute() {
-				
-				
-			}
-			
-		};
-	}
+	
 }
