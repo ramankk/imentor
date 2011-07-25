@@ -1,0 +1,28 @@
+.flowPanelCSS {
+	border:  1px solid black;
+	width: 250px;
+	height: 100px;
+	margin: 15px auto;
+	background-color: white;
+	
+	}
+	
+.itemSubjectCSS {
+	/* border: 1px solid black;  */
+	 background: #28AFE7;
+  	 border-radius: 3px;
+	 display: inline-block;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	 color: white;
+	 margin: 2px;
+	 outline: none;
+	 padding: 0 1px;
+	 vertical-align: middle;
+	 cursor: default;
+		 
+	}
+	
+.removeSubjectCSS {
+	cursor: pointer;
+	}
