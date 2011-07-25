@@ -1,14 +1,11 @@
 package com.bugyal.imentor.frontend.client;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.logical.shared.SelectionEvent;
-import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.Random;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -17,24 +14,19 @@ import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
-import com.google.gwt.user.client.ui.SuggestBox;
-import com.google.gwt.user.client.ui.SuggestOracle;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class ProfileDialogBox extends DialogBox implements SelectionHandler,
-		ClickHandler {
-	MultiWordSuggestOracle mwsWords = new MultiWordSuggestOracle();
+public class ProfileDialogBox extends DialogBox implements ClickHandler {
+
 	MentorServiceAsync service;
-	SuggestBox suggestBox, suggestBox_1;
+	SubjectsSuggestWidget subWidgetHas = new SubjectsSuggestWidget();
+	SubjectsSuggestWidget subWidgetNeed = new SubjectsSuggestWidget();
 	TextArea textArea_1, textArea;
 	TextArea tbLocation = new TextArea();
 	Button btnSave, btnCancel;
 	Label lblName, lblGender, lblEmailId;
 	LocationData lData = new LocationData();
-	ArrayList<String> hasSubjects = new ArrayList<String>();
-	ArrayList<String> needSubjects = new ArrayList<String>();
 
 	MapUI mapUI;
 
@@ -54,7 +46,8 @@ public class ProfileDialogBox extends DialogBox implements SelectionHandler,
 
 			@Override
 			public void onSuccess(List<String> result) {
-				mwsWords.addAll(result);
+				subWidgetHas.addMoreSubjects(result);
+				subWidgetNeed.addMoreSubjects(result);
 			}
 
 		};
@@ -94,27 +87,11 @@ public class ProfileDialogBox extends DialogBox implements SelectionHandler,
 
 		Label lblSubjectsYouNeed = new Label("Subjects You know:");
 		verticalPanel.add(lblSubjectsYouNeed);
-
-		suggestBox = new SuggestBox(mwsWords);
-		suggestBox.addSelectionHandler(this);
-		verticalPanel.add(suggestBox);
-
-		textArea = new TextArea();
-		textArea.setEnabled(false);
-		verticalPanel.add(textArea);
-		textArea.setSize("245px", "90px");
+		verticalPanel.add(subWidgetHas);
 
 		Label lblSujectsYouWant = new Label("Sujects You Want:");
 		verticalPanel.add(lblSujectsYouWant);
-
-		suggestBox_1 = new SuggestBox(mwsWords);
-		suggestBox_1.addSelectionHandler(this);
-		verticalPanel.add(suggestBox_1);
-
-		textArea_1 = new TextArea();
-		textArea_1.setEnabled(false);
-		verticalPanel.add(textArea_1);
-		textArea_1.setSize("244px", "106px");
+		verticalPanel.add(subWidgetNeed);
 
 		HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
 		verticalPanel.add(horizontalPanel_2);
@@ -137,44 +114,22 @@ public class ProfileDialogBox extends DialogBox implements SelectionHandler,
 	}
 
 	@Override
-	public void onSelection(SelectionEvent event) {
-
-		if (event.getSource() == suggestBox) {
-			String s1 = suggestBox.getText();
-			if (!hasSubjects.contains(s1)) {
-				hasSubjects.add(s1);
-				textArea.setText(textArea.getText() + suggestBox.getText()
-						+ ",");
-			}
-			suggestBox.setText(null);
-		}
-		if (event.getSource() == suggestBox_1) {
-
-			String s2 = suggestBox_1.getText();
-			if (!needSubjects.contains(s2)) {
-				needSubjects.add(s2);
-				textArea_1.setText(textArea_1.getText()
-						+ suggestBox_1.getText() + ",");
-			}
-			suggestBox_1.setText(null);
-		}
-
-	}
-
-	@Override
 	public void onClick(ClickEvent event) {
 
 		if (event.getSource() == btnSave) {
-
 			lData = mapUI.getLocationDetails();
-			if (!(hasSubjects.isEmpty() && needSubjects.isEmpty())
+			if (!(subWidgetHas.selected.getSubjects().isEmpty() && subWidgetNeed.selected
+					.getSubjects().isEmpty())
 					&& (tbLocation.getText() != null)) {
-				Window.alert("save button called  " + hasSubjects.size()
-						+ " :: " + needSubjects.size());
+				Window.alert("save button called  "
+						+ subWidgetHas.selected.getSubjects().size() + " :: "
+						+ subWidgetNeed.selected.getSubjects().size());
 				ParticipantVO partVO = new ParticipantVO(null, lblName
 						.getText(), lblEmailId.getText(), lData.getLatitude(),
 						lData.getLongitude(), tbLocation.getText(), lData
-								.getRadius(), hasSubjects, needSubjects);
+								.getRadius(), subWidgetHas.selected
+								.getSubjects(), subWidgetNeed.selected
+								.getSubjects());
 				service.create(partVO, new AsyncCallback<ParticipantVO>() {
 
 					@Override
@@ -190,9 +145,9 @@ public class ProfileDialogBox extends DialogBox implements SelectionHandler,
 						Window.alert("Your data has been saved");
 						hideProfileDialog();
 					}
-
 				});
 			}
+
 		}
 		if (event.getSource() == btnCancel) {
 			this.hide();
