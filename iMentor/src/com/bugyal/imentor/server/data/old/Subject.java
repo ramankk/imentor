@@ -18,5 +18,6 @@ public enum Subject {
 	HISTORY,
 	GEOGRAPHY,
 	COMPUTER_SCIENCE,
-	Science
+	Science,
+	NETWORKING
 }
