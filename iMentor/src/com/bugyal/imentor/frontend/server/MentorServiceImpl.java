@@ -173,4 +173,14 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		return list;
 	}
 
+	@Override
+	public void generateRandomData() throws MeException {
+		try {
+			new DataGenerator(1000);
+		} catch (MentorException e) {
+			e.printStackTrace();
+			throw new MeException(e.getMessage());
+		}
+	}
+
 }
