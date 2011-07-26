@@ -22,7 +22,6 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 	MentorServiceAsync service;
 	SubjectsSuggestWidget subWidgetHas = new SubjectsSuggestWidget();
 	SubjectsSuggestWidget subWidgetNeed = new SubjectsSuggestWidget();
-	TextArea textArea_1, textArea;
 	TextArea tbLocation = new TextArea();
 	Button btnSave, btnCancel;
 	Label lblName, lblGender, lblEmailId;
