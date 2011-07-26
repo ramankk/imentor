@@ -21,6 +21,7 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 	TextArea txtMessage;
 	TextArea tbLocation = new TextArea();
 	Button btnCreate, btnCancel, btnClear;
+
 	LocationData lData = new LocationData();
 	MapUI mapUI;
 
@@ -82,6 +83,7 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 		hp.add(btnClear);
 		hp.add(btnCreate);
 		hp.add(btnCancel);
+
 		verticalPanel.add(hp);
 
 		HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
@@ -101,23 +103,22 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 					&& !(tbLocation.getText().contains("Please, Use the Map"))) {
 
 				OpportunityVO oppVO = new OpportunityVO(null,
-						subWidget.selected.getSubjects(), 0, 0, lData
-								.getLatitude(), lData.getLongitude(), 0,
+						subWidget.selected.getSubjects(), 0, 0,
+						lData.getLatitude(), lData.getLongitude(), 0,
 						tbLocation.getText());
+
 				service.createOpportunity(oppVO,
 						new AsyncCallback<OpportunityVO>() {
 
 							@Override
 							public void onFailure(Throwable caught) {
-								Window
-										.alert("Sorry, Unble to Create the Opportunity"
-												+ caught.getMessage());
+								Window.alert("Sorry, Unble to Create the Opportunity"
+										+ caught.getMessage());
 							}
 
 							@Override
 							public void onSuccess(OpportunityVO result) {
-								Window
-										.alert("You Have successfully created an Opportunity");
+								Window.alert("You Have successfully created an Opportunity");
 								hideOpportunityDialogBox();
 							}
 

@@ -60,4 +60,10 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 
 	}
 
+	@Override
+	public void generateRandomData(AsyncCallback<Void> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
