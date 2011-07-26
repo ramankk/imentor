@@ -123,18 +123,18 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 				Window.alert("save button called  "
 						+ subWidgetHas.selected.getSubjects().size() + " :: "
 						+ subWidgetNeed.selected.getSubjects().size());
-				ParticipantVO partVO = new ParticipantVO(null, lblName
-						.getText(), lblEmailId.getText(), lData.getLatitude(),
-						lData.getLongitude(), tbLocation.getText(), lData
-								.getRadius(), subWidgetHas.selected
-								.getSubjects(), subWidgetNeed.selected
-								.getSubjects());
+				
+				ParticipantVO partVO = new ParticipantVO(null, lblName.getText(), 
+						lblEmailId.getText(), lData.getLatitude(),
+						lData.getLongitude(), tbLocation.getText(), 
+						lData.getRadius(), subWidgetHas.selected.getSubjects(), 
+						subWidgetNeed.selected.getSubjects());
+				
 				service.create(partVO, new AsyncCallback<ParticipantVO>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
-						Window.alert("Unable to save your data"
-								+ caught.getMessage());
+						Window.alert("Unable to save your data"	+ caught.getMessage());
 
 					}
 
