@@ -98,7 +98,7 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 		if (event.getSource() == btnCreate) {
 
 			if (!(subWidget.selected.getSubjects().isEmpty())
-					&& tbLocation.getText().contains("Please, Use the Map")) {
+					&& !(tbLocation.getText().contains("Please, Use the Map"))) {
 
 				OpportunityVO oppVO = new OpportunityVO(null,
 						subWidget.selected.getSubjects(), 0, 0, lData
@@ -110,7 +110,8 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 							@Override
 							public void onFailure(Throwable caught) {
 								Window
-										.alert("Sorry, Unble to Create the Opportunity"+caught.getMessage());
+										.alert("Sorry, Unble to Create the Opportunity"
+												+ caught.getMessage());
 							}
 
 							@Override
