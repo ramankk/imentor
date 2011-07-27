@@ -7,6 +7,7 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
@@ -92,7 +93,8 @@ public class HeaderWidget extends Composite {
 
 			@Override
 			public void execute() {
-
+				RootPanel.get("TOME").add(new ToMeWidget());
+				
 			}
 
 		};
