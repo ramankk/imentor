@@ -106,6 +106,7 @@ public class ParticipantVO implements Serializable {
 		return locationString;
 	}
 
+	@Override
 	public String toString() {
 		return "Participant " + id + ", name : " + name;
 	}
