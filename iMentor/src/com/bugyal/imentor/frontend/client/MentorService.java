@@ -25,5 +25,7 @@ public interface MentorService extends RemoteService {
 	
 	List<String> getSubjects() throws MeException;
 	
+	List<ParticipantVO> feedToMe(String emailId) throws MeException;
+	
 	void generateRandomData() throws MeException;
 }
