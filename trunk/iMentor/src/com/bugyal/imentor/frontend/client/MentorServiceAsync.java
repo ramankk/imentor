@@ -23,6 +23,8 @@ public interface MentorServiceAsync {
 	
 	void getSubjects(AsyncCallback<List<String>> callback);
 
+	void feedToMe(String emailId, AsyncCallback<List<ParticipantVO>> callback);
+
 	void generateRandomData(AsyncCallback<Void> callback);
 
 }

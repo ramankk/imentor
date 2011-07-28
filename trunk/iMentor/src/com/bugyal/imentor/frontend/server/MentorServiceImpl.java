@@ -67,16 +67,17 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				.getLocationString(), p.getRadius());
 		Participant pi = null;
 		try {
-			ParticipantManager participantManager = MentorManager.INSTANCE.getParticipantManager();
-			pi = participantManager
-					.createParticipant(p.getName(), location, p.getEmail());
+			ParticipantManager participantManager = MentorManager.INSTANCE
+					.getParticipantManager();
+			pi = participantManager.createParticipant(p.getName(), location, p
+					.getEmail());
 			for (String subject : p.getNeedSubjects()) {
-			  participantManager.addNeedKnowledge(pi, subject, 1, pi);
-			} 
-			for (String subject : p.getHasSubjects()) {
-			  participantManager.addHasKnowledge(pi, subject, 1, pi);
+				participantManager.addNeedKnowledge(pi, subject, 1, pi);
 			}
-			
+			for (String subject : p.getHasSubjects()) {
+				participantManager.addHasKnowledge(pi, subject, 1, pi);
+			}
+
 			save(pi, p);
 		} catch (MentorException m) {
 			throw new MeException(m.getMessage());
@@ -165,14 +166,45 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		List<String> list = new ArrayList<String>();
 
 		Subject sub[] = Subject.values();
-		
-		for(Subject s : sub)
-		{
+
+		for (Subject s : sub) {
 			list.add(s.toString());
 		}
 		return list;
 	}
 
+	@Override
+	public List<ParticipantVO> feedToMe(String emailId) throws MeException {
+		
+		try {
+			Participant pi = getParticipant(emailId);
+			Location l = pi.getLoc();
+			
+			List<Participant> participantsList = MentorManager.INSTANCE.getParticipantManager().searchParticipantsBySubjects(l, pi.getHasSubjects(), pi.getNeedSubjects());
+			
+			List<ParticipantVO> participantVOList = new ArrayList<ParticipantVO>();
+			
+			
+			for(Participant p:participantsList){
+				participantVOList.add(ValueObjectGenerator.create(p));
+			}
+			
+			return 	participantVOList;
+			
+		} catch (MentorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	private Participant getParticipant(String emailId) throws MentorException {
+
+		return MentorManager.INSTANCE.getParticipantManager()
+				.findParticipantByEmail(emailId);
+
+	}
+	
 	@Override
 	public void generateRandomData() throws MeException {
 		try {
