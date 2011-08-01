@@ -1,78 +1,79 @@
 package com.bugyal.imentor.frontend.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.client.JavaScriptObject;
+import com.google.gwt.core.client.JsArray;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.reveregroup.gwt.facebook4gwt.Facebook;
 import com.reveregroup.gwt.facebook4gwt.LoginButton;
-import com.reveregroup.gwt.facebook4gwt.events.FacebookLoginEvent;
-import com.reveregroup.gwt.facebook4gwt.events.FacebookLoginHandler;
-import com.reveregroup.gwt.facebook4gwt.user.UserField;
 
 
 public class IMentor implements EntryPoint {
-	
-	public LoginButton loginButton;
-	public Label statusLabel,userName;
-	
+
+   //  public static String API_KEY = "139577986094709";
 	public void onModuleLoad() {
-		statusLabel = new Label();
-		userName = new Label();
-		Facebook.init("139577986094709");
-		loginButton = new LoginButton();
-		RootPanel.get().add(loginButton);
-		Window.alert("OK");
 		
-		Facebook.login(new AsyncCallback(){
+	//	exportMethods(this);
+		initFacebookAPI();
 
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("failure");
-				
-			}
+//		Button b = new Button("Click me");
+//		b.addClickHandler(new ClickHandler(){
+//
+//			@Override
+//			public void onClick(ClickEvent event) {
+//				getMe();
+//			}
+//			
+//		});
+//		RootPanel.get().add(b);
+		RootPanel.get().add(new HTML("<fb:login-button></fb:login-button>"));
+	}	
 
-			@Override
-			public void onSuccess(Object result) {
-				RootPanel.get("header").add(new HeaderWidget());
-				
-			}
-			
+	private native String initFacebookAPI()
+	/*-{
+		$wnd.FB.init({appId: '139577986094709', status: true, cookie: true, xfbml: true});
+		$wnd.FB.Event.subscribe('auth.sessionChange', function(response) {
+		  if (response.session) {
+		    // A user has logged in, and a new cookie has been saved
+		    $wnd.alert('b4 login');
+		    $wnd.onLogin();
+		    
+		  } else {
+		    // The user has logged out, and the cookie has been cleared
+		    $wnd.onLogout();
+		  }		  			  	
 		});
-	/*	Facebook.addLoginHandler(new FacebookLoginHandler(){
+	}-*/;  
 
-			@Override
-			public void loginStatusChanged(FacebookLoginEvent event) {
-				if (event.isLoggedIn()){
-					Window.alert("logged in");
-							statusLabel.setText("Logged in");
-						
-				} else {
-					Window.alert("OK");
-					statusLabel.setText("No user logged in");
-				}	
-				
-			}
-			
+	private native void callAPI(String path, AsyncCallback<JavaScriptObject> callback) /*-{
+		$wnd.FB.api(path, function(response) {
+			// on error, this callback is never called in Firefox - why?
+			if (!response) {
+			    $wnd.alert('Error occured');
+			} else if (response.error) {
+				 $wnd.alert('1 Error occured');
+				$wnd.alert($wnd.dump(response));
+			    // call callback with the actual error
+				$wnd.onAPICall(callback, null, response.error);
+			} else if (response.data) {
+				 $wnd.alert('2 Error occured');
+				$wnd.alert($wnd.dump(response));
+				// call callback with the actual json-array
+				$wnd.onAPICall(callback, response.data, null);
+			} else {
+				 $wnd.alert('3 Error occured');
+				$wnd.alert($wnd.dump(response));
+				// call callback with the actual json-object
+				$wnd.onAPICall(callback, response, null);
+			} 
 		});
-		
-		Facebook.APIClient().users_getLoggedInUser(new AsyncCallback() {
-		
-			@Override
-			public void onFailure(Throwable caught) {
-			    //userInfoPanel.setVisible(false);
-				RootPanel.get("header").add(new HeaderWidget());
-			  }
-				@Override
-				public void onSuccess(Object result) {
-					userName.setText(result.toString());
-					
-					//userInfoPanel.setVisible(true);
-					
-				}
-			}, UserField.NAME);*/
-		RootPanel.get().add(userName);
-		RootPanel.get().add(statusLabel);
-	}
+	}-*/;
+
+
+  
 }
