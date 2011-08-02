@@ -214,13 +214,59 @@ public class ParticipantManagerImpl implements ParticipantManager {
 				params);
 
 		try {
-			results = MyGeocellManager
-					.proximityFetch(center, 30, l.getActiveRadius() * 1000,
-							Participant.class, baseQuery, pm);
+			results = MyGeocellManager.proximityFetch(center, 30,
+					l.getActiveRadius() * 1000, Participant.class, baseQuery,
+					pm);
 		} finally {
 			pm.close();
 		}
 
+		return results;
+	}
+
+	@Override
+	public List<Participant> searchParticipantsBySubjects(
+			List<String> subjects, Location l, boolean has)
+			throws MentorException {
+
+		Preconditions.checkNotNull(subjects);
+		Preconditions.checkNotNull(l);
+
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		List<Participant> results = null;
+
+		Point center = new Point(l.getLatitude(), l.getLongitude());
+		List<Object> params = new ArrayList<Object>();
+		params.add(subjects);
+
+		// String filter = has ? "hasSubjects == params" :
+		// "needSubjects == params";
+		String filter = has ? "hasSubjects" : "needSubjects";
+
+		StringBuilder queryString = new StringBuilder("(");
+
+		// TODO(sridhar,raman): Make it to a prepared query.
+		boolean first = true;
+		for (String s : subjects) {
+			if (first) {
+				first = false;
+				queryString.append(filter + " == \"" + s +"\"");
+			} else {
+				queryString.append(" || " + filter + " == \"" + s +"\"");
+			}
+		}
+		queryString.append(")");
+
+		GeocellQuery query = new GeocellQuery(queryString.toString(), null, null);
+
+		try {
+			results = MyGeocellManager.proximityFetch(center, 30,
+					l.getActiveRadius() * 1000, Participant.class, query, pm);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pm.close();
+		}
 		return results;
 	}
 
@@ -237,4 +283,5 @@ public class ParticipantManagerImpl implements ParticipantManager {
 
 		return p;
 	}
+
 }
