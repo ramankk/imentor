@@ -93,7 +93,7 @@ public class HeaderWidget extends Composite {
 
 			@Override
 			public void execute() {
-				RootPanel.get("TOME").add(new ToMeWidget());
+				RootPanel.get("SwitchTOME").add(new ContentSwitchWidget());
 				
 			}
 
