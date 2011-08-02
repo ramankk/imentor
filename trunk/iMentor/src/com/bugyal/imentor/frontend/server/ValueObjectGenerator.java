@@ -1,5 +1,8 @@
 package com.bugyal.imentor.frontend.server;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.bugyal.imentor.server.data.Opportunity;
@@ -23,5 +26,23 @@ public class ValueObjectGenerator {
 		return new OpportunityVO(o.getKey().getId(), o.getSubjects(), o
 				.getRequiredMentors(), o.getPriority(), o.getLoc().getLatitude(),
 				o.getLoc().getLongitude(), o.getLoc().getActiveRadius(), o.getLoc().getLocationString());
+	}
+	
+	public static List<ParticipantVO> createParticipantVOs(
+			List<Participant> participantsList) {
+		List<ParticipantVO> participantVOList = new ArrayList<ParticipantVO>();
+		for (Participant p : participantsList) {
+			participantVOList.add(ValueObjectGenerator.create(p));
+		}
+		return participantVOList;
+	}
+	
+	public static List<OpportunityVO> createOpportunityVOs(
+			List<Opportunity> opList) {
+		List<OpportunityVO> opVos = new ArrayList<OpportunityVO>();
+		for (Opportunity p : opList) {
+			opVos.add(ValueObjectGenerator.create(p));
+		}
+		return opVos;
 	}
 }
