@@ -40,8 +40,7 @@ public class OpportunityManagerImpl implements OpportunityManager {
 			results = MyGeocellManager.proximityFetch(center, 30, l.getActiveRadius() * 1000, Opportunity.class, baseQuery, pm);
 		} finally {
 			pm.close();
-		}
-		
+		}		
 		return results;
 	}
 	
