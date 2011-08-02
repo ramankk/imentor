@@ -317,6 +317,8 @@ public class MyGeocellManager {
 						+ ", String geocellsP");
 			}
 
+			
+			System.out.println("KRK Final Query :: " + query);
 			List<T> newResultEntities;
 			if (baseQuery.getParameters() == null
 					|| baseQuery.getParameters().isEmpty()) {
