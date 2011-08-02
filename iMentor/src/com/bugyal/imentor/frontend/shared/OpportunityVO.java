@@ -1,6 +1,7 @@
 package com.bugyal.imentor.frontend.shared;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OpportunityVO implements Serializable {
@@ -24,7 +25,12 @@ public class OpportunityVO implements Serializable {
 			String locString) {
 		super();
 		this.id = id;
-		this.subjects = subjects;
+		
+		// This is to convert org.datanucleus.sco.backend.ArrayList to simple java.util.ArrayList which
+		// is serializable over wire to be used in the GWT world.
+		this.subjects = new ArrayList<String>();
+		this.subjects.addAll(subjects);
+		
 		this.requiredMentors = requiredMentors;
 		this.priority = priority;
 		this.latitude = latitude;
