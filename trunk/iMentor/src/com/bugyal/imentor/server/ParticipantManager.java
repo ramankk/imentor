@@ -35,6 +35,9 @@ public interface ParticipantManager {
 	List<Participant> searchParticipantsBySubject(String subject, Location l,
 			boolean has) throws MentorException;
 
+	List<Participant> searchParticipantsBySubjects(List<String> subjects, Location l,
+			boolean has) throws MentorException;
+	
 	List<Participant> getMentors(Participant i) throws MentorException;
 
 	List<Participant> getMentees(Participant i) throws MentorException;
