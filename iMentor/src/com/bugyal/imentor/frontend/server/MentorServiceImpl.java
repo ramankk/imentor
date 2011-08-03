@@ -1,13 +1,17 @@
 package com.bugyal.imentor.frontend.server;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.bugyal.imentor.MentorException;
 import com.bugyal.imentor.frontend.client.MentorService;
 import com.bugyal.imentor.frontend.shared.MeException;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
+import com.bugyal.imentor.frontend.shared.SearchResponse;
+import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.bugyal.imentor.server.MentorManager;
 import com.bugyal.imentor.server.OpportunityManager;
 import com.bugyal.imentor.server.ParticipantManager;
@@ -17,6 +21,7 @@ import com.bugyal.imentor.server.data.Participant;
 import com.bugyal.imentor.server.data.old.Subject;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -67,17 +72,16 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				.getLocationString(), p.getRadius());
 		Participant pi = null;
 		try {
-			ParticipantManager participantManager = MentorManager.INSTANCE
-					.getParticipantManager();
-			pi = participantManager.createParticipant(p.getName(), location, p
-					.getEmail());
+			ParticipantManager participantManager = MentorManager.INSTANCE.getParticipantManager();
+			pi = participantManager
+					.createParticipant(p.getName(), location, p.getEmail());
 			for (String subject : p.getNeedSubjects()) {
-				participantManager.addNeedKnowledge(pi, subject, 1, pi);
-			}
+			  participantManager.addNeedKnowledge(pi, subject, 1, pi);
+			} 
 			for (String subject : p.getHasSubjects()) {
-				participantManager.addHasKnowledge(pi, subject, 1, pi);
+			  participantManager.addHasKnowledge(pi, subject, 1, pi);
 			}
-
+			
 			save(pi, p);
 		} catch (MentorException m) {
 			throw new MeException(m.getMessage());
@@ -166,45 +170,14 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		List<String> list = new ArrayList<String>();
 
 		Subject sub[] = Subject.values();
-
-		for (Subject s : sub) {
+		
+		for(Subject s : sub)
+		{
 			list.add(s.toString());
 		}
 		return list;
 	}
 
-	@Override
-	public List<ParticipantVO> feedToMe(String emailId) throws MeException {
-		
-		try {
-			Participant pi = getParticipant(emailId);
-			Location l = pi.getLoc();
-			
-			List<Participant> participantsList = MentorManager.INSTANCE.getParticipantManager().searchParticipantsBySubjects(l, pi.getHasSubjects(), pi.getNeedSubjects());
-			
-			List<ParticipantVO> participantVOList = new ArrayList<ParticipantVO>();
-			
-			
-			for(Participant p:participantsList){
-				participantVOList.add(ValueObjectGenerator.create(p));
-			}
-			
-			return 	participantVOList;
-			
-		} catch (MentorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	private Participant getParticipant(String emailId) throws MentorException {
-
-		return MentorManager.INSTANCE.getParticipantManager()
-				.findParticipantByEmail(emailId);
-
-	}
-	
 	@Override
 	public void generateRandomData() throws MeException {
 		try {
@@ -213,6 +186,73 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			e.printStackTrace();
 			throw new MeException(e.getMessage());
 		}
+	}
+
+	// Change the return type to SearchResponse which will have List<SearchResult> for has and another 
+	// List<SearchResult> for need, this way in the client-side, we need not have to query 3 times, and 
+	// derive knowlege from this.
+	@Override
+	public SearchResponse feedToMe(String emailId) throws MeException {
+		// TODO(sridhar): Fix the email Id passing.
+		SearchResponse response = new SearchResponse();
+		try {
+			Participant pi = getParticipant(emailId);
+			Set<String> hasSubjects = new HashSet<String>();
+			Set<String> needSubjects = new HashSet<String>();
+			
+			for (String s : pi.getHasSubjects()) {
+				hasSubjects.add(s);
+			}
+			for (String s : pi.getNeedSubjects()) {
+				needSubjects.add(s);
+			}
+			
+			List<SearchResult> has = new ArrayList<SearchResult>();
+			List<SearchResult> need = new ArrayList<SearchResult>();
+			
+			ParticipantManager pm = MentorManager.INSTANCE.getParticipantManager();
+			for (Participant p : pm.searchParticipantsBySubjects(pi.getHasSubjects(), pi.getLoc(), false)) {
+				List<String> matchingSubs = new ArrayList<String>();
+				for (String s : p.getNeedSubjects()) {
+					if (hasSubjects.contains(s)) {
+						matchingSubs.add(s);
+					}
+				}
+				has.add(new SearchResult(ValueObjectGenerator.create(p), true, matchingSubs));
+			}
+			
+			for (Participant p : pm.searchParticipantsBySubjects(pi.getNeedSubjects(), pi.getLoc(), false)) {
+				List<String> matchingSubs = new ArrayList<String>();
+				for (String s : p.getHasSubjects()) {
+					if (needSubjects.contains(s)) {
+						matchingSubs.add(s);
+					}
+				}
+				need.add(new SearchResult(ValueObjectGenerator.create(p), false, matchingSubs));
+			}
+			
+			for (Opportunity o : MentorManager.INSTANCE.getOppurtunityManager().searchOpportunities(pi.getLoc(), pi.getHasSubjects())) {
+				List<String> matchingSubs = new ArrayList<String>();
+				for (String s : o.getSubjects()) {
+					if (hasSubjects.contains(s)) {
+						matchingSubs.add(s);
+					}
+				}
+				has.add(new SearchResult(ValueObjectGenerator.create(o), matchingSubs));
+			}
+			
+			response.setHas(has);
+			response.setNeed(need);
+			return response;
+		} catch (MentorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return response;
+	}
+
+	private Participant getParticipant(String emailId) throws MentorException {
+		return MentorManager.INSTANCE.getParticipantManager().findParticipantByEmail(emailId);
 	}
 
 }

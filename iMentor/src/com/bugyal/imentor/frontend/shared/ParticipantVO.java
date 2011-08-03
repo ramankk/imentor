@@ -1,6 +1,7 @@
 package com.bugyal.imentor.frontend.shared;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ParticipantVO implements Serializable {
@@ -30,8 +31,14 @@ public class ParticipantVO implements Serializable {
 		this.longitude = longitude;
 		this.setLocationString(locString);
 		this.radius = radius;
-		this.hasSubjects = has;
-		this.needSubjects = need;
+		
+		// This is to convert org.datanucleus.sco.backend.ArrayList to simple java.util.ArrayList which
+		// is serializable over wire to be used in the GWT world.
+		this.hasSubjects = new ArrayList<String>();
+		this.hasSubjects.addAll(has);
+		
+		this.needSubjects = new ArrayList<String>();
+		this.needSubjects.addAll(need);
 	}
 
 	public Long getId() {
@@ -106,7 +113,6 @@ public class ParticipantVO implements Serializable {
 		return locationString;
 	}
 
-	@Override
 	public String toString() {
 		return "Participant " + id + ", name : " + name;
 	}

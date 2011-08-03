@@ -5,6 +5,7 @@ import java.util.List;
 import com.bugyal.imentor.frontend.shared.MeException;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
+import com.bugyal.imentor.frontend.shared.SearchResponse;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
@@ -20,12 +21,11 @@ public interface MentorService extends RemoteService {
 	ParticipantVO update(ParticipantVO p) throws MeException;
 	OpportunityVO updateOpportunity(OpportunityVO o) throws MeException;
 	
+	SearchResponse feedToMe(String emailId) throws MeException;
 	
 	List<OpportunityVO> find(List<String> subjects, ParticipantVO me) throws MeException;
 	
 	List<String> getSubjects() throws MeException;
-	
-	List<ParticipantVO> feedToMe(String emailId) throws MeException;
 	
 	void generateRandomData() throws MeException;
 }

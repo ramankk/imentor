@@ -4,6 +4,8 @@ import java.util.List;
 
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
+import com.bugyal.imentor.frontend.shared.SearchResponse;
+import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface MentorServiceAsync {
@@ -23,8 +25,8 @@ public interface MentorServiceAsync {
 	
 	void getSubjects(AsyncCallback<List<String>> callback);
 
-	void feedToMe(String emailId, AsyncCallback<List<ParticipantVO>> callback);
-
 	void generateRandomData(AsyncCallback<Void> callback);
+
+	void feedToMe(String emailId, AsyncCallback<SearchResponse> callback);
 
 }
