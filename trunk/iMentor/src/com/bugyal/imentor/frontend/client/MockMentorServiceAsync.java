@@ -2,11 +2,10 @@ package com.bugyal.imentor.frontend.client;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
-import com.google.gwt.dev.util.collect.HashSet;
+import com.bugyal.imentor.frontend.shared.SearchResponse;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class MockMentorServiceAsync implements MentorServiceAsync {
@@ -62,6 +61,12 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 
 	@Override
 	public void generateRandomData(AsyncCallback<Void> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void feedToMe(String emailId, AsyncCallback<SearchResponse> callback) {
 		// TODO Auto-generated method stub
 		
 	}
