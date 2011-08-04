@@ -242,25 +242,12 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		// String filter = has ? "hasSubjects == params" :
 		// "needSubjects == params";
 		String filter = has ? "hasSubjects" : "needSubjects";
+		filter += ".contains(subjectsP)";
 
-		StringBuilder queryString = new StringBuilder("(");
-
-		// TODO(sridhar,raman): Make it to a prepared query.
-		boolean first = true;
-		for (String s : subjects) {
-			if (first) {
-				first = false;
-				queryString.append(filter + " == \"" + s +"\"");
-			} else {
-				queryString.append(" || " + filter + " == \"" + s +"\"");
-			}
-		}
-		queryString.append(")");
-
-		GeocellQuery query = new GeocellQuery(queryString.toString(), null, null);
+		GeocellQuery query = new GeocellQuery(filter, "String subjectsP", params);
 
 		try {
-			results = MyGeocellManager.proximityFetch(center, 30,
+			results = MyGeocellManager.proximityFetch(center, 200,
 					l.getActiveRadius() * 1000, Participant.class, query, pm);
 		} catch (Exception e) {
 			e.printStackTrace();
