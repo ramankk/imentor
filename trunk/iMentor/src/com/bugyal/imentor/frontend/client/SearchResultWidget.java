@@ -42,9 +42,9 @@ public class SearchResultWidget extends Composite {
 
 			if (result.isHas()) {
 				// TODO(Sridhar): Confirm the text before submitting..
-				rel.setText(" is looking for your help in ");
-			} else {
 				rel.setText(" can help you in ");
+			} else {
+				rel.setText(" is looking for your help in ");
 			}
 		} else {
 			// TODO(Sridhar): Fix my format before submitting..
@@ -56,6 +56,12 @@ public class SearchResultWidget extends Composite {
 			subs += str + ", ";
 		}
 		subjects.setText(subs);
+	}
+
+	public void clear() {
+		name.setText("");
+		rel.setText("");
+		subjects.setText("");
 	}
 
 }
