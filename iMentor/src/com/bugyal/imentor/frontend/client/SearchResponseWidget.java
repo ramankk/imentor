@@ -3,7 +3,6 @@ package com.bugyal.imentor.frontend.client;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -83,19 +82,22 @@ public class SearchResponseWidget extends Composite {
 			return;
 		}
 		currentPage = page;
-		// TODO(Sridhar): What happens when page*pageSize + i > size.participants... 
-		for (int i = 0; i < pageSize && ((page * pageSize) + i) < searchResults.size() ; i++) {
-			resultObjects.get(i).setResult(searchResults.get((page * pageSize) + i));
+		int i;
+		for (i = 0; i < pageSize; i++) {
+			if (((page * pageSize) + i) < searchResults.size()) {
+				resultObjects.get(i).setResult(searchResults.get((page * pageSize) + i));
+			} else {
+				resultObjects.get(i).clear();
+			}
 		}
 		backwardButton.setEnabled(currentPage != 0);
-		
-		Window.alert("Current page " + currentPage +": " + searchResults.size());
-		if(currentPage > (searchResults.size()/pageSize)){
+//		Window.alert("size "+ searchResults.size()+" page " + currentPage + "resutl " + searchResults.size()/pageSize);
+
+		// Need to check it out by sridhar...!
+		if( currentPage == (searchResults.size()/pageSize) ) {
 			forwardButton.setEnabled(false);
 		} else{
 			forwardButton.setEnabled(true);
 		}
-		
-		// TODO(Sridhar): set appropriatly for last page as well !! 
 	}
 }
