@@ -14,6 +14,7 @@ import com.google.gwt.user.client.ui.MenuItemSeparator;
 
 public class HeaderWidget extends Composite {
 
+	static boolean status = false;
 	public HeaderWidget() {
 		initWidget(getHeaderWidget());
 	}
@@ -93,8 +94,10 @@ public class HeaderWidget extends Composite {
 
 			@Override
 			public void execute() {
-				RootPanel.get("TOME").add(new ToMeWidget("m9u62695zh@kawanan.com"));
-				
+				if(!status){
+					RootPanel.get("TOME").add(new ToMeWidget("pdx56v41fy@kawanan.com"));
+					status = true;
+				}
 			}
 
 		};
