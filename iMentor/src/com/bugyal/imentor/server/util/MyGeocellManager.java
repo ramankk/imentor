@@ -319,6 +319,7 @@ public class MyGeocellManager {
 
 			
 			System.out.println("KRK Final Query :: " + query);
+			System.out.println("     --- > CurrGeoCells :: " + curGeocellsUnique);
 			List<T> newResultEntities;
 			if (baseQuery.getParameters() == null
 					|| baseQuery.getParameters().isEmpty()) {
