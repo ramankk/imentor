@@ -6,27 +6,74 @@
 <!-- differences in layout.                        -->
 
 <html>
+<head></head>
   <body>
     <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 
     <link type="text/css" rel="stylesheet" href="IMentor.css">
     <link type="text/css" rel="stylesheet" href="SubjectsSuggestWidget.css">
     <title>iMentor</title>
-    <script type="text/javascript" language="javascript" src="imentor/imentor.nocache.js"></script>
+    
 
     <iframe src="javascript:''" id="__gwt_historyFrame" tabIndex='-1' style="position:absolute;width:0;height:0;border:0"></iframe>
     
-    <!-- RECOMMENDED if your web app will not function without JavaScript enabled -->
-    <noscript>
-      <div style="width: 22em; position: absolute; left: 50%; margin-left: -11em; color: red; background-color: white; border: 1px solid red; padding: 4px; font-family: sans-serif">
-        Your web browser must have JavaScript enabled
-        in order for this application to display correctly.
-      </div>
-    </noscript>
-	
-	
-<div id="log">
-</div>
-<div id="header"></div>
-	  </body>
+    <script id="test" type="text/javascript" language="javascript" src="imentor/imentor.nocache.js"></script> 
+	<div id="fb-root"></div>
+	<script src="http://connect.facebook.net/en_US/all.js"></script>
+	<script>
+              window.fbAsyncInit = function() {
+    FB.init({
+            appId: '139577986094709',
+            status: true,
+            cookie: true,
+            xfbml: true,
+            });
+                         
+                         
+          FB.getLoginStatus(function(response) {
+            alert('getLoginStatus: ');
+                  
+ 				if(response.status == 'connected')
+					{
+  				 var userId = response.session.uid;
+  				FB.api(
+  					{
+    			method: 'fql.query',
+    			query: 'SELECT name,sex,email FROM user WHERE uid=' + userId
+  					},
+  					function(response) {
+    				document.getElementById("name").innerHTML=response[0].name;
+    				document.getElementById("email").innerHTML=response[0].email;
+    				//document.getElementById("test").src="imentor/imentor.nocache.js";
+  					});
+				}
+				else
+				{
+			alert('not login');
+ 			
+				}
+          });
+                                                
+                };
+                       
+                         
+    </script>  
+    <div class="main">
+		<div class="top">
+			<div id="head" class="menu"></div>
+			<img class="imenimg" src="images/imenimg1.jpg">
+		</div>
+		<div class="empBar">
+		<b id="name"></b>---<b id="email"></b>
+		
+		<fb:login-button perms='email' autologoutlink='true'></fb:login-button>
+		
+		</div>
+		<div class="middle">
+			<div id="tome" class="tome"></div> 
+		</div>
+		<div class="bottom">
+		</div>
+	</div>
+	</body>
 </html>

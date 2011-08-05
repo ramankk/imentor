@@ -75,3 +75,94 @@ h1 {
   cursor: pointer;
 }
 
+
+
+
+.main { 
+	padding: 10px; 
+	width: 760px; 
+	border:1px solid #ccc; 
+	border-color: #C1E897;
+	border-width: 0 1px 1px 1px 1px; 
+	margin:0 auto;	
+}
+
+.top {
+	background: url(images/Untitled-1.jpg) repeat;
+	width:760px;
+	height:90px;
+}
+
+.menu {
+	border: 1px solid #ccc;
+	border-width: 0 1px 1px 1px 1px; 
+	margin: 0 0 0 558px;	
+}
+
+.tome {
+	margin: 20px 0 10px 6px;
+}
+
+.middle {
+	width: 760px;
+	border: 1px solid #ccc;
+	border-color: #FFFFFF;
+	border-width: 0 1px 1px 1px 1px; 
+	margin: 15px auto;
+}
+
+.main { 
+	width:760px;
+	margin:0 auto;
+}
+
+.empBar{
+	background-image:url(images/2.jpg);
+	width:760px;
+	height:22px;
+}
+
+.bottom {
+	background-image: url(images/fade.jpg);
+	width:760px;
+	height:100px;
+}
+	
+	
+	
+.gwt-MenuItem{
+	background-color: #C1E897;
+	color: black;
+	font-weight:bold;
+  	font-color: black;
+	border:   0px;
+	border-bottom-left-radius: 5px 5px;
+	
+}
+.menuBar{
+	border                      :   0px;
+    margin                      :   0 auto;
+   background-color            :   #C1E897;
+    color      			        :   #C1E897;
+    border:   0px;
+	border-bottom-left-radius: 5px 5px;
+    	
+}
+.menuBar table
+{
+    background-color            :   #C1E897;
+	border-bottom-left-radius: 5px 5px; 
+	border-color : #C1E897;
+}
+.menuBar .gwt-MenuItem-selected
+{
+    background-color            :   #C1E897;
+}
+
+.imenimg {
+	margin: -13px 0 0 0px;
+}
+
+
+
+
