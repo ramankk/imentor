@@ -247,8 +247,8 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		GeocellQuery query = new GeocellQuery(filter, "String subjectsP", params);
 
 		try {
-			results = MyGeocellManager.proximityFetch(center, 200,
-					l.getActiveRadius() * 1000, Participant.class, query, pm);
+			results = MyGeocellManager.proximityFetch(center, 30,
+					l.getActiveRadius() * 1000, Participant.class, query, pm, 8);
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
