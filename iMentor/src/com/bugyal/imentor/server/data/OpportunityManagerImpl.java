@@ -38,7 +38,7 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		GeocellQuery baseQuery = new GeocellQuery(filter, "String subjectsP", params);
 
 		try {
-			results = MyGeocellManager.proximityFetch(center, 100, l.getActiveRadius() * 1000, Opportunity.class, baseQuery, pm);
+			results = MyGeocellManager.proximityFetch(center, 30, l.getActiveRadius() * 1000, Opportunity.class, baseQuery, pm, 8);
 		} finally {
 			pm.close();
 		}		
