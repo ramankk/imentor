@@ -21,7 +21,6 @@ import com.bugyal.imentor.server.data.Participant;
 import com.bugyal.imentor.server.data.old.Subject;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -181,69 +180,26 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void generateRandomData() throws MeException {
 		try {
-			new DataGenerator(1000);
+			new DataGenerator(100);
 		} catch (MentorException e) {
 			e.printStackTrace();
 			throw new MeException(e.getMessage());
 		}
 	}
 
-	// Change the return type to SearchResponse which will have List<SearchResult> for has and another 
-	// List<SearchResult> for need, this way in the client-side, we need not have to query 3 times, and 
-	// derive knowlege from this.
+	
+
+	
 	@Override
 	public SearchResponse feedToMe(String emailId) throws MeException {
-		// TODO(sridhar): Fix the email Id passing.
 		SearchResponse response = new SearchResponse();
 		try {
+			long t=System.currentTimeMillis();
+			System.out.println(t);
 			Participant pi = getParticipant(emailId);
-			Set<String> hasSubjects = new HashSet<String>();
-			Set<String> needSubjects = new HashSet<String>();
-			
-			for (String s : pi.getHasSubjects()) {
-				hasSubjects.add(s);
-			}
-			for (String s : pi.getNeedSubjects()) {
-				needSubjects.add(s);
-			}
-			
-			List<SearchResult> has = new ArrayList<SearchResult>();
-			List<SearchResult> need = new ArrayList<SearchResult>();
-			
-			ParticipantManager pm = MentorManager.INSTANCE.getParticipantManager();
-			for (Participant p : pm.searchParticipantsBySubjects(pi.getHasSubjects(), pi.getLoc(), false)) {
-				List<String> matchingSubs = new ArrayList<String>();
-				for (String s : p.getNeedSubjects()) {
-					if (hasSubjects.contains(s)) {
-						matchingSubs.add(s);
-					}
-				}
-				has.add(new SearchResult(ValueObjectGenerator.create(p), true, matchingSubs));
-			}
-			
-			for (Participant p : pm.searchParticipantsBySubjects(pi.getNeedSubjects(), pi.getLoc(), false)) {
-				List<String> matchingSubs = new ArrayList<String>();
-				for (String s : p.getHasSubjects()) {
-					if (needSubjects.contains(s)) {
-						matchingSubs.add(s);
-					}
-				}
-				need.add(new SearchResult(ValueObjectGenerator.create(p), false, matchingSubs));
-			}
-			
-			for (Opportunity o : MentorManager.INSTANCE.getOppurtunityManager().searchOpportunities(pi.getLoc(), pi.getHasSubjects())) {
-				List<String> matchingSubs = new ArrayList<String>();
-				for (String s : o.getSubjects()) {
-					if (hasSubjects.contains(s)) {
-						matchingSubs.add(s);
-					}
-				}
-				has.add(new SearchResult(ValueObjectGenerator.create(o), matchingSubs));
-			}
-			
-			response.setHas(has);
-			response.setNeed(need);
-			return response;
+			System.out.println("part:" + (System.currentTimeMillis()-t));
+			return filterList(pi.getLocation().getLat(), pi.getLocation().getLon(), pi.getLoc().getLocationString(), pi.getLoc().getActiveRadius(), pi.getHasSubjects(), pi.getNeedSubjects());
+
 		} catch (MentorException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -255,4 +211,65 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		return MentorManager.INSTANCE.getParticipantManager().findParticipantByEmail(emailId);
 	}
 
+	@Override
+	public SearchResponse filterList(double latitude, double longitude,
+			String strlocation, int radius, List<String> hasSubs,
+			List<String> needSubs) {
+		SearchResponse response = new SearchResponse();
+		try{
+			Set<String> hasSubjects = new HashSet<String>();
+			Set<String> needSubjects = new HashSet<String>();
+
+			for (String s : hasSubs) {
+				hasSubjects.add(s);
+			}
+			for (String s : needSubs) {
+				needSubjects.add(s);
+			}
+
+			List<SearchResult> has = new ArrayList<SearchResult>();
+			List<SearchResult> need = new ArrayList<SearchResult>();
+			
+			Location location = new Location(latitude, longitude, strlocation, radius);
+			
+			ParticipantManager pm = MentorManager.INSTANCE.getParticipantManager();
+			
+			for (Participant p : pm.searchParticipantsBySubjects(needSubs, location, true)) {
+				List<String> matchingSubs = new ArrayList<String>();
+				for (String s : p.getHasSubjects()) {
+					if (needSubjects.contains(s)) {
+						matchingSubs.add(s);
+					}
+				}
+				has.add(new SearchResult(ValueObjectGenerator.create(p), true, matchingSubs));
+			}
+
+			for (Participant p : pm.searchParticipantsBySubjects(hasSubs, location, false)) {
+				List<String> matchingSubs = new ArrayList<String>();
+				for (String s : p.getNeedSubjects()) {
+					if (hasSubjects.contains(s)) {
+						matchingSubs.add(s);
+					}
+				}
+				need.add(new SearchResult(ValueObjectGenerator.create(p), false, matchingSubs));
+			}
+			
+			for (Opportunity o : MentorManager.INSTANCE.getOppurtunityManager().searchOpportunities(location, hasSubs)) {
+				List<String> matchingSubs = new ArrayList<String>();
+				for (String s : o.getSubjects()) {
+					if (hasSubjects.contains(s)) {
+						matchingSubs.add(s);
+					}
+				}
+				need.add(new SearchResult(ValueObjectGenerator.create(o), matchingSubs));
+			}
+			response.setHas(has);
+			response.setNeed(need);
+			return response;
+		} catch (MentorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return response;	
+	}	
 }

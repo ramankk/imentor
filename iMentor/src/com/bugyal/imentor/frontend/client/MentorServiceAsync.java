@@ -29,4 +29,8 @@ public interface MentorServiceAsync {
 
 	void feedToMe(String emailId, AsyncCallback<SearchResponse> callback);
 
+	void filterList(double latitude, double longitude, String strlocation,
+			int radius, List<String> hasSubs, List<String> needSubs,
+			AsyncCallback<SearchResponse> callback);
+
 }

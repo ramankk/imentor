@@ -8,6 +8,9 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
+import org.apache.james.mime4j.field.datetime.DateTime;
+
+import com.beoui.geocell.GeocellManager;
 import com.beoui.geocell.model.GeocellQuery;
 import com.beoui.geocell.model.Point;
 import com.bugyal.imentor.MentorException;
@@ -247,8 +250,13 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		GeocellQuery query = new GeocellQuery(filter, "String subjectsP", params);
 
 		try {
-			results = MyGeocellManager.proximityFetch(center, 30,
-					l.getActiveRadius() * 1000, Participant.class, query, pm, 8);
+			long t=System.currentTimeMillis();
+			System.out.println(t);
+		/*	results = MyGeocellManager.proximityFetch(center, 30,
+					l.getActiveRadius() * 1000, Participant.class, query, pm, 8);*/
+			results = GeocellManager.proximityFetch(center, 30, l.getActiveRadius() * 1000, Participant.class, query, pm, 8);
+			System.out.println(System.currentTimeMillis()-t);
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {

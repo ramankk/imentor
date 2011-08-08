@@ -71,4 +71,12 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 		
 	}
 
+	@Override
+	public void filterList(double latitude, double longitude,
+			String strlocation, int radius, List<String> hasSubs,
+			List<String> needSubs, AsyncCallback<SearchResponse> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

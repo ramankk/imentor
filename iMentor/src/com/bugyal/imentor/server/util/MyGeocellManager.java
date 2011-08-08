@@ -373,7 +373,7 @@ public class MyGeocellManager {
 				 */
 				curContainingGeocell = curContainingGeocell.substring(0, Math
 						.max(curContainingGeocell.length() - 1, 0));
-				if (curContainingGeocell.length() == 0) {
+				if (curContainingGeocell.length() == 3) { //sridhar: changed the value from 0 to 4
 					break; // Done with search, we've searched everywhere.
 				}
 				List<String> oldCurGeocells = new ArrayList<String>(curGeocells);
