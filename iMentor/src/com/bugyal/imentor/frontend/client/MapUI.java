@@ -1,6 +1,10 @@
 package com.bugyal.imentor.frontend.client;
 
+import java.util.List;
+
+import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.maps.client.InfoWindow;
 import com.google.gwt.maps.client.InfoWindowContent;
 import com.google.gwt.maps.client.MapUIOptions;
 import com.google.gwt.maps.client.MapWidget;
@@ -29,11 +33,12 @@ public class MapUI extends Composite {
 	private Polygon oldCircle;
 	private SliderBar slider = new SliderBar(0.0, 200.0);
 	private VerticalPanel panel = new VerticalPanel();
-
+	private String partSubjects="";
 	LocationData lData = new LocationData();
 
-	 private boolean needSlider;
+	 private boolean needSlider, addPartMarkers;
 	 private final TextArea locationDisplay;
+	 
 
 	public MapUI(boolean needSlider, TextArea locationDisplay) {
 		Maps.loadMapsApi(KEY, "2", false, new Runnable() {
@@ -46,11 +51,55 @@ public class MapUI extends Composite {
 		initWidget(panel);
 	}
 
+	private void addPartMarkers(int partType, List<ParticipantVO> participants) {
+		LatLng searchLL = marker.getLatLng();
+		map.clearOverlays();
+		for(final ParticipantVO p : participants){
+			LatLng ll = LatLng.newInstance(p.getLatitude(), p.getLongitude());
+			Marker partMarker = new Marker(ll);
+			map.addOverlay(partMarker);
+			partMarker.setDraggingEnabled(false);
+			//TODO(ravi): change image before submiting
+			partSubjects="";
+			if(partType==0){
+				partSubjects="Subjects: ";
+				getPartSubjects(p.getNeedSubjects());
+				partMarker.setImage("http://cycling-team.info/GreenDotMedia/2008/Pics/GreenDot.png");
+			}else if(partType==1){
+				partSubjects="Subjects: ";
+				getPartSubjects(p.getHasSubjects());
+				partMarker.setImage("http://designblog.rietveldacademie.nl//wp-content/uploads/2009/11/gul_cirkel.png");
+			}
+			else{
+				partSubjects="Need Subjects: ";
+				getPartSubjects(p.getNeedSubjects());
+				partSubjects+=" HasSubjects: ";
+				getPartSubjects(p.getHasSubjects());
+			}
+			partMarker.addMarkerMouseOverHandler(new MarkerMouseOverHandler()
+			{
+
+				@Override
+				public void onMouseOver(MarkerMouseOverEvent event) {
+					InfoWindowContent iwc = new InfoWindowContent("Name : "+p.getName()+"\n"+partSubjects);			
+					InfoWindow info = map.getInfoWindow();
+					info.open(event.getSender(), iwc);
+				}
+			});
+		}
+		Marker searchMarker = new Marker(searchLL);
+		map.addOverlay(searchMarker);
+	}
+
+	private void getPartSubjects(List<String> hasSubjects) {
+		// TODO Auto-generated method stub
+		
+	}
+
 	public void initMapUI() {
 		map = new MapWidget();
 		map.setCenter(LatLng.newInstance(17.45, 78.39, true), 4);
 		marker = new Marker(LatLng.newInstance(17.45, 78.39, true));
-		map.setSize("585px", "600px");
 		map.setCenter(marker.getLatLng());
 		MapUIOptions opts = map.getDefaultUI();
 		opts.setDoubleClick(false);
@@ -71,7 +120,7 @@ public class MapUI extends Composite {
 				}
 				getAddress(event.getLatLng());
 				lData.setLatitude(marker.getLatLng().getLatitude());
-				lData.setLatitude(marker.getLatLng().getLongitude());
+				lData.setLongitude(marker.getLatLng().getLongitude());
 			}
 
 		});
