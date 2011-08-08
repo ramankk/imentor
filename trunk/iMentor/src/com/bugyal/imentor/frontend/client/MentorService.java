@@ -27,5 +27,7 @@ public interface MentorService extends RemoteService {
 	
 	List<String> getSubjects() throws MeException;
 	
+	SearchResponse filterList(double latitude, double longitude, String strlocation, int radius, List<String> hasSubs,  List<String> needSubs);
+	
 	void generateRandomData() throws MeException;
 }

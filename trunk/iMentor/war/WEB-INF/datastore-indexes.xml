@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<datastore-indexes
+  autoGenerate="false">
+    <datastore-index kind="Participant" ancestor="false">
+        <property name="email" direction="asc" />
+        <property name="hasSubjects" direction="asc" />
+        <property name="needSubjects" direction="asc" />
+        <property name="geocells" direction="asc" />
+    </datastore-index>
+
+    <datastore-index kind="Opportunity" ancestor="false">
+        <property name="geocells" direction="asc" />
+        <property name="subjects" direction="asc" />
+    </datastore-index>
+</datastore-indexes>
