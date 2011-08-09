@@ -116,5 +116,14 @@ public class ParticipantVO implements Serializable {
 	public String toString() {
 		return "Participant " + id + ", name : " + name;
 	}
+
+	// This method trims ParticipantVO object to bare minimum information required in SearchResult.
+	// If you need the following cleared information, fix it !!
+	public void trim() {
+		this.needSubjects.clear();
+		this.hasSubjects.clear();
+		this.locationString = null;
+		this.email=null;
+	}
 	
 }

@@ -64,6 +64,12 @@ public class Opportunity implements LocationCapable {
 	@Persistent
 	private List<ChangeInfo> changeInfo;
 	
+	@Persistent
+	private long createdTime;
+	
+	@Persistent
+	private long lastModifiedTime;
+	
 	// TODO(raman): Add notes in oppurtunity as well. (also in oppVO)
 
 	@PersistenceCapable
@@ -107,6 +113,9 @@ public class Opportunity implements LocationCapable {
 		}
 		setLocation(location);
 		this.active = true; // active when created.
+		
+		this.createdTime = System.currentTimeMillis();
+		this.lastModifiedTime = System.currentTimeMillis();
 	}
 
 	public Point getLocation() {
@@ -125,6 +134,7 @@ public class Opportunity implements LocationCapable {
 
 		this.geocells = MyGeocellManager.generateGeoCell(new Point(location
 				.getLatitude(), location.getLongitude()));
+		this.lastModifiedTime = System.currentTimeMillis();
 	}
 
 	public List<String> getSubjects() {
@@ -135,12 +145,14 @@ public class Opportunity implements LocationCapable {
 		this.changeInfo.add(new ChangeInfo(who.getKey(), "Added subject "
 				+ subject));
 		this.subjects.add(subject);
+		this.lastModifiedTime = System.currentTimeMillis();
 	}
 
 	public void deleteSubject(String subject, Participant who) {
 		this.changeInfo.add(new ChangeInfo(who.getKey(), "Removed subject "
 				+ subject));
 		this.subjects.remove(subject);
+		this.lastModifiedTime = System.currentTimeMillis();
 	}
 
 	public int getRequiredMentors() {
@@ -153,6 +165,7 @@ public class Opportunity implements LocationCapable {
 				"Changed requirement from " + this.requiredMentors + " to "
 						+ requiredParticipants));
 		this.requiredMentors = requiredParticipants;
+		this.lastModifiedTime = System.currentTimeMillis();
 	}
 
 	public boolean isActive() {
@@ -162,6 +175,7 @@ public class Opportunity implements LocationCapable {
 	public void setActive(boolean active, Participant who) {
 		this.changeInfo.add(new ChangeInfo(who.getKey(),
 				"Changed active state from " + this.active + " to " + active));
+		this.lastModifiedTime = System.currentTimeMillis();
 		this.active = active;
 	}
 
@@ -173,12 +187,14 @@ public class Opportunity implements LocationCapable {
 		this.changeInfo.add(new ChangeInfo(who.getKey(), "Added new contact "
 				+ contact.getName()));
 		this.contacts.add(contact.getKey());
+		this.lastModifiedTime = System.currentTimeMillis();
 	}
 
 	public void removeContact(Participant contact, Participant who) {
 		this.changeInfo.add(new ChangeInfo(who.getKey(), "Removed contact "
 				+ contact.getName()));
 		this.contacts.remove(contact.getKey());
+		this.lastModifiedTime = System.currentTimeMillis();
 	}
 
 	public int getPriority() {
@@ -189,6 +205,7 @@ public class Opportunity implements LocationCapable {
 		this.changeInfo.add(new ChangeInfo(who.getKey(),
 				"Changed priority from " + this.priority + " to " + priority));
 		this.priority = priority;
+		this.lastModifiedTime = System.currentTimeMillis();
 	}
 
 	public List<ChangeInfo> getChangeInfo() {
@@ -211,6 +228,7 @@ public class Opportunity implements LocationCapable {
 
 	public void setLocationString(String locationString) {
 		this.locationString = locationString;
+		this.lastModifiedTime = System.currentTimeMillis();
 	}
 
 	public String getLocationString() {
@@ -239,5 +257,19 @@ public class Opportunity implements LocationCapable {
 		} else if (!key.equals(other.key))
 			return false;
 		return true;
+	}
+
+	/**
+	 * @return the createdTime
+	 */
+	public long getCreatedTime() {
+		return createdTime;
+	}
+	
+	/**
+	 * @return the lastModifiedTime
+	 */
+	public long getLastModifiedTime() {
+		return lastModifiedTime;
 	}
 }

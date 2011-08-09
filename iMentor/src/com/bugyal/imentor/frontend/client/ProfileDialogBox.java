@@ -125,6 +125,7 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 		btnCancel.addClickHandler(this);
 
 		mapUI = new MapUI(true, tbLocation);
+		mapUI.setSize("400px", "400px");
 		horizontalPanel.add(mapUI);
 	}
 

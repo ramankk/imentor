@@ -36,7 +36,7 @@ public class MapUI extends Composite {
 	private String partSubjects="";
 	LocationData lData = new LocationData();
 
-	 private boolean needSlider, addPartMarkers;
+	 private boolean needSlider;
 	 private final TextArea locationDisplay;
 	 
 
@@ -51,7 +51,7 @@ public class MapUI extends Composite {
 		initWidget(panel);
 	}
 
-	private void addPartMarkers(int partType, List<ParticipantVO> participants) {
+	public void addPartMarkers(int partType, List<ParticipantVO> participants) {
 		LatLng searchLL = marker.getLatLng();
 		map.clearOverlays();
 		for(final ParticipantVO p : participants){
@@ -98,6 +98,7 @@ public class MapUI extends Composite {
 
 	public void initMapUI() {
 		map = new MapWidget();
+		map.setHeight("500px");
 		map.setCenter(LatLng.newInstance(17.45, 78.39, true), 4);
 		marker = new Marker(LatLng.newInstance(17.45, 78.39, true));
 		map.setCenter(marker.getLatLng());

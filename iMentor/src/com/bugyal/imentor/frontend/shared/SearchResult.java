@@ -27,6 +27,8 @@ public class SearchResult implements IsSerializable {
 		this.has = has;
 		// AppEngine arraylist = normal arraylist..
 		this.subjects = appEngineListToSimpleList(subjects);
+		// strip participantVO object to reduce network-foot-print.
+		this.p.trim();
 	}
 	
 	public static final List<String> appEngineListToSimpleList(List<String> subjects) {
@@ -42,6 +44,9 @@ public class SearchResult implements IsSerializable {
 		this.o = o;
 		this.isTypeParticipant = false;
 		this.subjects = appEngineListToSimpleList(subjects);
+		
+		// strip opportunityVO object to reduce network-foot-print.
+		this.o.trim();
 	}
 
 	public boolean isHas() {
