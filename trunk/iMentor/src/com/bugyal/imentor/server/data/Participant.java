@@ -93,6 +93,12 @@ public class Participant implements LocationCapable {
 	@Persistent
 	private String locationString;
 	
+	@Persistent
+	private long lastModifiedTime;
+	
+	@Persistent
+	private long createdTime;
+	
 	@PersistenceCapable
 	public static class Note implements Serializable {
 		
@@ -237,6 +243,7 @@ public class Participant implements LocationCapable {
 
 	Participant setName(String name) {
 		this.name = name;
+		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
 
@@ -250,6 +257,7 @@ public class Participant implements LocationCapable {
 
 	public Participant setQualification(String qualification) {
 		this.qualification = qualification;
+		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
 
@@ -258,6 +266,7 @@ public class Participant implements LocationCapable {
 	}
 
 	public Participant setDateOfBirth(Date dateOfBirth) {
+		this.lastModifiedTime = System.currentTimeMillis();
 		this.dateOfBirth = dateOfBirth;
 		return this;
 	}
@@ -277,6 +286,7 @@ public class Participant implements LocationCapable {
 		for (String c : geocells) {
 			System.out.println("Adding geocell.. " + c + " for " + getName());
 		}
+		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
 
@@ -301,6 +311,7 @@ public class Participant implements LocationCapable {
 		} else {
 			needSubjects.add(k.getSubject());
 		}
+		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
 	
@@ -314,16 +325,19 @@ public class Participant implements LocationCapable {
 
 	Participant setMentors(List<Key> mentors) {
 		this.mentors = mentors;
+		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
 	
 	Participant addMentor(Key mentor) {
 		this.mentors.add(mentor);
+		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
 	
 	Participant removeMentor(Key mentor) {
 		this.mentors.remove(mentor);
+		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
 
@@ -333,16 +347,19 @@ public class Participant implements LocationCapable {
 
 	Participant setMentees(List<Key> mentees) {
 		this.mentees = mentees;
+		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
 	
 	Participant addMentee(Key mentee) {
 		this.mentees.add(mentee);
+		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
 	
 	Participant removeMentee(Key mentee) {
 		this.mentees.remove(mentee);
+		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
 
@@ -352,6 +369,7 @@ public class Participant implements LocationCapable {
 
 	Participant setCoParticipants(List<Key> coParticipants) {
 		this.coParticipants = coParticipants;
+		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
 
@@ -361,6 +379,7 @@ public class Participant implements LocationCapable {
 
 	public Participant setNotesPublic(boolean isNotesPublic) {
 		this.isNotesPublic = isNotesPublic;
+		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
 
@@ -371,6 +390,7 @@ public class Participant implements LocationCapable {
 	// Notes is meant to be only add-only, so no setter for it.
 	Participant addNotes(Note note) {
 		this.notes.add(note);
+		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
 
@@ -380,16 +400,19 @@ public class Participant implements LocationCapable {
 
 	public Participant setInterests(List<String> interests) {
 		this.interests = interests;
+		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
 	
 	public Participant addInterest(String interest) {
 		this.interests.add(interest);
+		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
 	
 	public Participant removeInterest(String interest) {
 		this.interests.remove(interest);
+		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
 	
@@ -403,6 +426,7 @@ public class Participant implements LocationCapable {
 
 	void setActive(boolean isActive) {
 		this.isActive = isActive;
+		this.lastModifiedTime = System.currentTimeMillis();
 	}
 
 	boolean isNotOnline() {
@@ -422,6 +446,8 @@ public class Participant implements LocationCapable {
 		this.notes = new ArrayList<Note>();
 		this.hasSubjects = new ArrayList<String>();
 		this.needSubjects = new ArrayList<String>();
+		this.createdTime = System.currentTimeMillis();
+		this.lastModifiedTime = System.currentTimeMillis();
 	}
 	
 	Participant(String name, Location location, String email) {
@@ -495,4 +521,13 @@ public class Participant implements LocationCapable {
 	public List<String> getNeedSubjects() {
 		return needSubjects;
 	}
+
+	public long getLastModifiedTime() {
+		return lastModifiedTime;
+	}
+
+	public long getCreatedTime() {
+		return createdTime;
+	}
+	
 }

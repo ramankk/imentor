@@ -91,6 +91,7 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 
 		horizontalPanel.add(verticalPanel);
 		mapUI = new MapUI(false, tbLocation);
+		mapUI.setWidth("500px");
 		horizontalPanel.add(mapUI);
 	}
 

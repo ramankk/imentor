@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.jdo.PersistenceManager;
 
+import com.beoui.geocell.GeocellManager;
 import com.beoui.geocell.model.GeocellQuery;
 import com.beoui.geocell.model.Point;
 import com.bugyal.imentor.server.OpportunityManager;
@@ -40,7 +41,8 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		try {
 			long t=System.currentTimeMillis();
 			System.out.println(t);
-			results = MyGeocellManager.proximityFetch(center, 30, l.getActiveRadius() * 1000, Opportunity.class, baseQuery, pm, 8);
+			//results = MyGeocellManager.proximityFetch(center, 30, l.getActiveRadius() * 1000, Opportunity.class, baseQuery, pm, 8);
+			results = GeocellManager.proximityFetch(center, 30, l.getActiveRadius() * 1000, Opportunity.class, baseQuery, pm, 8);
 			System.out.println(System.currentTimeMillis()-t);
 		} finally {
 			pm.close();

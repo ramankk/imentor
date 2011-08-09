@@ -102,4 +102,11 @@ public class OpportunityVO implements Serializable {
 	public void setLocString(String locString) {
 		this.locString = locString;
 	}
+
+	// This method trims ParticipantVO object to bare minimum information required in SearchResult.
+	// If you need the following cleared information, fix it !!
+	public void trim() {
+		this.subjects.clear();
+		this.locString = null;
+	}
 }

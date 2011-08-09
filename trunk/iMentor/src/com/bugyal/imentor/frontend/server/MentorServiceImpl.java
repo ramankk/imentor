@@ -180,7 +180,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void generateRandomData() throws MeException {
 		try {
-			new DataGenerator(100);
+			new DataGenerator(100000);
 		} catch (MentorException e) {
 			e.printStackTrace();
 			throw new MeException(e.getMessage());

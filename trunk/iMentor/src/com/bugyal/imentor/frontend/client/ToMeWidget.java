@@ -59,7 +59,7 @@ public class ToMeWidget extends Composite {
 	}
 
 	// Method to Get data from DataStore
-	private void getDataFeeds(String EmailId) {
+	public void getDataFeeds(String EmailId) {
 		service.feedToMe(EmailId, new AsyncCallback<SearchResponse>() {
 			@Override
 			public void onFailure(Throwable caught) {
