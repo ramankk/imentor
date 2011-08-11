@@ -25,12 +25,14 @@ public interface MentorServiceAsync {
 	
 	void getSubjects(AsyncCallback<List<String>> callback);
 
-	void generateRandomData(AsyncCallback<Void> callback);
-
 	void feedToMe(String emailId, AsyncCallback<SearchResponse> callback);
 
 	void filterList(double latitude, double longitude, String strlocation,
 			int radius, List<String> hasSubs, List<String> needSubs,
 			AsyncCallback<SearchResponse> callback);
+
+	void localActivity(String email, AsyncCallback<SearchResponse> asyncCallback);
+
+	void generateRandomData(int range, AsyncCallback<Void> asyncCallback);	
 
 }

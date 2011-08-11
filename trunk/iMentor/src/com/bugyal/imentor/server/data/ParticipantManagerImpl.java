@@ -8,12 +8,11 @@ import java.util.logging.Logger;
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
 
-import org.apache.james.mime4j.field.datetime.DateTime;
-
 import com.beoui.geocell.GeocellManager;
 import com.beoui.geocell.model.GeocellQuery;
 import com.beoui.geocell.model.Point;
 import com.bugyal.imentor.MentorException;
+import com.bugyal.imentor.frontend.server.LRUCache;
 import com.bugyal.imentor.server.ParticipantManager;
 import com.bugyal.imentor.server.util.MyGeocellManager;
 import com.google.appengine.api.datastore.Key;
@@ -23,6 +22,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 
 	private static final Logger LOG = Logger
 			.getLogger(ParticipantManagerImpl.class.getCanonicalName());
+	private LRUCache<String,Participant> cache = new LRUCache<String, Participant>(10);
 
 	@Override
 	public void addCoParticipant(Participant i, Participant him) {
@@ -96,6 +96,12 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	@Override
 	public Participant findParticipantByEmail(String email)
 			throws MentorException {
+
+		Participant participant = cache.get(email);
+		if (participant != null) {
+			return participant;
+		}
+		
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 
 		List<Participant> results = null;
@@ -121,6 +127,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 							+ email);
 		}
 
+		cache.put(email, results.get(0));
 		return results.get(0);
 	}
 
@@ -226,6 +233,41 @@ public class ParticipantManagerImpl implements ParticipantManager {
 
 		return results;
 	}
+	
+	@Override
+	public List<Participant> searchParticipantsByLocation(Location l)
+			throws MentorException {
+		long CHECK_TIME = 24 * (60 * 60 * 1000);
+		
+		Preconditions.checkNotNull(l);
+		
+		long checkTime = System.currentTimeMillis() - CHECK_TIME;
+
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		List<Participant> results = null;
+
+		Point center = new Point(l.getLatitude(), l.getLongitude());
+		List<Object> params = new ArrayList<Object>();
+		params.add(checkTime);
+
+		String filter = "lastModifiedTime >= updateTimeP" ;
+
+		GeocellQuery query = new GeocellQuery(filter, "long updateTimeP", params);
+
+		try {
+			long t=System.currentTimeMillis();
+			System.out.println(t);
+			
+			results = GeocellManager.proximityFetch(center, 50, l.getActiveRadius() * 1000, Participant.class, query, pm, 9);
+			System.out.println(" participant "+ (System.currentTimeMillis()-t));
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			pm.close();
+		}
+		return results;
+	}
 
 	@Override
 	public List<Participant> searchParticipantsBySubjects(
@@ -236,7 +278,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		Preconditions.checkNotNull(l);
 
 		PersistenceManager pm = PMF.get().getPersistenceManager();
-		List<Participant> results = null;
+		List<Participant> results = new ArrayList<Participant>();
 
 		Point center = new Point(l.getLatitude(), l.getLongitude());
 		List<Object> params = new ArrayList<Object>();
@@ -252,6 +294,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		try {
 			long t=System.currentTimeMillis();
 			System.out.println(t);
+			
 		/*	results = MyGeocellManager.proximityFetch(center, 30,
 					l.getActiveRadius() * 1000, Participant.class, query, pm, 8);*/
 			results = GeocellManager.proximityFetch(center, 30, l.getActiveRadius() * 1000, Participant.class, query, pm, 8);

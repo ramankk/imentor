@@ -41,9 +41,8 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		try {
 			long t=System.currentTimeMillis();
 			System.out.println(t);
-			//results = MyGeocellManager.proximityFetch(center, 30, l.getActiveRadius() * 1000, Opportunity.class, baseQuery, pm, 8);
 			results = GeocellManager.proximityFetch(center, 30, l.getActiveRadius() * 1000, Opportunity.class, baseQuery, pm, 8);
-			System.out.println(System.currentTimeMillis()-t);
+			System.out.println("opportunity search "+ (System.currentTimeMillis()-t));
 		} finally {
 			pm.close();
 		}		
@@ -51,22 +50,28 @@ public class OpportunityManagerImpl implements OpportunityManager {
 	}
 	
 	private List<Opportunity> searchAll(Location l, boolean active) {
-		Preconditions.checkNotNull(l);
 		
+		Preconditions.checkNotNull(l);
+		long CHECK_TIME = 24 * (60 * 60 * 1000);
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		
 		List<Opportunity> results = null;
+		long checkTime = System.currentTimeMillis() - CHECK_TIME;
 		
 		Point center = new Point(l.getLatitude(), l.getLongitude());
 
 		List<Object> params = new ArrayList<Object>();
-		params.add(new Boolean(true));
+		params.add(checkTime);
 		
-		String filter = active ? "active == activeP" : "";
-		GeocellQuery baseQuery = new GeocellQuery(filter, "Boolean activeP", params);
+		String filter = active ? "active == true " : "";
+		filter += "&& lastModifiedTime >= updateTimeP"; 
+		GeocellQuery baseQuery = new GeocellQuery(filter, "long updateTimeP", params);
 
 		try {
-			results = MyGeocellManager.proximityFetch(center, 30, l.getActiveRadius() * 1000, Opportunity.class, baseQuery, pm);
+			long t=System.currentTimeMillis();
+			System.out.println(t);
+			results = GeocellManager.proximityFetch(center, 60, l.getActiveRadius() * 1000, Opportunity.class, baseQuery, pm);
+			System.out.println("opportunity search all "+ (System.currentTimeMillis()-t));
 		} finally {
 			pm.close();
 		}
@@ -103,8 +108,7 @@ public class OpportunityManagerImpl implements OpportunityManager {
 
 	@Override
 	public List<Opportunity> allOpportunites(Location location) {
-		dumpAll();
-		
+		dumpAll();		
 		return searchAll(location, true);
 	}
 

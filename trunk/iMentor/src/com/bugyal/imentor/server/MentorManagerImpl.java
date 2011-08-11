@@ -20,7 +20,7 @@ public class MentorManagerImpl implements MentorManager {
 	}
 	
 	@Override
-	public OpportunityManager getOppurtunityManager() {
+	public OpportunityManager getOpportunityManager() {
 		return this.oManager;
 	}
 

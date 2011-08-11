@@ -67,4 +67,7 @@ public interface ParticipantManager {
 
 	Participant findById(Key id);
 
+	List<Participant> searchParticipantsByLocation(Location l)
+			throws MentorException;
+
 }
