@@ -12,7 +12,7 @@ public interface MentorManager {
 	
 	public ParticipantManager getParticipantManager();
 	
-	public OpportunityManager getOppurtunityManager();
+	public OpportunityManager getOpportunityManager();
 	
 	public List<Opportunity> getAllOppurtunities(Participant p);
 	

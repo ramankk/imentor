@@ -45,7 +45,7 @@ public class DataGenerator {
 			if (r.nextFloat() < 0.1) {
 				List<Participant> contacts = new ArrayList<Participant>();
 				contacts.add(participant);
-				MentorManager.INSTANCE.getOppurtunityManager()
+				MentorManager.INSTANCE.getOpportunityManager()
 						.createOpportunity(getRandomLocation(),
 								getRandomList(), r.nextInt(7), contacts,
 								r.nextInt(4));

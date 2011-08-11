@@ -1,7 +1,5 @@
 package com.bugyal.imentor.frontend.client;
 
-import com.bugyal.imentor.frontend.shared.OpportunityVO;
-import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.ui.Composite;

@@ -60,12 +60,6 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 	}
 
 	@Override
-	public void generateRandomData(AsyncCallback<Void> callback) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void feedToMe(String emailId, AsyncCallback<SearchResponse> callback) {
 		// TODO Auto-generated method stub
 		
@@ -78,5 +72,19 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 		// TODO Auto-generated method stub
 		
 	}
+
+	@Override
+	public void localActivity(String email,
+			AsyncCallback<SearchResponse> asyncCallback) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void generateRandomData(int range, AsyncCallback<Void> asyncCallback) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

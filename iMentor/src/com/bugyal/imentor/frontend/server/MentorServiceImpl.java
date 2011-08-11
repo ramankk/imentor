@@ -30,6 +30,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class MentorServiceImpl extends RemoteServiceServlet implements
 		MentorService {
 	private static final List<String> SUBJECTS_LIST = new ArrayList<String>();
+	
 
 	static {
 		SUBJECTS_LIST.add("Computers");
@@ -125,7 +126,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		Opportunity oi = null;
 
 		// TODO(raman): Understand why MentorException is not getting thrown.
-		OpportunityManager om = MentorManager.INSTANCE.getOppurtunityManager();
+		OpportunityManager om = MentorManager.INSTANCE.getOpportunityManager();
 		oi = om.createOpportunity(location, o.getSubjects(), o
 				.getRequiredMentors(), null, o.getPriority());
 
@@ -178,9 +179,9 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public void generateRandomData() throws MeException {
+	public void generateRandomData(int range) throws MeException {
 		try {
-			new DataGenerator(100000);
+			new DataGenerator(range);
 		} catch (MentorException e) {
 			e.printStackTrace();
 			throw new MeException(e.getMessage());
@@ -197,6 +198,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			long t=System.currentTimeMillis();
 			System.out.println(t);
 			Participant pi = getParticipant(emailId);
+			
 			System.out.println("part:" + (System.currentTimeMillis()-t));
 			return filterList(pi.getLocation().getLat(), pi.getLocation().getLon(), pi.getLoc().getLocationString(), pi.getLoc().getActiveRadius(), pi.getHasSubjects(), pi.getNeedSubjects());
 
@@ -254,7 +256,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				need.add(new SearchResult(ValueObjectGenerator.create(p), false, matchingSubs));
 			}
 			
-			for (Opportunity o : MentorManager.INSTANCE.getOppurtunityManager().searchOpportunities(location, hasSubs)) {
+			for (Opportunity o : MentorManager.INSTANCE.getOpportunityManager().searchOpportunities(location, hasSubs)) {
 				List<String> matchingSubs = new ArrayList<String>();
 				for (String s : o.getSubjects()) {
 					if (hasSubjects.contains(s)) {
@@ -262,6 +264,37 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 					}
 				}
 				need.add(new SearchResult(ValueObjectGenerator.create(o), matchingSubs));
+			}
+			response.setHas(has);
+			response.setNeed(need);
+			return response;
+		} catch (MentorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return response;	
+	}
+
+	@Override
+	public SearchResponse localActivity(String emailId) {
+		SearchResponse response = new SearchResponse();
+		try{
+			List<SearchResult> has = new ArrayList<SearchResult>();
+			List<SearchResult> need = new ArrayList<SearchResult>();
+			
+			Participant pi = getParticipant(emailId);
+			Location location = new Location(pi.getLocation().getLat(),  pi.getLocation().getLon(), pi.getLoc().getLocationString(), pi.getLoc().getActiveRadius());
+			
+			ParticipantManager pm = MentorManager.INSTANCE.getParticipantManager();
+			
+			
+			for (Participant p : pm.searchParticipantsByLocation(location)) {
+				has.add(new SearchResult(ValueObjectGenerator.create(p), true, p.getHasSubjects()));
+				need.add(new SearchResult(ValueObjectGenerator.create(p), false, p.getNeedSubjects()));
+			}
+			
+			for (Opportunity o : MentorManager.INSTANCE.getOpportunityManager().allOpportunites(location)) {
+				need.add(new SearchResult(ValueObjectGenerator.create(o),o.getSubjects()));
 			}
 			response.setHas(has);
 			response.setNeed(need);

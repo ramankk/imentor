@@ -107,6 +107,6 @@ public class OpportunityVO implements Serializable {
 	// If you need the following cleared information, fix it !!
 	public void trim() {
 		this.subjects.clear();
-		this.locString = null;
+		//this.locString = null;
 	}
 }

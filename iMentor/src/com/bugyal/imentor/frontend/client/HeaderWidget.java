@@ -1,7 +1,5 @@
 package com.bugyal.imentor.frontend.client;
 
-import com.google.gwt.core.client.GWT;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
@@ -9,7 +7,6 @@ import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
 
 public class HeaderWidget extends Composite {
@@ -53,11 +50,14 @@ public class HeaderWidget extends Composite {
 
 	private Command seedRandomDataCommand() {
 		return new Command() {
-
+			
 			@Override
 			public void execute() {
-
-				MentorServiceAsync service = GWT.create(MentorService.class);
+				DataGenerator dataGenerator = new DataGenerator();
+				dataGenerator.show();
+				dataGenerator.center();
+				
+				/*MentorServiceAsync service = GWT.create(MentorService.class);
 				service.generateRandomData(new AsyncCallback<Void>() {
 
 					@Override
@@ -69,7 +69,7 @@ public class HeaderWidget extends Composite {
 					public void onSuccess(Void result) {
 						Window.alert("Data generation complete ");
 					}
-				});
+				});*/
 			}
 
 		};
@@ -95,7 +95,8 @@ public class HeaderWidget extends Composite {
 			@Override
 			public void execute() {
 				if(!status){
-					RootPanel.get("tome").add(new ToMeWidget("test123@kawanan.com"));
+					RootPanel.get("tome").add(new ToMeWidget("amicjxkhhg@kawanan.com"));
+					RootPanel.get("activity").add(new LocalActivity("amicjxkhhg@kawanan.com"));
 					status = true;
 				}
 			}
@@ -111,8 +112,6 @@ public class HeaderWidget extends Composite {
 				ProfileDialogBox profileDialogBox = new ProfileDialogBox();
 				profileDialogBox.show();
 				profileDialogBox.center();
-				
-
 			}
 
 		};

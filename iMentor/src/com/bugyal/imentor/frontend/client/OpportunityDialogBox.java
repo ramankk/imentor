@@ -50,7 +50,7 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 		horizontalPanel.setSize("750px", "558px");
 
 		VerticalPanel verticalPanel = new VerticalPanel();
-		horizontalPanel.add(verticalPanel);
+		
 		verticalPanel.setSize("259px", "558px");
 
 		Label lblSubjects = new Label("Subjects:");
