@@ -2,21 +2,23 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" output="test-classes" path="test"/>
-	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry kind="con" path="com.google.appengine.eclipse.core.GAE_CONTAINER"/>
+	<classpathentry kind="con" path="com.google.gwt.eclipse.core.GWT_CONTAINER"/>
 	<classpathentry exported="true" kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/geocell-0.0.3-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="war/WEB-INF/lib/commons-lang-2.5.jar"/>
-	<classpathentry kind="lib" path="war/WEB-INF/lib/gwt-servlet.jar"/>
-	<classpathentry kind="lib" path="/home/ravi/Downloads/gwt-maps-1.1.1/gwt-maps.jar"/>
-	<classpathentry kind="lib" path="/home/ravi/Downloads/gwt-maps-1.1.1/gwt-maps-javadoc.jar"/>
-	<classpathentry kind="lib" path="/home/ravi/Downloads/gwt-maps-1.1.1/gwt-maps-noredist.jar"/>
-	<classpathentry kind="lib" path="/home/ravi/Downloads/lib jars/appengine-api.jar"/>
-	<classpathentry kind="lib" path="/home/ravi/Downloads/lib jars/appengine-api-labs.jar"/>
-	<classpathentry kind="lib" path="/home/ravi/Downloads/lib jars/appengine-api-stubs.jar"/>
-	<classpathentry kind="lib" path="/home/ravi/Downloads/lib jars/appengine-local-runtime.jar"/>
-	<classpathentry kind="lib" path="/home/ravi/Downloads/lib jars/appengine-testing.jar"/>
-	<classpathentry kind="lib" path="/home/ravi/Downloads/lib jars/gwt-incubator-20100204-r1747.jar"/>
+	<classpathentry kind="lib" path="/usr/local/kawanan/imentor_lib/facebook4gwt-1.0.8.jar"/>
+	<classpathentry exported="true" kind="lib" path="war/WEB-INF/lib/gwt-servlet.jar"/>
+	<classpathentry kind="lib" path="/usr/local/kawanan/imentor_lib/gwt-incubator-20100204-r1747.jar"/>
+	<classpathentry kind="lib" path="/usr/local/kawanan/imentor_lib/gwt-maps.jar"/>
+	<classpathentry kind="lib" path="/usr/local/kawanan/imentor_lib/gwt-maps-javadoc.jar"/>
+	<classpathentry kind="lib" path="/usr/local/kawanan/imentor_lib/gwt-maps-noredist.jar"/>
+	<classpathentry kind="lib" path="/usr/local/kawanan/imentor_lib/appengine-api.jar"/>
+	<classpathentry kind="lib" path="/usr/local/kawanan/imentor_lib/appengine-api-labs.jar"/>
+	<classpathentry kind="lib" path="/usr/local/kawanan/imentor_lib/appengine-api-stubs.jar"/>
+	<classpathentry kind="lib" path="/usr/local/kawanan/imentor_lib/appengine-local-runtime.jar"/>
+	<classpathentry kind="lib" path="/usr/local/kawanan/imentor_lib/appengine-testing.jar"/>
+	<classpathentry kind="lib" path="/usr/local/kawanan/imentor_lib/geocells.jar"/>
 	<classpathentry kind="output" path="war/WEB-INF/classes"/>
 </classpath>

@@ -35,7 +35,7 @@ public class MentorManagerImplTest {
 		MentorManagerImpl mmi = new MentorManagerImpl();
 		
 		ParticipantManager pmi = mmi.getParticipantManager();
-		OpportunityManager omi = mmi.getOppurtunityManager();
+		OpportunityManager omi = mmi.getOpportunityManager();
 		
 		List<String> subjects = new ArrayList<String>();
 		subjects.add("Math");
