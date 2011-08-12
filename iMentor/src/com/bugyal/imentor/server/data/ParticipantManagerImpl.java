@@ -202,6 +202,20 @@ public class ParticipantManagerImpl implements ParticipantManager {
 
 		return results;
 	}
+	@Override
+	public long deleteParticipants(){
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		long n;
+		try {
+			Query q = pm.newQuery(Participant.class);
+			n = q.deletePersistentAll();
+			q.closeAll();
+			
+		} finally {
+			pm.close();
+		}
+		return n;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override

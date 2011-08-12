@@ -214,6 +214,21 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
+	public long deleteRecords(){
+		long m = 0;
+		long n = 0;
+		ParticipantManager pm = MentorManager.INSTANCE.getParticipantManager();
+		OpportunityManager om = MentorManager.INSTANCE.getOpportunityManager();
+		try{
+			m = pm.deleteParticipants();
+			n = om.deleteOpportunities();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return m+n;
+	}
+	
+	@Override
 	public SearchResponse filterList(double latitude, double longitude,
 			String strlocation, int radius, List<String> hasSubs,
 			List<String> needSubs) {

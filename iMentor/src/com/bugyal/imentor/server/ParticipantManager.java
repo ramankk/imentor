@@ -70,4 +70,6 @@ public interface ParticipantManager {
 	List<Participant> searchParticipantsByLocation(Location l)
 			throws MentorException;
 
+	long deleteParticipants();
+
 }

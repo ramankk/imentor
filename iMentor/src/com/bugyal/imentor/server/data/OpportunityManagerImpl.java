@@ -4,12 +4,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.jdo.PersistenceManager;
+import javax.jdo.Query;
 
 import com.beoui.geocell.GeocellManager;
 import com.beoui.geocell.model.GeocellQuery;
 import com.beoui.geocell.model.Point;
 import com.bugyal.imentor.server.OpportunityManager;
-import com.bugyal.imentor.server.util.MyGeocellManager;
 import com.google.appengine.repackaged.com.google.common.base.Preconditions;
 
 public class OpportunityManagerImpl implements OpportunityManager {
@@ -19,7 +19,20 @@ public class OpportunityManagerImpl implements OpportunityManager {
 			List<String> subjects) {
 		return search(location, subjects, false);
 	}
-	
+	@Override
+	public long deleteOpportunities(){
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		long n;
+		try {
+			Query q = pm.newQuery(Opportunity.class);
+			n = q.deletePersistentAll();
+			q.closeAll();
+			
+		} finally {
+			pm.close();
+		}
+		return n;
+	}
 	private List<Opportunity> search(Location l, List<String> subjects, boolean onlyActive) {
 		Preconditions.checkNotNull(l);
 		Preconditions.checkNotNull(subjects);
