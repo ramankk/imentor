@@ -92,5 +92,12 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 		
 	}
 
+	@Override
+	public void getOpportunitiesById(String emailId,
+			AsyncCallback<List<OpportunityVO>> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

@@ -34,6 +34,9 @@ public interface MentorServiceAsync {
 
 	void generateRandomData(int range, AsyncCallback<Void> asyncCallback);
 
-	void deleteRecords(AsyncCallback<Long> asyncCallback);	
+	void deleteRecords(AsyncCallback<Long> asyncCallback);
+
+	void getOpportunitiesById(String emailId,
+			AsyncCallback<List<OpportunityVO>> callback);	
 
 }

@@ -319,5 +319,19 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			e.printStackTrace();
 		}
 		return response;	
+	}
+
+	@Override
+	public List<OpportunityVO> getOpportunitiesById(String emailId) {
+		Participant p = null;
+		try{
+			p = getParticipant(emailId);
+			OpportunityManager om = MentorManager.INSTANCE.getOpportunityManager();
+			return ValueObjectGenerator.createOpportunityVOs(om.searchOpportunitiesByKey(p.getKey()));
+		}catch(MentorException e) {
+			e.printStackTrace();
+		}
+		
+		return null;
 	}	
 }
