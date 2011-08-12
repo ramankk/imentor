@@ -10,6 +10,7 @@ import com.beoui.geocell.GeocellManager;
 import com.beoui.geocell.model.GeocellQuery;
 import com.beoui.geocell.model.Point;
 import com.bugyal.imentor.server.OpportunityManager;
+import com.google.appengine.api.datastore.Key;
 import com.google.appengine.repackaged.com.google.common.base.Preconditions;
 
 public class OpportunityManagerImpl implements OpportunityManager {
@@ -127,5 +128,20 @@ public class OpportunityManagerImpl implements OpportunityManager {
 
 	private void dumpAll() {
 		
+	}
+	@Override
+	public List<Opportunity> searchOpportunitiesByKey(Key key) {
+		Preconditions.checkNotNull(key);
+
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+
+		List<Opportunity> results = null;
+		
+		String filter = "contacts.contains(keyP)";
+		Query q = pm.newQuery(Opportunity.class, filter);
+		q.declareParameters(Key.class.getName() + " keyP");
+		
+		results = (List<Opportunity>) q.execute(key);
+		return results;
 	}
 }

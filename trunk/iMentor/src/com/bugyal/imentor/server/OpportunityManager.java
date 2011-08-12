@@ -5,6 +5,7 @@ import java.util.List;
 import com.bugyal.imentor.server.data.Location;
 import com.bugyal.imentor.server.data.Opportunity;
 import com.bugyal.imentor.server.data.Participant;
+import com.google.appengine.api.datastore.Key;
 
 public interface OpportunityManager {
 
@@ -25,4 +26,6 @@ public interface OpportunityManager {
 	public void save(Opportunity... oppurtunities);
 
 	long deleteOpportunities();
+
+	public List<Opportunity> searchOpportunitiesByKey(Key key);
 }

@@ -35,4 +35,6 @@ public interface MentorService extends RemoteService {
 	
 	long deleteRecords();
 	
+	List<OpportunityVO> getOpportunitiesById(String emailId);
+	
 }

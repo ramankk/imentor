@@ -11,7 +11,6 @@
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
   <!-- Other module inherits                                      -->
-  <inherits name="com.reveregroup.gwt.facebook4gwt.Facebook4gwt"></inherits>
   <inherits name='com.google.gwt.maps.GoogleMaps' />
   <inherits name='com.google.gwt.widgetideas.WidgetIdeas' />   
   <inherits name='com.google.gwt.libideas.LibIdeas' />
