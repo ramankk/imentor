@@ -32,9 +32,7 @@ public class IMentor implements EntryPoint {
 		hp1.add(tb1);
 		hp1.add(btn);
 		
-		RootPanel.get().add(hp);
-		RootPanel.get().add(hp1);
-
+		
 		button.addClickHandler(new ClickHandler() {
 
 			@Override
@@ -73,5 +71,34 @@ public class IMentor implements EntryPoint {
 			}
 			
 		});
+		
+		Button b = new Button("Delete Datastore Records");
+		HorizontalPanel hp2 = new HorizontalPanel();
+		hp2.add(b);
+		b.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				service = (MentorServiceAsync) GWT.create(MentorService.class);
+				service.deleteRecords(new AsyncCallback<Long>(){
+
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to delete records");						
+					}
+
+					@Override
+					public void onSuccess(Long result) {
+						Window.alert("No of records deleted : "+result);
+					}
+					
+				});
+			}
+			
+		});
+		
+		RootPanel.get().add(hp);
+		RootPanel.get().add(hp1);
+		RootPanel.get().add(hp2);
 	}
 }

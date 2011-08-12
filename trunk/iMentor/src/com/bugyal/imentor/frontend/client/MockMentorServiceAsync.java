@@ -86,5 +86,11 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 		
 	}
 
+	@Override
+	public void deleteRecords(AsyncCallback<Long> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

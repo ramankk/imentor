@@ -30,6 +30,9 @@ public interface MentorService extends RemoteService {
 	SearchResponse filterList(double latitude, double longitude, String strlocation, int radius, List<String> hasSubs,  List<String> needSubs);
 		
 	SearchResponse localActivity(String email);
+	
 	void generateRandomData(int range) throws MeException;
+	
+	long deleteRecords();
 	
 }

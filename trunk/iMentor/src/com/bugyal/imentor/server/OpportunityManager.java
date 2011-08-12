@@ -23,4 +23,6 @@ public interface OpportunityManager {
 	public List<Opportunity> allOpportunites(Location location);
 	
 	public void save(Opportunity... oppurtunities);
+
+	long deleteOpportunities();
 }
