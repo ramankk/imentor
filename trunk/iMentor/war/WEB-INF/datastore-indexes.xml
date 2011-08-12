@@ -5,11 +5,13 @@
         <property name="email" direction="asc" />
         <property name="hasSubjects" direction="asc" />
         <property name="needSubjects" direction="asc" />
-        <property name="geocells" direction="asc" />
+        <property name="geocells" direction="asc"/>
+        <property name="lastModifiedTime" direction="asc"/>
     </datastore-index>
 
     <datastore-index kind="Opportunity" ancestor="false">
         <property name="geocells" direction="asc" />
         <property name="subjects" direction="asc" />
+        <property name="lastModifiedTime" direction="asc"/>
     </datastore-index>
 </datastore-indexes>
