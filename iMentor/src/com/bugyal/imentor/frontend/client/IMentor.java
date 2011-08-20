@@ -22,8 +22,6 @@ public class IMentor implements EntryPoint {
 	public static final boolean TEST_MODE_FLAG = true;
 
 	public void onModuleLoad() {
-		
-		
 		setShowTrigger(this);
 		setShowTrigger2(this);
 		
@@ -33,42 +31,28 @@ public class IMentor implements EntryPoint {
 	}
 	
 	public void loadApp(){
-		Window.alert("Done...");
-		
 		UserDetails userDetails = new UserDetails();
 		userDetails.setName(RootPanel.get("name").getElement().getInnerHTML());
 		userDetails.setEmail(RootPanel.get("email").getElement().getInnerHTML());
 		
-		Window.alert(userDetails.getName());
-		Window.alert(userDetails.getEmail());
-		
-		
-		MainPageWidget mainPage = new MainPageWidget();
-		RootPanel.get("head").add(new HeaderWidget(mainPage, userDetails));
-		RootPanel.get("middle").add(mainPage);
+		HeaderWidget headerWidget = new HeaderWidget(userDetails);
+		headerWidget.init();
+		RootPanel.get("head").add(headerWidget);
+		RootPanel.get("middle").add(headerWidget.getMainPage());
 	}
 	
 	public native void setShowTrigger(IMentor x)/*-{
-
-	$wnd.showIMentorApp = function () {
-
-	x.@com.bugyal.imentor.frontend.client.IMentor::loadApp()();
-
-	};
-
+    	$wnd.showIMentorApp = function () {
+			x.@com.bugyal.imentor.frontend.client.IMentor::loadApp()();
+    	};
 	}-*/;
-	
 	
 	public native void setShowTrigger2(IMentor x)/*-{
+		$wnd.showIMentorApp2 = function () {
+			x.@com.bugyal.imentor.frontend.client.IMentor::logout()();
 
-	$wnd.showIMentorApp2 = function () {
-
-	x.@com.bugyal.imentor.frontend.client.IMentor::logout()();
-
-	};
-
+		};
 	}-*/;
-	
 	
 	public void logout(){
 		RootPanel.get("middle").clear();
@@ -122,7 +106,6 @@ public class IMentor implements EntryPoint {
 					}
 				});
 			}
-
 		});
 
 		Button b = new Button("Delete Datastore Records");

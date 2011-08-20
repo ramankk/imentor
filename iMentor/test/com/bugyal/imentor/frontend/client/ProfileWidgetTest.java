@@ -5,7 +5,7 @@ import org.junit.Test;
 import com.google.gwt.junit.client.GWTTestCase;
 import com.google.gwt.user.client.ui.TextArea;
 
-public class ProfileDialogTest extends GWTTestCase {
+public class ProfileWidgetTest extends GWTTestCase {
 
 	@Override
 	public String getModuleName() {
@@ -13,9 +13,8 @@ public class ProfileDialogTest extends GWTTestCase {
 	}
 
 	@Test
-
 	public void checkDisplay() {
-		ProfileDialogBox profileDialogBox = new ProfileDialogBox("test1@k.com",	"test1");
+		ProfileWidget profileDialogBox = new ProfileWidget(null);
 		@SuppressWarnings("unused")
 		TextArea location = profileDialogBox.tbLocation;
 		//

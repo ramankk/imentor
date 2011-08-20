@@ -184,25 +184,6 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		return results;
 	}
 
-	/*public Opportunity searchOpportunityByKey(String key) {
-		Preconditions.checkNotNull(key);
-		PersistenceManager pm = PMF.get().getPersistenceManager();
-
-		
-		 * Object result =null; String filter = "key.contains(keyP)"; Query q =
-		 * pm.newQuery(Opportunity.class, filter);
-		 * q.declareParameters("Object keyp"); result = q.execute(key);
-		 
-		Key k = null;
-		try {
-			k = KeyFactory.stringToKey(key);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		Opportunity result = pm.getObjectById(Opportunity.class, "749");
-		return result;
-	}*/
-
 	@Override
 	public Opportunity findById(Key key) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();

@@ -1,7 +1,7 @@
 package com.bugyal.imentor.frontend.client;
 
 public class UserDetails {
-	String name,email;
+	private String name,email;
 
 	public String getName() {
 		return name;

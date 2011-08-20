@@ -9,22 +9,29 @@ import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
 
 public class HeaderWidget extends Composite {
-	private OpportunityDialogBox opportunityDialogBox = new OpportunityDialogBox();
-	private ProfileDialogBox profileDialogBox = new ProfileDialogBox("g7iz219iu9@kawanan.com", "test1");
-	
 	private MainPageWidget mainPage = null;
+	private UserDetails userDetails = null;
+	private MenuBar menuBar;
 	
-	public HeaderWidget(MainPageWidget mainPage, UserDetails userDetails) {
-		this.mainPage = mainPage;
+	public HeaderWidget(UserDetails userDetails) {
+		this.userDetails = userDetails;
 		
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		horizontalPanel.setWidth("377px");
 		Image image = new Image("");
 		image.setPixelSize(100, 30);
 		horizontalPanel.add(image);
-		MenuBar menuBar = new MenuBar(false);
+		menuBar = new MenuBar(false);
 		horizontalPanel.add(menuBar);
+		initWidget(horizontalPanel);
+	}
+	
+	public void init() {
+		mainPage = new MainPageWidget(this);
+		initMenuBar(menuBar);
+	}
 
+	private void initMenuBar(MenuBar menuBar) {
 		MenuItem mntmHome = new MenuItem("Home", false, homeCommand());
 		menuBar.addItem(mntmHome);
 
@@ -49,8 +56,10 @@ public class HeaderWidget extends Composite {
 					seedRandomDataCommand());
 			menuBar.addItem(randomData);
 		}
-		
-		initWidget(menuBar);
+	}
+	
+	public MainPageWidget getMainPage() {
+ 	    return mainPage;
 	}
 	
 	private Command seedRandomDataCommand() {
@@ -69,8 +78,7 @@ public class HeaderWidget extends Composite {
 		return new Command() {
 			@Override
 			public void execute() {
-				opportunityDialogBox.show();
-				opportunityDialogBox.center();
+				mainPage.showOpportunityPanel();
 			}
 		};
 	}
@@ -88,8 +96,7 @@ public class HeaderWidget extends Composite {
 		return new Command() {
 			@Override
 			public void execute() {
-				profileDialogBox.show();
-				profileDialogBox.center();
+				mainPage.showProfilePanel();
 			}
 		};
 	}
@@ -101,5 +108,9 @@ public class HeaderWidget extends Composite {
 				mainPage.showSearchPanel();
 			}
 		};
+	}
+	
+	public UserDetails getUserDetails() {
+		return this.userDetails;
 	}
 }
