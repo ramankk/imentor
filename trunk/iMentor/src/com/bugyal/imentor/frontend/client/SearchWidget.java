@@ -16,6 +16,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -27,7 +28,6 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class SearchWidget extends Composite implements ClickHandler,
 		ChangeHandler {
-
 	MapUI mapUI;
 	Button searchBtn;
 	MentorServiceAsync service;
@@ -37,20 +37,61 @@ public class SearchWidget extends Composite implements ClickHandler,
 	RadioButton rbtnAll, rbtnMentor, rbtnMentee;
 	SearchResponse sResponse;
 
-	SearchResponseWidget results;
+	SearchResponseWidget searchResultsWidget = new SearchResponseWidget();
+	
+	FlexTable resultsPanel = new FlexTable();
 
 	public SearchWidget() {
-		results = new SearchResponseWidget();
-
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
-		locationData = new LocationData();
-
+		
+		mapUI = new MapUI(true, location);
+		mapUI.setWidth("600px");
+		
 		VerticalPanel mainPanel = new VerticalPanel();
-		initWidget(mainPanel);
 		mainPanel.setSize("750px", "756px");
+		mainPanel.add(buildSearchForm());
+		mainPanel.add(buildViewToggler());
+		mainPanel.add(resultsPanel);
 
+		showMapView();
+		locationData = mapUI.getLocationDetails();
+		
+		initWidget(mainPanel);
+	}
+	
+	public void showListView() {
+		isMapViewDisplayed = false;
+		viewToggler.setText(MAP_VIEW);
+		resultsPanel.setWidget(0, 0, searchResultsWidget);
+	}
+	
+	public void showMapView() {
+		isMapViewDisplayed = true;
+		viewToggler.setText(LIST_VIEW);
+		resultsPanel.setWidget(0, 0, mapUI);
+	}
+
+	private static final String LIST_VIEW = "List View";
+	private static final String MAP_VIEW = "Map View";
+	private boolean isMapViewDisplayed = true;
+	private final Button viewToggler = new Button(LIST_VIEW);
+	
+	private Button buildViewToggler() {
+		
+		viewToggler.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (isMapViewDisplayed) {
+					showListView();
+				} else {
+					showMapView();
+				}
+			}});
+		return viewToggler;
+	}
+
+	private HorizontalPanel buildSearchForm() {
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
-		mainPanel.add(horizontalPanel);
 		horizontalPanel.setSize("750px", "317px");
 
 		VerticalPanel filterPanel = new VerticalPanel();
@@ -128,22 +169,15 @@ public class SearchWidget extends Composite implements ClickHandler,
 		horizontalPanel_3.setCellVerticalAlignment(rbtnMentee,
 				HasVerticalAlignment.ALIGN_MIDDLE);
 
-		verticalPanel_2.add(results);
-		verticalPanel_2.setCellVerticalAlignment(results,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-
 		HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
 		verticalPanel_2.add(horizontalPanel_2);
 		verticalPanel_2.setCellHorizontalAlignment(horizontalPanel_2,
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel_2.setSize("57px", "29px");
-
-		mapUI = new MapUI(true, location);
-		mapUI.setWidth("600px");
-		mainPanel.add(mapUI);
-		locationData = mapUI.getLocationDetails();
+		
+		return horizontalPanel;
 	}
-
+	
 	@Override
 	public void onClick(ClickEvent event) {
 
@@ -191,18 +225,18 @@ public class SearchWidget extends Composite implements ClickHandler,
 					});
 
 		} else if (event.getSource() == rbtnMentor) {
-			results.setResults(sResponse.getHas());
+			searchResultsWidget.setResults(sResponse.getHas());
 		} else if (event.getSource() == rbtnMentee) {
-			results.setResults(sResponse.getNeed());
+			searchResultsWidget.setResults(sResponse.getNeed());
 		} else {
-			results.setResults(sResponse.getAllResults());
+			searchResultsWidget.setResults(sResponse.getAllResults());
 		}
 	}
 
 	@SuppressWarnings("deprecation")
 	protected void showSearchResults(SearchResponse response) {
 		List<ParticipantVO> pList = new ArrayList<ParticipantVO>();
-		results.setResults(response.getAllResults());
+		searchResultsWidget.setResults(response.getAllResults());
 
 		for (SearchResult p : response.getHas()) {
 			pList.add(p.getP());
