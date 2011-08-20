@@ -1,3 +1,4 @@
+
 package com.bugyal.imentor.frontend.client;
 
 import com.google.gwt.core.client.EntryPoint;
@@ -21,12 +22,56 @@ public class IMentor implements EntryPoint {
 	public static final boolean TEST_MODE_FLAG = true;
 
 	public void onModuleLoad() {
-		MainPageWidget mainPage = new MainPageWidget();
-		RootPanel.get("head").add(new HeaderWidget(mainPage));
-		RootPanel.get("middle").add(mainPage);
+		
+		
+		setShowTrigger(this);
+		setShowTrigger2(this);
+		
 		if (TEST_MODE_FLAG) {
 		    includeForTest();
 		}
+	}
+	
+	public void loadApp(){
+		Window.alert("Done...");
+		
+		UserDetails userDetails = new UserDetails();
+		userDetails.setName(RootPanel.get("name").getElement().getInnerHTML());
+		userDetails.setEmail(RootPanel.get("email").getElement().getInnerHTML());
+		
+		Window.alert(userDetails.getName());
+		Window.alert(userDetails.getEmail());
+		
+		
+		MainPageWidget mainPage = new MainPageWidget();
+		RootPanel.get("head").add(new HeaderWidget(mainPage, userDetails));
+		RootPanel.get("middle").add(mainPage);
+	}
+	
+	public native void setShowTrigger(IMentor x)/*-{
+
+	$wnd.showIMentorApp = function () {
+
+	x.@com.bugyal.imentor.frontend.client.IMentor::loadApp()();
+
+	};
+
+	}-*/;
+	
+	
+	public native void setShowTrigger2(IMentor x)/*-{
+
+	$wnd.showIMentorApp2 = function () {
+
+	x.@com.bugyal.imentor.frontend.client.IMentor::logout()();
+
+	};
+
+	}-*/;
+	
+	
+	public void logout(){
+		RootPanel.get("middle").clear();
 	}
 
 	private void includeForTest() {

@@ -14,7 +14,7 @@ public class HeaderWidget extends Composite {
 	
 	private MainPageWidget mainPage = null;
 	
-	public HeaderWidget(MainPageWidget mainPage) {
+	public HeaderWidget(MainPageWidget mainPage, UserDetails userDetails) {
 		this.mainPage = mainPage;
 		
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
