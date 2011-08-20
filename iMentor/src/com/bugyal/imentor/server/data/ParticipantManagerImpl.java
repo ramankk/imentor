@@ -72,22 +72,22 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	}
 
 	@Override
-	public Participant createParticipant(String name, Location location,
+	public Participant createParticipant(String name, String gender, Location location,
 			String email) throws MentorException {
 		Participant e = findParticipantByEmail(email);
 		if (e != null) {
 			throw new MentorException("Participant with email " + email
 					+ " already exists.");
 		}
-		Participant i = new Participant(name, location, email);
+		Participant i = new Participant(name, gender, location, email);
 		save(i);
 		return i;
 	}
 
 	@Override
-	public Participant createParticipant(String name, Location location,
+	public Participant createParticipant(String name, String gender, Location location,
 			Participant creator) {
-		Participant i = new Participant(name, location, creator.getKey());
+		Participant i = new Participant(name, gender, location, creator.getKey());
 		save(i);
 		return i;
 	}
@@ -217,7 +217,6 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		return n;
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public List<Participant> searchParticipantsBySubject(String subject,
 			Location l, boolean has) {

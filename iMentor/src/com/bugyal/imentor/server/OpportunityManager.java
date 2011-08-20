@@ -9,10 +9,6 @@ import com.google.appengine.api.datastore.Key;
 
 public interface OpportunityManager {
 
-	public Opportunity createOpportunity(Location location,
-			List<String> subjects, int requiredMentors,
-			List<Participant> contacts, int priority);
-
 	// searches active oppurtunities.
 	public List<Opportunity> searchOpportunities(Location location,
 			List<String> subjects);
@@ -28,4 +24,12 @@ public interface OpportunityManager {
 	long deleteOpportunities();
 
 	public List<Opportunity> searchOpportunitiesByKey(Key key);
+
+	public Opportunity createOpportunity(Location location, List<String> subjects,
+			int requiredMentors, List<Participant> contacts,
+			int priority, String message, Participant savedBy);
+
+	public Opportunity findById(Key key);
+
+	void update(Opportunity opportunity, Participant savedBy);
 }

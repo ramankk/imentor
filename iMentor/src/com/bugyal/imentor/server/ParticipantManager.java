@@ -20,10 +20,10 @@ public interface ParticipantManager {
 	 * @throws MentorException
 	 *             if a participant already exists with same email.
 	 */
-	Participant createParticipant(String name, Location location, String email)
+	Participant createParticipant(String name, String gender, Location location, String email)
 			throws MentorException;
 
-	Participant createParticipant(String name, Location location,
+	Participant createParticipant(String name, String gender, Location location,
 			Participant creator) throws MentorException;
 
 	Participant findParticipantByEmail(String email) throws MentorException;

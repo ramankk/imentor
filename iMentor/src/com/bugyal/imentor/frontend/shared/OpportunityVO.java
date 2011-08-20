@@ -6,6 +6,10 @@ import java.util.List;
 
 public class OpportunityVO implements Serializable {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Long id;
 	private List<String> subjects;
 	private int requiredMentors;
@@ -14,6 +18,7 @@ public class OpportunityVO implements Serializable {
 	private double longitude;
 	private int radius;
 	private String locString;
+	private String message;
 	
 	// Required by GWT.
 	public OpportunityVO() {
@@ -22,7 +27,7 @@ public class OpportunityVO implements Serializable {
 	
 	public OpportunityVO(Long id, List<String> subjects, int requiredMentors,
 			int priority, double latitude, double longitude, int radius,
-			String locString) {
+			String locString, String message) {
 		super();
 		this.id = id;
 		
@@ -37,6 +42,7 @@ public class OpportunityVO implements Serializable {
 		this.longitude = longitude;
 		this.radius = radius;
 		this.locString = locString;
+		this.message = message;
 	}
 
 	public Long getId() {
@@ -106,7 +112,29 @@ public class OpportunityVO implements Serializable {
 	// This method trims ParticipantVO object to bare minimum information required in SearchResult.
 	// If you need the following cleared information, fix it !!
 	public void trim() {
-		this.subjects.clear();
+		//this.subjects.clear();
 		//this.locString = null;
+	}
+	
+	public String getSubjectsAsString() {
+		StringBuilder subs = new StringBuilder();
+		boolean first = true;
+		for (String subject : getSubjects()) {
+			if (first) {
+				first = false;
+			} else {
+				subs.append(", ");
+			}
+			subs.append(subject);
+		}
+		return subs.toString();
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getMessage() {
+		return message;
 	}
 }

@@ -74,7 +74,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		try {
 			ParticipantManager participantManager = MentorManager.INSTANCE.getParticipantManager();
 			pi = participantManager
-					.createParticipant(p.getName(), location, p.getEmail());
+					.createParticipant(p.getName(), p.getGender(), location, p.getEmail());
 			for (String subject : p.getNeedSubjects()) {
 			  participantManager.addNeedKnowledge(pi, subject, 1, pi);
 			} 
@@ -114,9 +114,26 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		pi.setLocation(location);
 		MentorManager.INSTANCE.getParticipantManager().save(pi);
 	}
+	
+	private void save(Opportunity oi, OpportunityVO o, String emailId) throws MentorException {
+		Location location = new Location(o.getLatitude(), o.getLongitude(),
+				o.getLocString(), o.getRadius());
+		oi.setLocation(location);		
+		Participant savedBy = MentorManager.INSTANCE.getParticipantManager().findParticipantByEmail(emailId);
+		
+		if(o.getSubjects() != null) {
+			oi.resetSubjects(o.getSubjects(), savedBy);	
+		}
+		
+		oi.setPriority(o.getPriority(), savedBy);
+		oi.setActive(true, savedBy);
+		oi.setRequiredParticipants(o.getRequiredMentors(), savedBy);
+ 		MentorManager.INSTANCE.getOpportunityManager().update(oi, savedBy);
+	}
 
 	@Override
-	public OpportunityVO createOpportunity(OpportunityVO o) throws MeException {
+	
+	public OpportunityVO createOpportunity(String emailId, OpportunityVO o) throws MeException {
 		if (o.getId() != null) {
 			throw new MeException("Cannot create already created participant");
 		}
@@ -124,11 +141,23 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		Location location = new Location(o.getLatitude(), o.getLongitude(), o
 				.getLocString(), o.getRadius());
 		Opportunity oi = null;
-
+		List<Participant> contacts = new ArrayList<Participant>();
+		
+		Participant participant=null;
+		try {
+			participant = getParticipant(emailId);
+			if (participant != null) {
+			  contacts.add(participant);
+			}
+		} catch (MentorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+		
 		// TODO(raman): Understand why MentorException is not getting thrown.
 		OpportunityManager om = MentorManager.INSTANCE.getOpportunityManager();
 		oi = om.createOpportunity(location, o.getSubjects(), o
-				.getRequiredMentors(), null, o.getPriority());
+				.getRequiredMentors(), contacts, o.getPriority(), o.getMessage(), participant);
 
 		if (oi != null) {
 			return ValueObjectGenerator.create(oi);
@@ -161,8 +190,25 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public OpportunityVO updateOpportunity(OpportunityVO o) throws MeException {
-		throw new MeException("Unimplemented !! - fix me");
+	public OpportunityVO updateOpportunity(OpportunityVO o, String emailId) throws MeException {
+		if (o.getId() == null) {
+			throw new MeException("New opportunity, cannot update.");
+		}
+
+		Opportunity oi = null;
+		Key key = KeyFactory.createKey(Opportunity.class.getSimpleName(), o.getId());
+
+		try {
+			oi = MentorManager.INSTANCE.getOpportunityManager().findById(key);
+			save(oi, o, emailId);
+		} catch (MentorException m) {
+			throw new MeException(m.getMessage());
+		}
+		if (oi != null) {
+			return ValueObjectGenerator.create(oi);
+		} else {
+			return null;
+		}
 	}
 
 	@Override
@@ -324,14 +370,14 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public List<OpportunityVO> getOpportunitiesById(String emailId) {
 		Participant p = null;
-		try{
+		try {
 			p = getParticipant(emailId);
 			OpportunityManager om = MentorManager.INSTANCE.getOpportunityManager();
 			return ValueObjectGenerator.createOpportunityVOs(om.searchOpportunitiesByKey(p.getKey()));
-		}catch(MentorException e) {
+		} catch(MentorException e) {
 			e.printStackTrace();
 		}
-		
 		return null;
-	}	
+	}
+	
 }

@@ -6,8 +6,13 @@ import java.util.List;
 
 public class ParticipantVO implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private Long id;
 	private String name;
+	private String gender;
 	private String email;
 	private double latitude;
 	private double longitude;
@@ -21,11 +26,12 @@ public class ParticipantVO implements Serializable {
 		
 	}
 	
-	public ParticipantVO(Long id, String name, String email, double latitude,
+	public ParticipantVO(Long id, String name, String gender, String email, double latitude,
 			double longitude, String locString, int radius, List<String> has, List<String> need) {
 		super();
 		this.id = id;
 		this.name = name;
+		this.gender = gender;
 		this.email = email;
 		this.latitude = latitude;
 		this.longitude = longitude;
@@ -120,10 +126,18 @@ public class ParticipantVO implements Serializable {
 	// This method trims ParticipantVO object to bare minimum information required in SearchResult.
 	// If you need the following cleared information, fix it !!
 	public void trim() {
-		this.needSubjects.clear();
+		/*this.needSubjects.clear();
 		this.hasSubjects.clear();
 		this.locationString = null;
-		this.email=null;
+		this.email=null;*/
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getGender() {
+		return gender;
 	}
 	
 }

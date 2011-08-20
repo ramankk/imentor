@@ -1,8 +1,11 @@
 package com.bugyal.imentor.server.data;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
+
 import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import org.junit.After;
 import org.junit.Before;
@@ -11,8 +14,6 @@ import org.junit.Test;
 import com.bugyal.imentor.MentorException;
 import com.google.appengine.tools.development.testing.LocalDatastoreServiceTestConfig;
 import com.google.appengine.tools.development.testing.LocalServiceTestHelper;
-
-import static org.junit.Assert.*;
 
 public class ParticipantManagerImplTest {
 
@@ -32,11 +33,11 @@ public class ParticipantManagerImplTest {
 	public void testSaveAndSearch() throws Exception {
 		ParticipantManagerImpl pmi = new ParticipantManagerImpl();
 		
-		Participant p = pmi.createParticipant("Raman", dummyLoc1, "raman@gmail.com");
+		Participant p = pmi.createParticipant("Raman", "male", dummyLoc1, "raman@gmail.com");
 		p.addInterest("interest1");
 		pmi.save(p);
 		
-		Participant pd = pmi.createParticipant("Kumar", dummyLoc1, p);
+		Participant pd = pmi.createParticipant("Kumar", "male", dummyLoc1, p);
 		pd.addInterest("interest1");
 		pmi.save(pd);
 		
@@ -53,9 +54,9 @@ public class ParticipantManagerImplTest {
 	public void testMultipleParticipantsWithSameEmail() throws Exception {
 		ParticipantManagerImpl pmi = new ParticipantManagerImpl();
 		
-		pmi.createParticipant("Raman", dummyLoc1, "raman@gmail.com");
+		pmi.createParticipant("Raman", "male", dummyLoc1, "raman@gmail.com");
 		try {
-			pmi.createParticipant("Kumar", dummyLoc1, "raman@gmail.com");
+			pmi.createParticipant("Kumar", "male", dummyLoc1, "raman@gmail.com");
 			fail();
 		} catch (MentorException me) {
 			assertEquals("Participant with email raman@gmail.com already exists." , me.getMessage());
@@ -66,10 +67,10 @@ public class ParticipantManagerImplTest {
 	public void testMentorsMentees() throws Exception {
 		ParticipantManagerImpl pmi = new ParticipantManagerImpl();
 		
-		Participant p = pmi.createParticipant("Raman", dummyLoc1, "raman@bugyal.com");
-		Participant p2 = pmi.createParticipant("Kumar", dummyLoc1, "kumar@bugyal.com");
+		Participant p = pmi.createParticipant("Raman", "male", dummyLoc1, "raman@bugyal.com");
+		Participant p2 = pmi.createParticipant("Kumar", "male", dummyLoc1, "kumar@bugyal.com");
 		
-		Participant m1 = pmi.createParticipant("mentee1", dummyLoc1, p2);
+		Participant m1 = pmi.createParticipant("mentee1", "male", dummyLoc1, p2);
 		pmi.addMentor(m1, p);
 		
 		List<Participant> mList = pmi.getMentors(m1);
@@ -85,9 +86,9 @@ public class ParticipantManagerImplTest {
 	public void testKnowledgeQueries() throws Exception {
 		ParticipantManagerImpl pmi = new ParticipantManagerImpl();
 		
-		Participant p = pmi.createParticipant("Raman", dummyLoc1, "raman@bugyal.com");
-		Participant p2 = pmi.createParticipant("Kumar", dummyLoc1, "kumar@bugyal.com");
-		Participant p3 = pmi.createParticipant("Sridhar", dummyLoc2, "s@bugyal.com");
+		Participant p = pmi.createParticipant("Raman", "male", dummyLoc1, "raman@bugyal.com");
+		Participant p2 = pmi.createParticipant("Kumar", "male", dummyLoc1, "kumar@bugyal.com");
+		Participant p3 = pmi.createParticipant("Sridhar", "male", dummyLoc2, "s@bugyal.com");
 		
 		printCells(p);
 		printCells(p2);
@@ -146,7 +147,6 @@ public class ParticipantManagerImplTest {
 
 	private final Location dummyLoc1 = new Location(17.442945, 78.353333, "Laxmi Enclace, Gachibowli, hyderabad", 10);
 	private final Location dummyLoc2 = new Location(17.442745, 78.353433, "Somewhere else, Gachibowli, hyderabad", 10);
-	private final Location dummyLoc3 = new Location(17.443945, 78.353533, "not Gachibowli, hyderabad", 10);
 	
 }
 

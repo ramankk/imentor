@@ -2,6 +2,7 @@ package com.bugyal.imentor.frontend.client;
 
 import java.util.List;
 
+import com.bugyal.imentor.MentorException;
 import com.bugyal.imentor.frontend.shared.MeException;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
@@ -16,10 +17,10 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface MentorService extends RemoteService {
 	
 	ParticipantVO create(ParticipantVO p) throws MeException;
-	OpportunityVO createOpportunity(OpportunityVO o) throws MeException;
+	OpportunityVO createOpportunity(String emailId, OpportunityVO o) throws MeException;
 	
 	ParticipantVO update(ParticipantVO p) throws MeException;
-	OpportunityVO updateOpportunity(OpportunityVO o) throws MeException;
+	OpportunityVO updateOpportunity(OpportunityVO o, String emailId) throws MeException;
 	
 	SearchResponse feedToMe(String emailId) throws MeException;
 	

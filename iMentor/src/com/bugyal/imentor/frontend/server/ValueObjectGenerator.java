@@ -13,7 +13,7 @@ public class ValueObjectGenerator {
 	public static ParticipantVO create(Participant p) {
 		// TODO(raman): Dont send all of datastore key.
 		// TODO(raman): also add need-subjects.
-		return new ParticipantVO(p.getKey().getId(), p.getName(), p.getEmail(), p
+		return new ParticipantVO(p.getKey().getId(), p.getName(), p.getGender(), p.getEmail(), p
 				.getLoc().getLatitude(), p.getLoc().getLongitude(), p.getLoc()
 				.getLocationString(), p.getLoc().getActiveRadius(), p
 				.getHasSubjects(), p.getNeedSubjects());
@@ -25,7 +25,7 @@ public class ValueObjectGenerator {
 		// TODO(sudhakar): Add support for saying active vs. passive opportunity.
 		return new OpportunityVO(o.getKey().getId(), o.getSubjects(), o
 				.getRequiredMentors(), o.getPriority(), o.getLoc().getLatitude(),
-				o.getLoc().getLongitude(), o.getLoc().getActiveRadius(), o.getLoc().getLocationString());
+				o.getLoc().getLongitude(), o.getLoc().getActiveRadius(), o.getLoc().getLocationString(), o.getMessage());
 	}
 	
 	public static List<ParticipantVO> createParticipantVOs(

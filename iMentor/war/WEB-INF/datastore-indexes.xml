@@ -14,4 +14,9 @@
         <property name="subjects" direction="asc" />
         <property name="lastModifiedTime" direction="asc"/>
     </datastore-index>
+    
+    <datastore-index kind="Opportunity$ChangeInfo" ancestor="true" source="manual">
+        <property name="changeInfo_INTEGER_IDX" direction="asc"/>
+    </datastore-index>
+    
 </datastore-indexes>

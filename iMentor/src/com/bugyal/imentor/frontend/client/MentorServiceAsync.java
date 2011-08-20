@@ -14,12 +14,9 @@ public interface MentorServiceAsync {
 
 	void create(ParticipantVO p, AsyncCallback<ParticipantVO> callback);
 
-	void createOpportunity(OpportunityVO o,
-			AsyncCallback<OpportunityVO> callback);
-
 	void update(ParticipantVO p, AsyncCallback<ParticipantVO> callback);
 
-	void updateOpportunity(OpportunityVO o,
+	void updateOpportunity(OpportunityVO o, String emailId,
 			AsyncCallback<OpportunityVO> callback);
 	
 	void getSubjects(AsyncCallback<List<String>> callback);
@@ -37,6 +34,9 @@ public interface MentorServiceAsync {
 	void deleteRecords(AsyncCallback<Long> asyncCallback);
 
 	void getOpportunitiesById(String emailId,
-			AsyncCallback<List<OpportunityVO>> callback);	
+			AsyncCallback<List<OpportunityVO>> callback);
+
+	void createOpportunity(String emailId, OpportunityVO o,
+			AsyncCallback<OpportunityVO> callback);	
 
 }

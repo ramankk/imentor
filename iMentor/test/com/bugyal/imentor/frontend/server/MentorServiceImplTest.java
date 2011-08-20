@@ -38,7 +38,7 @@ public class MentorServiceImplTest {
 		subjects.add("CS");
 		subjects.add("Math");
 
-		ParticipantVO pvo = msi.create(new ParticipantVO(null, "raman", "12903138",
+		ParticipantVO pvo = msi.create(new ParticipantVO(null, "raman", "male", "12903138",
 				TestLocations.GACHIBOWLI.getLatitude(),
 				TestLocations.GACHIBOWLI.getLongitude(),
 				TestLocations.GACHIBOWLI.getLocationString(), 
@@ -47,11 +47,12 @@ public class MentorServiceImplTest {
 		assertNotNull(pvo.getId());
 		assertTrue(pvo.getId() > 0);
 		
-		msi.createOpportunity(new OpportunityVO(null, subjects, 2, 6, TestLocations.GACHIBOWLI.getLatitude(),
+		msi.createOpportunity("", new OpportunityVO(null, subjects, 2, 6, TestLocations.GACHIBOWLI.getLatitude(),
 				TestLocations.GACHIBOWLI.getLongitude(), 10,
-				TestLocations.GACHIBOWLI.getLocationString()));
+				TestLocations.GACHIBOWLI.getLocationString(), "message"));
 		
 		List<OpportunityVO> opportunities = msi.find(subjects, pvo);
+		assertNotNull(opportunities);
 		
 		assertEquals(1, opportunities.size());
 		assertEquals(6, opportunities.get(0).getPriority());

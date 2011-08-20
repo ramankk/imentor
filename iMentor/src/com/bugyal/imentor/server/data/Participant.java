@@ -43,6 +43,9 @@ public class Participant implements LocationCapable {
 	private String qualification;
 	
 	@Persistent
+	private String gender;
+	
+	@Persistent
 	private Date dateOfBirth;
 	
 	@Persistent(serialized = "true")
@@ -102,6 +105,10 @@ public class Participant implements LocationCapable {
 	@PersistenceCapable
 	public static class Note implements Serializable {
 		
+		@PrimaryKey
+	    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	    private Key key;
+
 		@Persistent
 		private boolean isPublic = true;
 		
@@ -162,6 +169,15 @@ public class Participant implements LocationCapable {
 	@PersistenceCapable
 	public static class Knowledge implements Serializable {
 		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		
+		@PrimaryKey
+	    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	    private Key key;
+
 		@Persistent
 		private boolean has; // true: if has, false if needed.
 		
@@ -450,16 +466,17 @@ public class Participant implements LocationCapable {
 		this.lastModifiedTime = System.currentTimeMillis();
 	}
 	
-	Participant(String name, Location location, String email) {
+	Participant(String name, String gender, Location location, String email) {
 		this.name = name;
 		this.email = email;
 		this.isNotOnline = false;
 		this.creator = null;
-		setLocation(location);
+		this.gender = gender;
+		setLocation(location);		
 		init();
 	}
 	
-	Participant(String name, Location location, Key creatorsKey) {
+	Participant(String name, String gender, Location location, Key creatorsKey) {
 		this.name = name;
 		this.email = null;
 		this.isNotOnline = true;
@@ -528,6 +545,14 @@ public class Participant implements LocationCapable {
 
 	public long getCreatedTime() {
 		return createdTime;
+	}
+
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getGender() {
+		return gender;
 	}
 	
 }
