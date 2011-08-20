@@ -314,10 +314,12 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	
 	@Override
 	public SearchResponse feedToMe(String emailId) throws MeException {
-		SearchResponse response = new SearchResponse();
+		SearchResponse response = null;
 		try {
 			Participant pi = pm.findParticipantByEmail(emailId);
-
+			if (pi == null) {
+				return new SearchResponse();
+			}
 			response = filterList(pi.getLocation().getLat(), pi.getLocation()
 					.getLon(), pi.getLoc().getLocationString(), pi.getLoc()
 					.getActiveRadius(), pi.getHasSubjects(), pi
@@ -335,12 +337,12 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	public ParticipantVO getParticipantVOByEmailId(String emailId)
 			throws MeException {
 		try {
-			return ValueObjectGenerator.create(pm.findParticipantByEmail(emailId));
+			Participant participant = pm.findParticipantByEmail(emailId);
+			return ValueObjectGenerator.create(participant);
 		} catch (MentorException e) {
 			e.printStackTrace();
 		}
 		return null;
-
 	}
 	
 	@Override
@@ -351,6 +353,9 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			List<SearchResult> need = new ArrayList<SearchResult>();
 
 			Participant pi = pm.findParticipantByEmail(emailId);
+			if (pi == null) {
+				return response;
+			}
 			Location location = new Location(pi.getLocation().getLat(), pi
 					.getLocation().getLon(), pi.getLoc().getLocationString(),
 					pi.getLoc().getActiveRadius());
@@ -380,7 +385,11 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		Participant p = null;
 		try {
 			p = pm.findParticipantByEmail(emailId);
-			return ValueObjectGenerator.createOpportunityVOs(om.searchOpportunitiesByKey(p.getKey()));
+			if (p == null) {
+				return new ArrayList<OpportunityVO>();
+			}
+			List<Opportunity> opportunities = om.searchOpportunitiesByKey(p.getKey());
+			return ValueObjectGenerator.createOpportunityVOs(opportunities);
 		} catch(MentorException e) {
 			e.printStackTrace();
 		}
