@@ -14,10 +14,10 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class MyOpportunitiesWidget extends Composite {
-	OpportunityDialogBox parent;
+	OpportunityPanel parent;
 	VerticalPanel scroller= new VerticalPanel();
 	
-	public MyOpportunitiesWidget(OpportunityDialogBox opportunityDialogBox) {
+	public MyOpportunitiesWidget(OpportunityPanel opportunityDialogBox) {
 		parent = opportunityDialogBox;
 		
 		HorizontalPanel hp = new HorizontalPanel();
@@ -36,7 +36,7 @@ public class MyOpportunitiesWidget extends Composite {
 		VerticalPanel vp = new VerticalPanel();
 
 		public SingleOpportunityResult(final OpportunityVO o,
-				final OpportunityDialogBox parent) {
+				final OpportunityPanel parent) {
 			HorizontalPanel panel = new HorizontalPanel();
 			Label lhead = new Label("Created On : "); // +opp.getLastModifiedTime());
 			Button edit = new Button("Edit");

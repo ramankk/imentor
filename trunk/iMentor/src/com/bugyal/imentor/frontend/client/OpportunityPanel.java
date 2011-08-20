@@ -9,14 +9,14 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class OpportunityDialogBox extends DialogBox implements ClickHandler {
+public class OpportunityPanel extends Composite implements ClickHandler {
 	private final SubjectsSuggestWidget subWidget = new SubjectsSuggestWidget();
 
 	private final TextArea txtMessage = new TextArea();;
@@ -28,11 +28,11 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 	private static MapUI mapUI;
 	private MentorServiceAsync service;
 
-	private Button btnCreate, btnCancel, btnClear;
+	private Button btnCreate, btnClear;
 	private LocationData lData = new LocationData();
-	private String emailId;
 
 	private MyOpportunitiesWidget myOppWidget;
+	private MainPageWidget mainPage;
 
 	private final AsyncCallback<List<String>> getSubjectsCallback = new AsyncCallback<List<String>>() {
 
@@ -60,21 +60,20 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 		}
 	};
 
-	public OpportunityDialogBox() {
+	public OpportunityPanel(MainPageWidget mainPage) {
+		this.mainPage = mainPage;
+
 		myOppWidget = new MyOpportunitiesWidget(this);
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
-		setSize("400px", "608px");
-		setHTML("Opportunity");
-		emailId = "sridhar@kawa";
 
 		// TODO(raman,sridhar): Get Subjects only once per browser and resuse
 		// it.. dont let every
 		// widget fetch its own list of subjects.
 		service.getSubjects(getSubjectsCallback);
-		service.getOpportunitiesById(emailId, getOpportuniesCallback);
+		service.getOpportunitiesById(mainPage.getUserDetails().getEmail(),
+				getOpportuniesCallback);
 
-		setWidget(horizontalPanel);
 		horizontalPanel.setSize("750px", "558px");
 
 		VerticalPanel verticalPanel = new VerticalPanel();
@@ -104,13 +103,9 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 		btnCreate = new Button("Save");
 		btnCreate.addClickHandler(this);
 
-		btnCancel = new Button("Cancel");
-		btnCancel.addClickHandler(this);
-
 		HorizontalPanel hp = new HorizontalPanel();
 		hp.add(btnClear);
 		hp.add(btnCreate);
-		hp.add(btnCancel);
 		verticalPanel.add(hp);
 
 		stackPanel.add(verticalPanel, "Set Opportunity");
@@ -119,6 +114,8 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 		mapUI = new MapUI(false, tbLocation);
 		mapUI.setWidth("500px");
 		horizontalPanel.add(mapUI);
+
+		initWidget(horizontalPanel);
 	}
 
 	private void addMyOpportunities(List<OpportunityVO> myOpportunities) {
@@ -161,7 +158,8 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 
 				if (id == null) {
 					// Create mode.
-					service.createOpportunity(emailId, oppVO,
+					service.createOpportunity(mainPage.getUserDetails()
+							.getEmail(), oppVO,
 							new AsyncCallback<OpportunityVO>() {
 
 								@Override
@@ -173,39 +171,34 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 								@Override
 								public void onSuccess(OpportunityVO result) {
 									clearOpportunity();
-									hideOpportunityDialogBox();
-									service.getOpportunitiesById(emailId,
+									service.getOpportunitiesById(mainPage
+											.getUserDetails().getEmail(),
 											getOpportuniesCallback);
 								}
 
 							});
 				} else {
 					// edit mode.
-					service.updateOpportunity(oppVO, emailId,
-							new AsyncCallback<OpportunityVO>() {
+					service.updateOpportunity(oppVO, mainPage.getUserDetails()
+							.getEmail(), new AsyncCallback<OpportunityVO>() {
 
-								@Override
-								public void onFailure(Throwable caught) {
-									Window.alert("Sorry, Unble to Create the Opportunity "
-											+ caught.getMessage());
-								}
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert("Sorry, Unble to Create the Opportunity "
+									+ caught.getMessage());
+						}
 
-								@Override
-								public void onSuccess(OpportunityVO result) {
-									clearOpportunity();
-									hideOpportunityDialogBox();
-									service.getOpportunitiesById(emailId,
-											getOpportuniesCallback);
-								}
-							});
+						@Override
+						public void onSuccess(OpportunityVO result) {
+							clearOpportunity();
+							service.getOpportunitiesById(mainPage
+									.getUserDetails().getEmail(),
+									getOpportuniesCallback);
+						}
+					});
 				}
 
 			}
-		}
-
-		if (event.getSource() == btnCancel) {
-			clearOpportunity();
-			hideOpportunityDialogBox();
 		}
 
 		if (event.getSource() == btnClear) {
@@ -219,10 +212,6 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 		tbLocation.setText("Please, Use the Map");
 		txtMessage.setText("");
 		showingOpportunity = null;
-	}
-
-	protected void hideOpportunityDialogBox() {
-		this.hide();
 	}
 
 	public void showOnMap(OpportunityVO o) {

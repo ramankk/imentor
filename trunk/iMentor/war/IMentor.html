@@ -22,48 +22,35 @@
 	<div id="fb-root"></div>
 	<script src="http://connect.facebook.net/en_US/all.js"></script>
 	<script>
-              window.fbAsyncInit = function() {
-    FB.init({
-            appId: '139577986094709',
-            status: true,
-            cookie: true,
-            xfbml: true,
-            });
-                         
-                         
-          FB.getLoginStatus(function(response) {
-            alert('getLoginStatus: ');
-                  
- 				if(response.status == 'connected')
+		window.fbAsyncInit = function() {
+			FB.init({
+				appId : '139577986094709',
+				status : true,
+				cookie : true,
+				xfbml : true,
+			});
+
+			FB.getLoginStatus(function(response) {
+				if (response.status == 'connected') {
+					var userId = response.session.uid;
+					FB.api(
 					{
-  				 var userId = response.session.uid;
-  				FB.api(
-  					{
-    			method: 'fql.query',
-    			query: 'SELECT name,sex,email FROM user WHERE uid=' + userId
-  					},
-  					function(response) {
-    				document.getElementById("name").innerHTML=response[0].name;
-    				document.getElementById("email").innerHTML=response[0].email;
-    				showIMentorApp();
-  					});
-				}
-				else
-				{
+						method : 'fql.query',
+						query : 'SELECT name,sex,email FROM user WHERE uid='
+								+ userId
+					},
+					function(response) {
+						document.getElementById("name").innerHTML = response[0].name;
+						document
+								.getElementById("email").innerHTML = response[0].email;
+						showIMentorApp();
+					});
+				} else {
 					alert('not login');
- 				}
-          });
-                                                
-                };
-                
-              
-             FB.Event.subscribe('auth.statusChange', function(response) {
-  				alert('The status of the session is: ' + response.status);
-			}); 
-                
-                       
-                         
-    </script>  
+				}
+			});
+		};
+	</script>  
     <div class="main">
     	<div id="test"></div>
 		<div class="top">
