@@ -328,6 +328,10 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		Participant p = null;
 		try {
 			p = pm.getObjectById(Participant.class, key);
+			
+			// Magic to load knowledge and notes.
+			p.getHas();
+			p.getNotes();
 		} finally {
 			pm.close();
 		}
