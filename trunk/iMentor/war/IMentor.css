@@ -82,21 +82,27 @@ h1 {
 	padding: 10px; 
 	width: 760px; 
 	border:1px solid #ccc; 
-	border-color: #C1E897;
+	border-color: #2B547E;
 	border-width: 0 1px 1px 1px 1px; 
 	margin:0 auto;	
 }
 
 .top {
-	background: url(images/Untitled-1.jpg) repeat;
+	background: url(images/head1.jpg);
 	width:760px;
-	height:90px;
+	height:100px;
+}
+
+.bar {
+	background: url(images/fade.jpg);
+	width:758px;
+	height:20px;
 }
 
 .menu {
 	border: 1px solid #ccc;
 	border-width: 0 1px 1px 1px 1px; 
-	margin: 0 0 0 558px;	
+	margin: 0 0 0 457px;	
 }
 
 .tome {
@@ -123,46 +129,16 @@ h1 {
 }
 
 .bottom {
-	background-image: url(images/fade.jpg);
+	background-image: url(images/tail3.jpg);
 	width:760px;
 	height:100px;
 }
-	
-	
-	
-.gwt-MenuItem{
-	background-color: #C1E897;
-	color: black;
-	font-weight:bold;
-  	font-color: black;
-	border:   0px;
-	border-bottom-left-radius: 5px 5px;
-	
-}
-.menuBar{
-	border                      :   0px;
-    margin                      :   0 auto;
-   background-color            :   #C1E897;
-    color      			        :   #C1E897;
-    border:   0px;
-	border-bottom-left-radius: 5px 5px;
-    	
-}
-.menuBar table
-{
-    background-color            :   #C1E897;
-	border-bottom-left-radius: 5px 5px; 
-	border-color : #C1E897;
-}
-.menuBar .gwt-MenuItem-selected
-{
-    background-color            :   #C1E897;
-}
 
-.imenimg {
-	margin: -13px 0 0 0px;
+.bar {
+	background-image: url(images/fade.jpg); 
+    width: 760px;
+	height: 20px;
 }
-
 
 
 
