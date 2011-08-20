@@ -49,6 +49,10 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 
 					@Override
 					public void onSuccess(ParticipantVO result) {
+						if (result == null) {
+							Window.alert("No participant found");
+							return;
+						}
 						tbName.setText(result.getName());
 						tbEmailId.setText(result.getEmail());
 						tbLocation.setText(result.getLocationString());
