@@ -18,13 +18,13 @@ import com.google.appengine.api.datastore.Key;
 /**
  * Format:
  * 
- * - hasKnowledge, List<Subject, SkillLevel>
- * - needsKnowledge, List<Subject, SkillLevel>
+ * - hasKnowledge, List<Subject, SkillLevel> - needsKnowledge, List<Subject,
+ * SkillLevel>
  * 
- * - Name, Qualification, Location,  
+ * - Name, Qualification, Location,
  * 
  * @author raman (raman@bugyal.com)
- *
+ * 
  */
 @PersistenceCapable
 public class Participant implements LocationCapable {
@@ -32,92 +32,93 @@ public class Participant implements LocationCapable {
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Key key;
-	
+
 	@Persistent
 	private String name;
-	
+
 	@Persistent
 	private String email;
-	
+
 	@Persistent
 	private String qualification;
-	
+
 	@Persistent
 	private String gender;
-	
+
 	@Persistent
 	private Date dateOfBirth;
-	
+
 	@Persistent(serialized = "true")
 	private List<Knowledge> knowledge;
-	
+
 	@Persistent
 	private List<Key> mentors; // points to another participant
-	
+
 	@Persistent
 	private List<Key> mentees; // points to another participant
-	
+
 	@Persistent
 	private List<Key> coParticipants; // social-group of participants
-	
+
 	@Persistent
 	private boolean isNotesPublic = true;
-	
+
 	@Persistent
-	private boolean isNotOnline = false; // is true when participant has online presence and has email.
-	
-	@Persistent 
+	private boolean isNotOnline = false; // is true when participant has online
+											// presence and has email.
+
+	@Persistent
 	private Key creator; // key of the creator participant.
-	
+
 	@Persistent
 	private boolean isActive = true;
-	
+
 	@Persistent(serialized = "true")
 	private List<Note> notes;
-	
+
 	@Persistent
 	private List<String> interests; // TODO(understand the need)
-	
-	@Persistent 
+
+	@Persistent
 	private List<String> hasSubjects;
-	
+
 	@Persistent
 	private List<String> needSubjects;
-	
+
 	@Persistent
 	private double longitude;
-	
+
 	@Persistent
 	private double latitude;
-	
+
 	@Persistent
 	private int activeRadius;
-	
+
 	@Persistent
 	private String locationString;
-	
+
 	@Persistent
 	private long lastModifiedTime;
-	
+
 	@Persistent
 	private long createdTime;
-	
+
 	@PersistenceCapable
 	public static class Note implements Serializable {
-		
+
 		@PrimaryKey
-	    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	    private Key key;
+		@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+		private Key key;
 
 		@Persistent
 		private boolean isPublic = true;
-		
+
 		@Persistent
 		private Date date;
-		
+
 		@Persistent
 		private String note;
-		
+
 		@Persistent
 		private Key noter;
 
@@ -165,28 +166,28 @@ public class Participant implements LocationCapable {
 			this.isPublic = isPublic;
 		}
 	}
-	
+
 	@PersistenceCapable
 	public static class Knowledge implements Serializable {
-		
+
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = 1L;
-		
+
 		@PrimaryKey
-	    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-	    private Key key;
+		@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+		private Key key;
 
 		@Persistent
 		private boolean has; // true: if has, false if needed.
-		
+
 		@Persistent
 		private String subject;
-		
+
 		@Persistent
 		private int level;
-		
+
 		@Persistent
 		private Key suggestedBy; // participant who suggest this information.
 
@@ -218,7 +219,7 @@ public class Participant implements LocationCapable {
 		public boolean has() {
 			return has;
 		}
-		
+
 		public boolean needs() {
 			return !has;
 		}
@@ -296,7 +297,7 @@ public class Participant implements LocationCapable {
 		this.longitude = location.getLongitude();
 		this.locationString = location.getLocationString();
 		this.activeRadius = location.getActiveRadius();
-		
+
 		Point p = new Point(latitude, longitude);
 		this.geocells = MyGeocellManager.generateGeoCell(p);
 		for (String c : geocells) {
@@ -330,7 +331,7 @@ public class Participant implements LocationCapable {
 		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
-	
+
 	List<Knowledge> getHas() {
 		return filter(true);
 	}
@@ -344,13 +345,13 @@ public class Participant implements LocationCapable {
 		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
-	
+
 	Participant addMentor(Key mentor) {
 		this.mentors.add(mentor);
 		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
-	
+
 	Participant removeMentor(Key mentor) {
 		this.mentors.remove(mentor);
 		this.lastModifiedTime = System.currentTimeMillis();
@@ -366,13 +367,13 @@ public class Participant implements LocationCapable {
 		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
-	
+
 	Participant addMentee(Key mentee) {
 		this.mentees.add(mentee);
 		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
-	
+
 	Participant removeMentee(Key mentee) {
 		this.mentees.remove(mentee);
 		this.lastModifiedTime = System.currentTimeMillis();
@@ -419,23 +420,23 @@ public class Participant implements LocationCapable {
 		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
-	
+
 	public Participant addInterest(String interest) {
 		this.interests.add(interest);
 		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
-	
+
 	public Participant removeInterest(String interest) {
 		this.interests.remove(interest);
 		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
-	
+
 	public Key getKey() {
 		return key;
 	}
-	
+
 	boolean isActive() {
 		return isActive;
 	}
@@ -465,17 +466,17 @@ public class Participant implements LocationCapable {
 		this.createdTime = System.currentTimeMillis();
 		this.lastModifiedTime = System.currentTimeMillis();
 	}
-	
+
 	Participant(String name, String gender, Location location, String email) {
 		this.name = name;
 		this.email = email;
 		this.isNotOnline = false;
 		this.creator = null;
 		this.gender = gender;
-		setLocation(location);		
+		setLocation(location);
 		init();
 	}
-	
+
 	Participant(String name, String gender, Location location, Key creatorsKey) {
 		this.name = name;
 		this.email = null;
@@ -483,6 +484,11 @@ public class Participant implements LocationCapable {
 		this.creator = creatorsKey;
 		setLocation(location);
 		init();
+	}
+
+	public static Participant createParticipantForTest(String name,
+			Location location, String email) {
+		return new Participant(name, "f", location, email);
 	}
 
 	@Override
@@ -508,7 +514,7 @@ public class Participant implements LocationCapable {
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
 		return name + " " + key;
@@ -516,7 +522,7 @@ public class Participant implements LocationCapable {
 
 	@Persistent
 	private List<String> geocells;
-	
+
 	@Override
 	public List<String> getGeocells() {
 		return geocells;
@@ -526,9 +532,10 @@ public class Participant implements LocationCapable {
 	public String getKeyString() {
 		return key.toString();
 	}
-	
+
 	public Location getLoc() {
-		return new Location(this.latitude, this.longitude, this.locationString, this.activeRadius);
+		return new Location(this.latitude, this.longitude, this.locationString,
+				this.activeRadius);
 	}
 
 	public List<String> getHasSubjects() {
@@ -554,5 +561,5 @@ public class Participant implements LocationCapable {
 	public String getGender() {
 		return gender;
 	}
-	
+
 }

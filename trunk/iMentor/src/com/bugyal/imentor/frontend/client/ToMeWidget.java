@@ -20,18 +20,18 @@ public class ToMeWidget extends Composite {
 	SearchResponseWidget allResults;
 	SearchResponseWidget hasResults;
 	SearchResponseWidget needResults;
-	
+
 	TabPanel tabPanel;
 
 	// Constructor for ToMeWidget
-	public ToMeWidget(String EmailId) {
+	public ToMeWidget(String emailId) {
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 		allResults = new SearchResponseWidget();
 		hasResults = new SearchResponseWidget();
 		needResults = new SearchResponseWidget();
-		
+
 		FlowPanel flowpanel;
-		
+
 		tabPanel = new TabPanel();
 
 		flowpanel = new FlowPanel();
@@ -39,54 +39,55 @@ public class ToMeWidget extends Composite {
 		tabPanel.add(flowpanel, "All");
 
 		flowpanel = new FlowPanel();
-		flowpanel.add(needResults); 
+		flowpanel.add(needResults);
 		tabPanel.add(flowpanel, "Need");
 
 		flowpanel = new FlowPanel();
-		flowpanel.add(hasResults); 
+		flowpanel.add(hasResults);
 		tabPanel.add(flowpanel, "Has");
 
 		tabPanel.selectTab(0);
 
 		tabPanel.setSize("500px", "250px");
 		tabPanel.addStyleName("table-center");
-		
+
 		initWidget(tabPanel);
-		
-		// TODO(sridhar): Show it as loading... change the mouse icon to loading..  
+
 		showWaitCursor();
-		getDataFeeds(EmailId);
+		getDataFeeds(emailId);
 	}
 
 	// Method to Get data from DataStore
-	public void getDataFeeds(String EmailId) {
-		service.feedToMe(EmailId, new AsyncCallback<SearchResponse>() {
+	public void getDataFeeds(String emailId) {
+
+		service.feedToMe(emailId, new AsyncCallback<SearchResponse>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("unable to load");
+				Window.alert("unable to load" + caught.getMessage());
+				showDefaultCursor();
 			}
 
 			@Override
 			public void onSuccess(SearchResponse result) {
+
 				List<SearchResult> all = new ArrayList<SearchResult>();
-				all.addAll(result.getNeed());
-				all.addAll(result.getHas());
-				
+
+				all.addAll(result.getAllResults());
+
 				showDefaultCursor();
-				
+
 				allResults.setResults(all);
 				hasResults.setResults(result.getHas());
 				needResults.setResults(result.getNeed());
-				// change back the mouse icon to normal pointer.
 			}
 		});
 	}
-	
+
 	public static void showWaitCursor() {
-	    DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "wait");
+		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "wait");
 	}
-	 
+
 	public static void showDefaultCursor() {
-	    DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "default");
+		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "default");
 	}
 }

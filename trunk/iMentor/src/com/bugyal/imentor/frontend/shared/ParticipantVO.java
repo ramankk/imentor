@@ -5,11 +5,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ParticipantVO implements Serializable {
-	
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = -7785833027106467978L;
+	/**
+	 * 
+	 */
 	private Long id;
 	private String name;
 	private String gender;
@@ -20,14 +23,15 @@ public class ParticipantVO implements Serializable {
 	private List<String> hasSubjects;
 	private List<String> needSubjects;
 	private String locationString;
-	
+
 	// Required for GWT.
 	public ParticipantVO() {
-		
+
 	}
-	
+
 	public ParticipantVO(Long id, String name, String gender, String email, double latitude,
-			double longitude, String locString, int radius, List<String> has, List<String> need) {
+			double longitude, String locString, int radius, List<String> has,
+			List<String> need) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -37,12 +41,13 @@ public class ParticipantVO implements Serializable {
 		this.longitude = longitude;
 		this.setLocationString(locString);
 		this.radius = radius;
-		
-		// This is to convert org.datanucleus.sco.backend.ArrayList to simple java.util.ArrayList which
+
+		// This is to convert org.datanucleus.sco.backend.ArrayList to simple
+		// java.util.ArrayList which
 		// is serializable over wire to be used in the GWT world.
 		this.hasSubjects = new ArrayList<String>();
 		this.hasSubjects.addAll(has);
-		
+
 		this.needSubjects = new ArrayList<String>();
 		this.needSubjects.addAll(need);
 	}
@@ -123,7 +128,8 @@ public class ParticipantVO implements Serializable {
 		return "Participant " + id + ", name : " + name;
 	}
 
-	// This method trims ParticipantVO object to bare minimum information required in SearchResult.
+	// This method trims ParticipantVO object to bare minimum information
+	// required in SearchResult.
 	// If you need the following cleared information, fix it !!
 	public void trim() {
 		/*this.needSubjects.clear();
@@ -139,5 +145,5 @@ public class ParticipantVO implements Serializable {
 	public String getGender() {
 		return gender;
 	}
-	
+
 }

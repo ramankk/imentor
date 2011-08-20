@@ -34,7 +34,6 @@ public class IMentor implements EntryPoint {
 		
 		
 		button.addClickHandler(new ClickHandler() {
-
 			@Override
 			public void onClick(ClickEvent event) {
 				if (tw == null) {
@@ -46,8 +45,8 @@ public class IMentor implements EntryPoint {
 					tw.getDataFeeds(tb.getText());
 					la.getDataFeeds(tb.getText());
 				}
-				
 			}
+			
 		});
 		
 		btn.addClickHandler(new ClickHandler() {
@@ -101,4 +100,5 @@ public class IMentor implements EntryPoint {
 		RootPanel.get().add(hp1);
 		RootPanel.get().add(hp2);
 	}
+
 }

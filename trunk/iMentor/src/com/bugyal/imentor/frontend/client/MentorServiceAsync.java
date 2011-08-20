@@ -18,7 +18,7 @@ public interface MentorServiceAsync {
 
 	void updateOpportunity(OpportunityVO o, String emailId,
 			AsyncCallback<OpportunityVO> callback);
-	
+
 	void getSubjects(AsyncCallback<List<String>> callback);
 
 	void feedToMe(String emailId, AsyncCallback<SearchResponse> callback);
@@ -26,6 +26,16 @@ public interface MentorServiceAsync {
 	void filterList(double latitude, double longitude, String strlocation,
 			int radius, List<String> hasSubs, List<String> needSubs,
 			AsyncCallback<SearchResponse> callback);
+
+
+	void getParticipantVOByEmailId(String emailId,
+			AsyncCallback<ParticipantVO> callback);
+
+	void createSession(String emailId, AsyncCallback<Void> callback);
+
+	void validateSession(String emailId, AsyncCallback<Boolean> callback);
+
+	void deleteSession(String emailId, AsyncCallback<Boolean> callback);
 
 	void localActivity(String email, AsyncCallback<SearchResponse> asyncCallback);
 
@@ -38,5 +48,4 @@ public interface MentorServiceAsync {
 
 	void createOpportunity(String emailId, OpportunityVO o,
 			AsyncCallback<OpportunityVO> callback);	
-
 }

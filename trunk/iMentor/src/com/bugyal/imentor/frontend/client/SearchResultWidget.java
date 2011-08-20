@@ -22,14 +22,9 @@ public class SearchResultWidget extends Composite {
 		DOM.setStyleAttribute(hp.getElement(), "backgroundColor",
 				isEven ? colors[0] : colors[1]);
 
-		// Refer StyleSheet named "war/ToMeWidget.css"
-		name.addStyleName("myLabelCSS");
-		rel.addStyleName("myLabelCSS");
-		subjects.addStyleName("myLabelCSS");
-
 		hp.add(name);
-		hp.add(rel);
 		hp.add(subjects);
+		hp.add(rel);
 
 		initWidget(hp);
 	}
@@ -39,21 +34,19 @@ public class SearchResultWidget extends Composite {
 			name.setText(result.getP().getName());
 
 			if (result.isHas()) {
-				// TODO(Sridhar): Confirm the text before submitting..
 				rel.setText(" can help you in ");
 			} else {
 				rel.setText(" is looking for your help in ");
 			}
 		} else {
-			// TODO(Sridhar): Fix my format before submitting..
-			name.setText("Opportunity at " + result.getO().getLocString());
-			rel.setText(", looking for your help in ");
+			name.setText("Opportunity in ");
+			rel.setText("at "+result.getO().getLocString());
 		}
 		String subs = " ";
 		for (String str : result.getSubjects()) {
 			subs += str + ", ";
 		}
-		subjects.setText(subs);
+		subjects.setText(subs.substring(0, subs.length() - 2));
 	}
 
 	public void clear() {
