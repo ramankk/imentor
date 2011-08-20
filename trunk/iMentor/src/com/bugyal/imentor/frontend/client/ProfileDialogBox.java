@@ -74,6 +74,8 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 
 			@Override
 			public void onSuccess(List<String> result) {
+				subWidgetHas.selected.clearAll();
+				subWidgetNeed.selected.clearAll();
 				subWidgetHas.addMoreSubjects(result);
 				subWidgetNeed.addMoreSubjects(result);
 

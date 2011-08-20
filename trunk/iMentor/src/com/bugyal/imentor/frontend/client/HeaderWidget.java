@@ -10,7 +10,7 @@ import com.google.gwt.user.client.ui.MenuItemSeparator;
 
 public class HeaderWidget extends Composite {
 	private OpportunityDialogBox opportunityDialogBox = new OpportunityDialogBox();
-	private ProfileDialogBox profileDialogBox = new ProfileDialogBox("test1@k.com", "test1");
+	private ProfileDialogBox profileDialogBox = new ProfileDialogBox("g7iz219iu9@kawanan.com", "test1");
 	
 	private MainPageWidget mainPage = null;
 	

@@ -31,10 +31,11 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	}
 
 	@Override
-	public void addHasKnowledge(Participant i, String s, int l,
-			Participant suggestedBy) {
-		i.addKnowledge(new Participant.Knowledge(s, l, suggestedBy.getKey(),
-				true));
+	public void addHasKnowledge(Participant i, List<String> hasSubjects, int l,
+			Participant suggestedBy) {	
+		for (String has : hasSubjects) {
+			i.addKnowledge(new Participant.Knowledge(has, l, suggestedBy.getKey(), true));
+		}
 		save(i);
 	}
 
@@ -52,11 +53,12 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	}
 
 	@Override
-	public void addNeedKnowledge(Participant i, String s, int l,
+	public void addNeedKnowledge(Participant i, List<String> needSubjects, int l,
 			Participant suggestedBy) {
-		i.addKnowledge(new Participant.Knowledge(s, l, suggestedBy.getKey(),
-				false));
-		save(i);
+		for (String need : needSubjects) {
+			i.addKnowledge(new Participant.Knowledge(need, l, suggestedBy.getKey(), false));
+		}
+		//save(i);
 	}
 
 	@Override

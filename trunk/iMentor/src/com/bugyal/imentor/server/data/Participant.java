@@ -170,11 +170,6 @@ public class Participant implements LocationCapable {
 	@PersistenceCapable
 	public static class Knowledge implements Serializable {
 
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 1L;
-
 		@PrimaryKey
 		@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 		private Key key;
@@ -322,6 +317,11 @@ public class Participant implements LocationCapable {
 	}
 
 	Participant addKnowledge(Knowledge k) {
+		// TODO(Sridhar, raman) : FIX ME 
+		if (this.knowledge == null) {
+			this.knowledge = new ArrayList<Knowledge>();
+		}
+		
 		this.knowledge.add(k);
 		if (k.has()) {
 			hasSubjects.add(k.getSubject());
@@ -332,6 +332,11 @@ public class Participant implements LocationCapable {
 		return this;
 	}
 
+	public void clearSubjects(){
+		hasSubjects.clear();
+		needSubjects.clear();
+	}
+	
 	List<Knowledge> getHas() {
 		return filter(true);
 	}

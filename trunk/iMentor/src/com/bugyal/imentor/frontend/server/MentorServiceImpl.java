@@ -77,12 +77,8 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		Participant pi = null;
 		try {
 			pi = pm.createParticipant(p.getName(), p.getGender(), location, p.getEmail());
-			for (String subject : p.getNeedSubjects()) {
-			  pm.addNeedKnowledge(pi, subject, 1, pi);
-			} 
-			for (String subject : p.getHasSubjects()) {
-			  pm.addHasKnowledge(pi, subject, 1, pi);
-			}
+			pm.addHasKnowledge(pi, p.getHasSubjects(), 1, pi);
+			pm.addNeedKnowledge(pi, p.getNeedSubjects(), 1, pi);
 			
 			save(pi, p);
 		} catch (MentorException m) {
@@ -98,20 +94,23 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	private void save(Participant pi, ParticipantVO p) throws MentorException {
 		Location location = new Location(p.getLatitude(), p.getLongitude(), p
 				.getLocationString(), p.getRadius());
-
-		if (p.getHasSubjects() != null) {
-			for (String has : p.getHasSubjects()) {
-				pm.addHasKnowledge(pi, has, 5, pi);
-			}
+		clearSubjects(pi);
+		if (p.getHasSubjects() != null) {	
+			
+			pm.addHasKnowledge(pi, p.getHasSubjects(), 5, pi);
 		}
 
 		if (p.getNeedSubjects() != null) {
-			for (String need : p.getNeedSubjects()) {
-				pm.addNeedKnowledge(pi, need, 5, pi);
-			}
+			pm.addNeedKnowledge(pi, p.getNeedSubjects(), 5, pi);
 		}
 
 		pi.setLocation(location);
+		pm.save(pi);
+	}
+
+	private void clearSubjects(Participant pi) throws MentorException {
+		// TODO(sridhar,raman): resolve it.
+		pi.clearSubjects();
 		pm.save(pi);
 	}
 	
@@ -176,7 +175,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				.getId());
 
 		try {
-			pi = pm.findById(key);
+			pi = pm.findById(key);			
 			save(pi, p);
 		} catch (MentorException m) {
 			throw new MeException(m.getMessage());
