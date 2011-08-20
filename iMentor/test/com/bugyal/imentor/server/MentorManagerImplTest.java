@@ -49,10 +49,10 @@ public class MentorManagerImplTest {
 		plist.add(p);
 		
 		Participant seaker = pmi.createParticipant("kumar", "male", TestLocations.BODUPPAL_10, "kumar@bugyal.com");
-		pmi.addHasKnowledge(seaker, "CS", 6, seaker);
+		//pmi.addHasKnowledge(seaker, "CS", 6, seaker);
 		
 		Participant seaker2 = pmi.createParticipant("krk", "female", TestLocations.KONDAPUR, "krk@bugyal.com");
-		pmi.addHasKnowledge(seaker2, "Math", 4, seaker2);
+	//	pmi.addHasKnowledge(seaker2, "Math", 4, seaker2);
 		
 	//	Opportunity o1 = omi.createOpportunity(TestLocations.KPHB, subjects, 2, plist, 7);
 	//	Opportunity o2 = omi.createOpportunity(TestLocations.KONDAPUR, ss, 4, plist, 6);

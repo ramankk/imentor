@@ -13,9 +13,9 @@ public class ProfileDialogTest extends GWTTestCase {
 	}
 
 	@Test
+
 	public void checkDisplay() {
-		ProfileDialogBox profileDialogBox = new ProfileDialogBox("test1@k.com",
-				"test1");
+		ProfileDialogBox profileDialogBox = new ProfileDialogBox("test1@k.com",	"test1");
 		@SuppressWarnings("unused")
 		TextArea location = profileDialogBox.tbLocation;
 		//

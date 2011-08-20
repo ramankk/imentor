@@ -33,14 +33,9 @@ public class DataGenerator {
 			Participant participant = participantManager.createParticipant(
 					name, getRandomGender(), getRandomLocation(), email);
 
-			for (String subject : hasSubjects) {
-				participantManager.addHasKnowledge(participant, subject,
-						r.nextInt(5), participant);
-			}
-			for (String subject : needSubjects) {
-				participantManager.addNeedKnowledge(participant, subject,
-						r.nextInt(5), participant);
-			}
+			participantManager.addHasKnowledge(participant,  hasSubjects, 1, participant);
+			participantManager.addNeedKnowledge(participant, needSubjects, 1, participant);
+			
 
 			if (r.nextFloat() < 0.1) {
 				List<Participant> contacts = new ArrayList<Participant>();

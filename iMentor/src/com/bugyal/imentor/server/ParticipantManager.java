@@ -49,10 +49,10 @@ public interface ParticipantManager {
 
 	void changeName(Participant i, String newName) throws MentorException;
 
-	void addHasKnowledge(Participant i, String s, int l, Participant suggestedBy)
+	void addHasKnowledge(Participant i,  List<String> hasSubjects, int l, Participant suggestedBy)
 			throws MentorException;
 
-	void addNeedKnowledge(Participant i, String s, int l,
+	void addNeedKnowledge(Participant i, List<String> subjects, int l,
 			Participant suggestedBy) throws MentorException;
 
 	void save(Participant... participants) throws MentorException;
@@ -71,5 +71,6 @@ public interface ParticipantManager {
 			throws MentorException;
 
 	long deleteParticipants();
+
 
 }
