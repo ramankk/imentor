@@ -42,18 +42,16 @@ public class LocalActivity extends Composite {
 			@Override
 			public void onFailure(Throwable caught) {
 				// TODO Auto-generated method stub
-				Window.alert("Failed to fetch for LOCAL ACTIVITIES..!");
+				Window.alert("Failed to fetch for local activies" + caught.getMessage());
 			}
 
 			@Override
 			public void onSuccess(SearchResponse result) {
-				Window.alert("Total Records are " + (result.getNeed().size() + result.getHas().size()));		
 				List<SearchResult> all = new ArrayList<SearchResult>();
 				all.addAll(result.getNeed());
 				all.addAll(result.getHas());
 				
 				showDefaultCursor();
-				
 				allResults.setResults(all);				
 			}
 			

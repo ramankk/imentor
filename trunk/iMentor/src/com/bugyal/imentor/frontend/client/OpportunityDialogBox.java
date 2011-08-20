@@ -43,7 +43,6 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 
 		@Override
 		public void onSuccess(List<String> result) {
-			Window.alert("success to get Subjects list");
 			subWidget.addMoreSubjects(result);
 		}
 	};
@@ -57,7 +56,6 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 
 		@Override
 		public void onSuccess(List<OpportunityVO> result) {
-			Window.alert("Success to get Subjects list");
 			addMyOpportunities(result);
 		}
 	};
@@ -73,9 +71,7 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 		// TODO(raman,sridhar): Get Subjects only once per browser and resuse
 		// it.. dont let every
 		// widget fetch its own list of subjects.
-		Window.alert("getsub");
 		service.getSubjects(getSubjectsCallback);
-		Window.alert("getOpp");
 		service.getOpportunitiesById(emailId, getOpportuniesCallback);
 
 		setWidget(horizontalPanel);
@@ -127,11 +123,9 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 
 	private void addMyOpportunities(List<OpportunityVO> myOpportunities) {
 		if (myOpportunities.size() == 0) {
-			Window.alert(" " + myOpportunities.size());
 			stackPanel.add(new Label("No opportunity is created by you.. "),
 					"My Opportunity");
 		} else {
-			Window.alert(" " + myOpportunities.size());
 			myOppWidget.setOpportunities(myOpportunities);
 			stackPanel.add(myOppWidget, "My Opportunity");
 		}
@@ -158,7 +152,6 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 		if (event.getSource() == btnCreate) {
 			if (!(subWidget.selected.getSubjects().isEmpty())
 					&& !(tbLocation.getText().contains("Please, Use the Map"))) {
-				Window.alert("form validated !! ");
 				Long id = showingOpportunity == null ? null
 						: showingOpportunity.getId();
 				OpportunityVO oppVO = new OpportunityVO(id,
@@ -168,7 +161,6 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 
 				if (id == null) {
 					// Create mode.
-					Window.alert("new Opportunity !! ");
 					service.createOpportunity(emailId, oppVO,
 							new AsyncCallback<OpportunityVO>() {
 
@@ -180,7 +172,6 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 
 								@Override
 								public void onSuccess(OpportunityVO result) {
-									Window.alert("You Have successfully created an Opportunity");
 									clearOpportunity();
 									hideOpportunityDialogBox();
 									service.getOpportunitiesById(emailId,
@@ -190,7 +181,6 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 							});
 				} else {
 					// edit mode.
-					Window.alert("update Opportunity !! ");
 					service.updateOpportunity(oppVO, emailId,
 							new AsyncCallback<OpportunityVO>() {
 
@@ -202,7 +192,6 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 
 								@Override
 								public void onSuccess(OpportunityVO result) {
-									Window.alert("You Have successfully updated an Opportunity");
 									clearOpportunity();
 									hideOpportunityDialogBox();
 									service.getOpportunitiesById(emailId,

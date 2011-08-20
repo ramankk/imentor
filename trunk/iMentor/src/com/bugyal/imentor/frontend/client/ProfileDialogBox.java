@@ -18,7 +18,6 @@ import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class ProfileDialogBox extends DialogBox implements ClickHandler {
-
 	MentorServiceAsync service;
 	SubjectsSuggestWidget subWidgetHas = new SubjectsSuggestWidget();
 	SubjectsSuggestWidget subWidgetNeed = new SubjectsSuggestWidget();
@@ -27,7 +26,7 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 	TextBox tbName, tbEmailId;
 	LocationData lData = new LocationData();
 	boolean status = false;
-	long id ;
+	long id;
 	RadioButton rbMail, rbFemail;
 	MapUI mapUI;
 
@@ -57,16 +56,13 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 							subWidgetHas.selected.add(sub);
 						for (String sub : result.getNeedSubjects())
 							subWidgetNeed.selected.add(sub);
-						id =result.getId();
+						id = result.getId();
 
 						status = true;
-
 					}
-
 				});
 
 		AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
-
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("Fail to get Subjects list");
@@ -120,7 +116,6 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 		hpEmailId.add(new Label("Mail Id"));
 		hpEmailId.add(tbEmailId);
 		verticalPanel_1.add(hpEmailId);
-		// lblEmailId.setText("fakeemail" + Random.nextInt() + " @kawanan.com");
 
 		Label lblLocation = new Label("Location:");
 		verticalPanel.add(lblLocation);
@@ -165,14 +160,12 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 		if (event.getSource() == btnSave) {
 			lData = mapUI.getLocationDetails();
 			if (!(subWidgetHas.selected.getSubjects().isEmpty() && subWidgetNeed.selected
-					.getSubjects().isEmpty())
-					&& (tbLocation.getText() != null)) {
-				Window.alert("save button called  "
-						+ subWidgetHas.selected.getSubjects().size() + " :: "
-						+ subWidgetNeed.selected.getSubjects().size());
-				
-				ParticipantVO partVO = new ParticipantVO(id, tbName.getText(), "M", tbEmailId.getText(), lData.getLatitude(),
-						lData.getLongitude(),tbLocation.getText(), lData.getRadius(), subWidgetHas.selected.getSubjects(),
+					.getSubjects().isEmpty()) && (tbLocation.getText() != null)) {
+
+				ParticipantVO partVO = new ParticipantVO(id, tbName.getText(),
+						"M", tbEmailId.getText(), lData.getLatitude(),
+						lData.getLongitude(), tbLocation.getText(),
+						lData.getRadius(), subWidgetHas.selected.getSubjects(),
 						subWidgetNeed.selected.getSubjects());
 				if (!status) {
 					service.create(partVO, new AsyncCallback<ParticipantVO>() {
@@ -181,13 +174,10 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 						public void onFailure(Throwable caught) {
 							Window.alert("Unable to Create the Profile"
 									+ caught.getMessage());
-
 						}
 
 						@Override
 						public void onSuccess(ParticipantVO result) {
-
-							Window.alert("Your data has been saved");
 							hideProfileDialog();
 						}
 					});
@@ -196,7 +186,8 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							Window.alert("Sorry, No changes has been made"+caught.getMessage());
+							Window.alert("Sorry, No changes has been made"
+									+ caught.getMessage());
 						}
 
 						@Override
@@ -208,9 +199,7 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 
 					});
 				}
-
 			}
-
 		}
 		if (event.getSource() == btnCancel) {
 			tbName.setText(null);
@@ -224,14 +213,11 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 			tbEmailId.setText(null);
 			subWidgetHas.selected.clearAll();
 			subWidgetNeed.selected.clearAll();
-
 		}
-
 	}
 
 	protected void hideProfileDialog() {
 		this.hide();
-
 	}
 
 }

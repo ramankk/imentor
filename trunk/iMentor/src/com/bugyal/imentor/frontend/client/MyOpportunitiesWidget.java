@@ -18,7 +18,6 @@ public class MyOpportunitiesWidget extends Composite {
 	VerticalPanel scroller= new VerticalPanel();
 	
 	public MyOpportunitiesWidget(OpportunityDialogBox opportunityDialogBox) {
-		Window.alert("My OPPs class");
 		parent = opportunityDialogBox;
 		
 		HorizontalPanel hp = new HorizontalPanel();
@@ -38,7 +37,6 @@ public class MyOpportunitiesWidget extends Composite {
 
 		public SingleOpportunityResult(final OpportunityVO o,
 				final OpportunityDialogBox parent) {
-			Window.alert("My OPPs Inner class");
 			HorizontalPanel panel = new HorizontalPanel();
 			Label lhead = new Label("Created On : "); // +opp.getLastModifiedTime());
 			Button edit = new Button("Edit");
@@ -64,8 +62,6 @@ public class MyOpportunitiesWidget extends Composite {
 			vp.add(panel);
 			vp.add(l);
 			initWidget(vp);
-
-			Window.alert("My OPPs Inner class completed");
 		}
 	}
 }

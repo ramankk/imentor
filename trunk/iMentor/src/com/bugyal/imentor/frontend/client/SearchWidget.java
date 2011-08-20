@@ -40,7 +40,6 @@ public class SearchWidget extends Composite implements ClickHandler,
 	SearchResponseWidget results;
 
 	public SearchWidget() {
-
 		results = new SearchResponseWidget();
 
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
@@ -73,7 +72,6 @@ public class SearchWidget extends Composite implements ClickHandler,
 			@Override
 			public void onSuccess(List<String> result) {
 				subjectsSuggestWidget.addMoreSubjects(result);
-
 			}
 
 		};
@@ -148,33 +146,34 @@ public class SearchWidget extends Composite implements ClickHandler,
 
 	@Override
 	public void onClick(ClickEvent event) {
-		
+
 		List<String> hasSubs, needSubs;
-		
-		// TODO(sundeep): Fix me, pick up the participant's has and need subjects
+
+		// TODO(sundeep): Fix me, pick up the participant's has and need
+		// subjects
 		// when user doesn't supply them.
 		hasSubs = new ArrayList<String>();
 		needSubs = new ArrayList<String>();
-		
-		if (event.getSource() == searchBtn){
+
+		if (event.getSource() == searchBtn) {
 			showWaitCursor();
 			locationData = mapUI.getLocationDetails();
-			
-			if(subjectsSuggestWidget.getSelected().isEmpty()){
-//				hasSubs = ;(get from logged in user TODO Sundeep)
-//				needSubs = ;
-			}else{				
+
+			if (subjectsSuggestWidget.getSelected().isEmpty()) {
+				// hasSubs = ;(get from logged in user TODO Sundeep)
+				// needSubs = ;
+			} else {
 				hasSubs = subjectsSuggestWidget.getSelected();
 				needSubs = subjectsSuggestWidget.getSelected();
 			}
-			
-			if(location.getText().contains("Please, Use the Map")){
-				location.setText("");//  get from logged in user TODO Sundeep
+
+			if (location.getText().contains("Please, Use the Map")) {
+				location.setText("");// get from logged in user TODO Sundeep
 			}
-			
-			service.filterList(locationData.getLatitude(), locationData
-					.getLongitude(), location.getText(), locationData
-					.getRadius(), hasSubs, needSubs,
+
+			service.filterList(locationData.getLatitude(),
+					locationData.getLongitude(), location.getText(),
+					locationData.getRadius(), hasSubs, needSubs,
 					new AsyncCallback<SearchResponse>() {
 
 						@Override
@@ -191,11 +190,11 @@ public class SearchWidget extends Composite implements ClickHandler,
 
 					});
 
-		}else if(event.getSource() == rbtnMentor){
+		} else if (event.getSource() == rbtnMentor) {
 			results.setResults(sResponse.getHas());
-		}else if(event.getSource() == rbtnMentee){
+		} else if (event.getSource() == rbtnMentee) {
 			results.setResults(sResponse.getNeed());
-		}else{
+		} else {
 			results.setResults(sResponse.getAllResults());
 		}
 	}
@@ -203,9 +202,6 @@ public class SearchWidget extends Composite implements ClickHandler,
 	@SuppressWarnings("deprecation")
 	protected void showSearchResults(SearchResponse response) {
 		List<ParticipantVO> pList = new ArrayList<ParticipantVO>();
-
-		Window.alert("" + response.getHas().size());
-		Window.alert("" + response.getNeed().size());
 		results.setResults(response.getAllResults());
 
 		for (SearchResult p : response.getHas()) {
