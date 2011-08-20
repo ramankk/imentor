@@ -6,10 +6,6 @@ import java.util.List;
 
 public class OpportunityVO implements Serializable {
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1L;
 	private Long id;
 	private List<String> subjects;
 	private int requiredMentors;
@@ -65,6 +61,8 @@ public class OpportunityVO implements Serializable {
 		return requiredMentors;
 	}
 
+	
+
 	public void setRequiredMentors(int requiredMentors) {
 		this.requiredMentors = requiredMentors;
 	}
@@ -108,6 +106,7 @@ public class OpportunityVO implements Serializable {
 	public void setLocString(String locString) {
 		this.locString = locString;
 	}
+	
 
 	// This method trims ParticipantVO object to bare minimum information required in SearchResult.
 	// If you need the following cleared information, fix it !!

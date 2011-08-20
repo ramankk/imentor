@@ -11,6 +11,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class LocalActivity extends Composite {
@@ -22,7 +23,7 @@ public class LocalActivity extends Composite {
 	public LocalActivity(String emailId) {
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 		allResults = new SearchResponseWidget();
-		
+		Label lActivity = new Label("Loacl Activity");
 		flowpanel = new FlowPanel();
 		flowpanel.add(allResults);
 		

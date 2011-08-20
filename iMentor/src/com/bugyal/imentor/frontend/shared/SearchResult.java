@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.gwt.user.client.rpc.IsSerializable;
 
-public class SearchResult implements IsSerializable {
+public class SearchResult implements IsSerializable, Comparable<SearchResult> {
 	
 	private boolean has;
 	private ParticipantVO p;
@@ -28,7 +28,7 @@ public class SearchResult implements IsSerializable {
 		// AppEngine arraylist = normal arraylist..
 		this.subjects = appEngineListToSimpleList(subjects);
 		// strip participantVO object to reduce network-foot-print.
-		this.p.trim();
+		//this.p.trim();
 	}
 	
 	public static final List<String> appEngineListToSimpleList(List<String> subjects) {
@@ -46,7 +46,7 @@ public class SearchResult implements IsSerializable {
 		this.subjects = appEngineListToSimpleList(subjects);
 		
 		// strip opportunityVO object to reduce network-foot-print.
-		this.o.trim();
+		//this.o.trim();
 	}
 
 	public boolean isHas() {
@@ -67,5 +67,42 @@ public class SearchResult implements IsSerializable {
 
 	public boolean isTypeParticipant() {
 		return isTypeParticipant;
+	}
+
+	public double getLongitude() {
+		if (isTypeParticipant) {
+		    return p.getLongitude();
+		} else {
+			return o.getLongitude();
+		}
+	}
+	
+	public double getLatitude() {
+		if (isTypeParticipant) {
+		    return p.getLatitude();
+		} else {
+			return o.getLatitude();
+		}
+	}
+	
+	double score = 1d;
+	
+	public void applyScore(double score) {
+		this.score *= score; 
+	}
+	
+	public double getScore() {
+		return this.score;
+	}
+
+	@Override
+	public int compareTo(SearchResult o) {
+		if (score < o.getScore()) {
+			return 1;
+		} else if (score > o.getScore()) {
+			return -1;
+		} else {
+			return 0;
+		}
 	}
 }

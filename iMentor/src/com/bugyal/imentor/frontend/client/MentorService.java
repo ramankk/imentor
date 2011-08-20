@@ -15,27 +15,36 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
  */
 @RemoteServiceRelativePath("mentor")
 public interface MentorService extends RemoteService {
-	
+
 	ParticipantVO create(ParticipantVO p) throws MeException;
 	OpportunityVO createOpportunity(String emailId, OpportunityVO o) throws MeException;
-	
+
 	ParticipantVO update(ParticipantVO p) throws MeException;
 	OpportunityVO updateOpportunity(OpportunityVO o, String emailId) throws MeException;
-	
-	SearchResponse feedToMe(String emailId) throws MeException;
-	
-	List<OpportunityVO> find(List<String> subjects, ParticipantVO me) throws MeException;
-	
+
+	SearchResponse feedToMe(String emilId) throws MeException;
+
+	List<OpportunityVO> find(List<String> subjects, ParticipantVO me)
+			throws MeException;
+
 	List<String> getSubjects() throws MeException;
+
+	SearchResponse filterList(double latitude, double longitude,
+			String strlocation, int radius, List<String> hasSubs,
+			List<String> needSubs);
 	
-	SearchResponse filterList(double latitude, double longitude, String strlocation, int radius, List<String> hasSubs,  List<String> needSubs);
+	ParticipantVO getParticipantVOByEmailId(String emailId) throws MeException;
+	
+	void createSession(String emailId) throws MeException;
+	boolean validateSession(String emailId)throws MeException;
+	boolean deleteSession(String emailId) throws MeException;
 		
 	SearchResponse localActivity(String email);
 	
 	void generateRandomData(int range) throws MeException;
-	
+
 	long deleteRecords();
 	
 	List<OpportunityVO> getOpportunitiesById(String emailId);
-	
+
 }

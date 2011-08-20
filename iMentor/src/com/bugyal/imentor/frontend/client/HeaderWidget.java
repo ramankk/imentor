@@ -45,6 +45,10 @@ public class HeaderWidget extends Composite {
 		MenuItem randomData = new MenuItem("Seed Data", false,
 				seedRandomDataCommand());
 		menuBar.addItem(randomData);
+		
+		MenuItem searchData = new MenuItem("Search", false,
+				searchCommand());
+		menuBar.addItem(searchData);
 
 		return horizontalPanel;
 	}
@@ -95,6 +99,8 @@ public class HeaderWidget extends Composite {
 
 		};
 	}
+	
+	
 
 	public Command profileCommand() {
 		return new Command() {
@@ -104,6 +110,17 @@ public class HeaderWidget extends Composite {
 				ProfileDialogBox profileDialogBox = new ProfileDialogBox();
 				profileDialogBox.show();
 				profileDialogBox.center();
+			}
+
+		};
+	}
+	
+	public Command searchCommand() {
+		return new Command() {
+
+			@Override
+			public void execute() {
+				RootPanel.get("tome").add(new SearchWidget());
 			}
 
 		};

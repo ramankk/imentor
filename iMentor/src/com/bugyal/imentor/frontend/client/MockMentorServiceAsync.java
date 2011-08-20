@@ -50,14 +50,29 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 	}
 
 	@Override
-	public void filterList(double latitude, double longitude,
-			String strlocation, int radius, List<String> hasSubs,
-			List<String> needSubs, AsyncCallback<SearchResponse> callback) {
+	public void createSession(String emailId, AsyncCallback<Void> callback) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
+	public void validateSession(String emailId, AsyncCallback<Boolean> callback) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void deleteSession(String emailId, AsyncCallback<Boolean> callback) {
+		// TODO Auto-generated method stub
+
+	}
+
+	public void filterList(double latitude, double longitude,
+			String strlocation, int radius, List<String> hasSubs,
+			List<String> needSubs, AsyncCallback<SearchResponse> callback) {
+
+	}
+
 	public void localActivity(String email,
 			AsyncCallback<SearchResponse> asyncCallback) {
 		// TODO Auto-generated method stub
@@ -93,6 +108,13 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 	@Override
 	public void updateOpportunity(OpportunityVO o, String emailId,
 			AsyncCallback<OpportunityVO> callback) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void getParticipantVOByEmailId(String emailId,
+			AsyncCallback<ParticipantVO> callback) {
 		// TODO Auto-generated method stub
 
 	}
