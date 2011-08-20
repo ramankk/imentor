@@ -31,7 +31,12 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 public class MentorServiceImpl extends RemoteServiceServlet implements
 		MentorService {
 	private static final List<String> SUBJECTS_LIST = new ArrayList<String>();
-
+	private static final Ranker feedRanker = new Ranker().addScorer(
+			new DistanceScorer()).addScorer(new SubjectCorrelationScorer());
+	private static final ParticipantManager pm = MentorManager.INSTANCE.getParticipantManager();
+	private static final OpportunityManager om = MentorManager.INSTANCE.getOpportunityManager();
+	private static final MentorManager mm = MentorManager.INSTANCE;
+	
 	static {
 		SUBJECTS_LIST.add("Computers");
 		SUBJECTS_LIST.add("Physics");
@@ -44,16 +49,15 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			throws IllegalArgumentException {
 		Key key = KeyFactory.createKey(Participant.class.getSimpleName(), me
 				.getId());
-		Participant p = MentorManager.INSTANCE.getParticipantManager()
-				.findById(key);
+		Participant p = pm.findById(key);
 
 		List<OpportunityVO> rList = new ArrayList<OpportunityVO>();
 
 		List<Opportunity> oList = null;
 		if (subjects != null) {
-			oList = MentorManager.INSTANCE.getAllOppurtunities(p, subjects);
+			oList = mm.getAllOppurtunities(p, subjects);
 		} else {
-			oList = MentorManager.INSTANCE.getAllOppurtunities(p);
+			oList = mm.getAllOppurtunities(p);
 		}
 		for (Opportunity o : oList) {
 			rList.add(ValueObjectGenerator.create(o));
@@ -72,14 +76,12 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				.getLocationString(), p.getRadius());
 		Participant pi = null;
 		try {
-			ParticipantManager participantManager = MentorManager.INSTANCE.getParticipantManager();
-			pi = participantManager
-					.createParticipant(p.getName(), p.getGender(), location, p.getEmail());
+			pi = pm.createParticipant(p.getName(), p.getGender(), location, p.getEmail());
 			for (String subject : p.getNeedSubjects()) {
-			  participantManager.addNeedKnowledge(pi, subject, 1, pi);
+			  pm.addNeedKnowledge(pi, subject, 1, pi);
 			} 
 			for (String subject : p.getHasSubjects()) {
-			  participantManager.addHasKnowledge(pi, subject, 1, pi);
+			  pm.addHasKnowledge(pi, subject, 1, pi);
 			}
 			
 			save(pi, p);
@@ -97,29 +99,27 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		Location location = new Location(p.getLatitude(), p.getLongitude(), p
 				.getLocationString(), p.getRadius());
 
-		ParticipantManager participantManager = MentorManager.INSTANCE
-				.getParticipantManager();
 		if (p.getHasSubjects() != null) {
 			for (String has : p.getHasSubjects()) {
-				participantManager.addHasKnowledge(pi, has, 5, pi);
+				pm.addHasKnowledge(pi, has, 5, pi);
 			}
 		}
 
 		if (p.getNeedSubjects() != null) {
 			for (String need : p.getNeedSubjects()) {
-				participantManager.addNeedKnowledge(pi, need, 5, pi);
+				pm.addNeedKnowledge(pi, need, 5, pi);
 			}
 		}
 
 		pi.setLocation(location);
-		participantManager.save(pi);
+		pm.save(pi);
 	}
 	
 	private void save(Opportunity oi, OpportunityVO o, String emailId) throws MentorException {
 		Location location = new Location(o.getLatitude(), o.getLongitude(),
 				o.getLocString(), o.getRadius());
 		oi.setLocation(location);		
-		Participant savedBy = MentorManager.INSTANCE.getParticipantManager().findParticipantByEmail(emailId);
+		Participant savedBy = pm.findParticipantByEmail(emailId);
 		
 		if(o.getSubjects() != null) {
 			oi.resetSubjects(o.getSubjects(), savedBy);	
@@ -128,7 +128,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		oi.setPriority(o.getPriority(), savedBy);
 		oi.setActive(true, savedBy);
 		oi.setRequiredParticipants(o.getRequiredMentors(), savedBy);
- 		MentorManager.INSTANCE.getOpportunityManager().update(oi, savedBy);
+ 		om.update(oi, savedBy);
 	}
 
 	@Override
@@ -145,7 +145,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		
 		Participant participant=null;
 		try {
-			participant = getParticipant(emailId);
+			participant = pm.findParticipantByEmail(emailId);
 			if (participant != null) {
 			  contacts.add(participant);
 			}
@@ -155,7 +155,6 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		}	
 		
 		// TODO(raman): Understand why MentorException is not getting thrown.
-		OpportunityManager om = MentorManager.INSTANCE.getOpportunityManager();
 		oi = om.createOpportunity(location, o.getSubjects(), o
 				.getRequiredMentors(), contacts, o.getPriority(), o.getMessage(), participant);
 
@@ -177,7 +176,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				.getId());
 
 		try {
-			pi = MentorManager.INSTANCE.getParticipantManager().findById(key);
+			pi = pm.findById(key);
 			save(pi, p);
 		} catch (MentorException m) {
 			throw new MeException(m.getMessage());
@@ -199,7 +198,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		Key key = KeyFactory.createKey(Opportunity.class.getSimpleName(), o.getId());
 
 		try {
-			oi = MentorManager.INSTANCE.getOpportunityManager().findById(key);
+			oi = om.findById(key);
 			save(oi, o, emailId);
 		} catch (MentorException m) {
 			throw new MeException(m.getMessage());
@@ -226,33 +225,23 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public void generateRandomData(int range) throws MeException {
 		try {
-
 			new DataGenerator(range);
-
 		} catch (MentorException e) {
 			e.printStackTrace();
 			throw new MeException(e.getMessage());
 		}
 	}
 
-	private Participant getParticipant(String emailId) throws MentorException {
-		return MentorManager.INSTANCE.getParticipantManager()
-				.findParticipantByEmail(emailId);
-	}
-
 	@Override
 	public long deleteRecords() {
-		long m = 0;
-		long n = 0;
-		ParticipantManager pm = MentorManager.INSTANCE.getParticipantManager();
-		OpportunityManager om = MentorManager.INSTANCE.getOpportunityManager();
+		long count = 0;
 		try {
-			m = pm.deleteParticipants();
-			n = om.deleteOpportunities();
+			count += pm.deleteParticipants();
+			count += om.deleteOpportunities();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return m + n;
+		return count;
 	}
 
 	@Override
@@ -276,9 +265,6 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 
 			Location location = new Location(latitude, longitude, strlocation,
 					radius);
-
-			ParticipantManager pm = MentorManager.INSTANCE
-					.getParticipantManager();
 
 			for (Participant p : pm.searchParticipantsBySubjects(needSubs,
 					location, true)) {
@@ -304,8 +290,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 						false, matchingSubs));
 			}
 
-			for (Opportunity o : MentorManager.INSTANCE.getOpportunityManager()
-					.searchOpportunities(location, hasSubs)) {
+			for (Opportunity o : om.searchOpportunities(location, hasSubs)) {
 
 				List<String> matchingSubs = new ArrayList<String>();
 				for (String s : o.getSubjects()) {
@@ -326,31 +311,17 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		return response;
 	}
 
-	static final Ranker feedRanker = new Ranker().addScorer(
-			new DistanceScorer()).addScorer(new SubjectCorrelationScorer());
-
+	
 	@Override
 	public SearchResponse feedToMe(String emailId) throws MeException {
 		SearchResponse response = new SearchResponse();
 		try {
-			Participant pi = getParticipant(emailId);
+			Participant pi = pm.findParticipantByEmail(emailId);
 
 			response = filterList(pi.getLocation().getLat(), pi.getLocation()
 					.getLon(), pi.getLoc().getLocationString(), pi.getLoc()
 					.getActiveRadius(), pi.getHasSubjects(), pi
 					.getNeedSubjects());
-
-			// checking whether the results within the participant's radius
-			/*
-			 * for (int i = 0; i < response.size(); i++) {
-			 * 
-			 * double d = GeocellUtils.distance(pi.getLocation(), new Point(
-			 * response.getAllResults().get(i).getLatitude(), response
-			 * .getAllResults().get(i).getLongitude())) / 1000;
-			 * 
-			 * if (d< (pi.getLoc().getActiveRadius() * 1.0)) {
-			 * Window.alert("result is out of radius"); break; } }
-			 */
 
 			feedRanker.rank(response, pi);
 			return response;
@@ -364,12 +335,56 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	public ParticipantVO getParticipantVOByEmailId(String emailId)
 			throws MeException {
 		try {
-			return ValueObjectGenerator.create(getParticipant(emailId));
+			return ValueObjectGenerator.create(pm.findParticipantByEmail(emailId));
 		} catch (MentorException e) {
 			e.printStackTrace();
 		}
 		return null;
 
+	}
+	
+	@Override
+	public SearchResponse localActivity(String emailId) {
+		SearchResponse response = new SearchResponse();
+		try {
+			List<SearchResult> has = new ArrayList<SearchResult>();
+			List<SearchResult> need = new ArrayList<SearchResult>();
+
+			Participant pi = pm.findParticipantByEmail(emailId);
+			Location location = new Location(pi.getLocation().getLat(), pi
+					.getLocation().getLon(), pi.getLoc().getLocationString(),
+					pi.getLoc().getActiveRadius());
+
+			for (Participant p : pm.searchParticipantsByLocation(location)) {
+				has.add(new SearchResult(ValueObjectGenerator.create(p), true,
+						p.getHasSubjects()));
+				need.add(new SearchResult(ValueObjectGenerator.create(p),
+						false, p.getNeedSubjects()));
+			}
+
+			for (Opportunity o : om.allOpportunites(location)) {
+				need.add(new SearchResult(ValueObjectGenerator.create(o), o
+						.getSubjects()));
+			}
+			response.setHas(has);
+			response.setNeed(need);
+			return response;
+		} catch (MentorException e) {
+			e.printStackTrace();
+		}
+		return response;
+	}
+
+	@Override
+	public List<OpportunityVO> getOpportunitiesById(String emailId) {
+		Participant p = null;
+		try {
+			p = pm.findParticipantByEmail(emailId);
+			return ValueObjectGenerator.createOpportunityVOs(om.searchOpportunitiesByKey(p.getKey()));
+		} catch(MentorException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	@Override
@@ -402,53 +417,5 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		}
 	}
 
-	@Override
-	public SearchResponse localActivity(String emailId) {
-		SearchResponse response = new SearchResponse();
-		try {
-			List<SearchResult> has = new ArrayList<SearchResult>();
-			List<SearchResult> need = new ArrayList<SearchResult>();
 
-			Participant pi = getParticipant(emailId);
-			Location location = new Location(pi.getLocation().getLat(), pi
-					.getLocation().getLon(), pi.getLoc().getLocationString(),
-					pi.getLoc().getActiveRadius());
-
-			ParticipantManager pm = MentorManager.INSTANCE
-					.getParticipantManager();
-
-			for (Participant p : pm.searchParticipantsByLocation(location)) {
-				has.add(new SearchResult(ValueObjectGenerator.create(p), true,
-						p.getHasSubjects()));
-				need.add(new SearchResult(ValueObjectGenerator.create(p),
-						false, p.getNeedSubjects()));
-			}
-
-			for (Opportunity o : MentorManager.INSTANCE.getOpportunityManager()
-					.allOpportunites(location)) {
-				need.add(new SearchResult(ValueObjectGenerator.create(o), o
-						.getSubjects()));
-			}
-			response.setHas(has);
-			response.setNeed(need);
-			return response;
-		} catch (MentorException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return response;
-	}
-
-	@Override
-	public List<OpportunityVO> getOpportunitiesById(String emailId) {
-		Participant p = null;
-		try {
-			p = getParticipant(emailId);
-			OpportunityManager om = MentorManager.INSTANCE.getOpportunityManager();
-			return ValueObjectGenerator.createOpportunityVOs(om.searchOpportunitiesByKey(p.getKey()));
-		} catch(MentorException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
 }

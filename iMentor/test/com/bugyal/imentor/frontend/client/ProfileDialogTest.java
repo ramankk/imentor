@@ -11,21 +11,20 @@ public class ProfileDialogTest extends GWTTestCase {
 	public String getModuleName() {
 		return "com.bugyal.imentor.frontend.client.ProfileDialog";
 	}
-	
+
 	@Test
-	public void checkDisplay()
-	{
-		ProfileDialogBox profileDialogBox = new ProfileDialogBox();
+	public void checkDisplay() {
+		ProfileDialogBox profileDialogBox = new ProfileDialogBox("test1@k.com",
+				"test1");
 		@SuppressWarnings("unused")
 		TextArea location = profileDialogBox.tbLocation;
-//		
-//		TextArea t1= profileDialogBox.textArea;
-//		SuggestBox sugBox1 =profileDialogBox.suggestBox_1;
-//		sugBox1.setText("tel");
-	//	sugBox1.fireEvent(KeyEvent.VK_ENTER);
-//		assertEquals(sugBox1.getText(),"TELUGU");
-		
-	}
+		//
+		// TextArea t1= profileDialogBox.textArea;
+		// SuggestBox sugBox1 =profileDialogBox.suggestBox_1;
+		// sugBox1.setText("tel");
+		// sugBox1.fireEvent(KeyEvent.VK_ENTER);
+		// assertEquals(sugBox1.getText(),"TELUGU");
 
+	}
 
 }

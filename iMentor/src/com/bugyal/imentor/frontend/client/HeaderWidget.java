@@ -1,23 +1,22 @@
 package com.bugyal.imentor.frontend.client;
 
+import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
 
 public class HeaderWidget extends Composite {
-
-	static boolean status = false;
-
-	public HeaderWidget() {
-		initWidget(getHeaderWidget());
-	}
-
-	public HorizontalPanel getHeaderWidget() {
+	private OpportunityDialogBox opportunityDialogBox = new OpportunityDialogBox();
+	private ProfileDialogBox profileDialogBox = new ProfileDialogBox("test1@k.com", "test1");
+	
+	private MainPageWidget mainPage = null;
+	
+	public HeaderWidget(MainPageWidget mainPage) {
+		this.mainPage = mainPage;
+		
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		horizontalPanel.setWidth("377px");
 		Image image = new Image("");
@@ -38,21 +37,22 @@ public class HeaderWidget extends Composite {
 		MenuItemSeparator separator_1 = new MenuItemSeparator();
 		menuBar.addSeparator(separator_1);
 
-		MenuItem mntmBuzz = new MenuItem("Add Opportunity", false,
+		MenuItem mntmBuzz = new MenuItem("Opportunity", false,
 				opportunityCommand());
 		menuBar.addItem(mntmBuzz);
 
-		MenuItem randomData = new MenuItem("Seed Data", false,
-				seedRandomDataCommand());
-		menuBar.addItem(randomData);
-		
-		MenuItem searchData = new MenuItem("Search", false,
-				searchCommand());
+		MenuItem searchData = new MenuItem("Search", false, searchCommand());
 		menuBar.addItem(searchData);
 
-		return horizontalPanel;
+		if (IMentor.TEST_MODE_FLAG) {
+			MenuItem randomData = new MenuItem("Seed Data", false,
+					seedRandomDataCommand());
+			menuBar.addItem(randomData);
+		}
+		
+		initWidget(menuBar);
 	}
-
+	
 	private Command seedRandomDataCommand() {
 		return new Command() {
 
@@ -62,68 +62,44 @@ public class HeaderWidget extends Composite {
 				dataGenerator.show();
 				dataGenerator.center();
 			}
-
 		};
 	}
 
-	private OpportunityDialogBox opportunityDialogBox = null;
-
 	public Command opportunityCommand() {
 		return new Command() {
-
 			@Override
 			public void execute() {
-				if (opportunityDialogBox == null) {
-					opportunityDialogBox = new OpportunityDialogBox();
-				}
 				opportunityDialogBox.show();
 				opportunityDialogBox.center();
 			}
-
 		};
 	}
 
 	public Command homeCommand() {
 		return new Command() {
-
 			@Override
 			public void execute() {
-				if (!status) {
-					RootPanel.get("tome").add(
-							new ToMeWidget("test1@k.com"));
-					RootPanel.get("activity").add(
-							new LocalActivity("test1@k.com"));
-					status = true;
-				}
+				mainPage.showHomeWidget();
 			}
-
 		};
 	}
-	
-	
 
 	public Command profileCommand() {
 		return new Command() {
-
 			@Override
 			public void execute() {
-				ProfileDialogBox profileDialogBox = new ProfileDialogBox("test1@k.com","test1");
 				profileDialogBox.show();
 				profileDialogBox.center();
 			}
-
 		};
 	}
-	
+
 	public Command searchCommand() {
 		return new Command() {
-
 			@Override
 			public void execute() {
-				RootPanel.get("tome").add(new SearchWidget());
+				mainPage.showSearchPanel();
 			}
-
 		};
 	}
-
 }
