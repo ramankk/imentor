@@ -26,18 +26,44 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 	Button btnClear, btnSave, btnCancel;
 	TextBox tbName, tbEmailId;
 	LocationData lData = new LocationData();
-
-	RadioButton rbMale, rbFemale;
+	boolean status = false;
+	long id ;
+	RadioButton rbMail, rbFemail;
 	MapUI mapUI;
-	String gender;
 
-	@SuppressWarnings("deprecation")
-	public ProfileDialogBox() {
+	public ProfileDialogBox(final String emailId, final String name) {
 
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 		setSize("400px", "608px");
 		setHTML("Profile");
+
+		service.getParticipantVOByEmailId(emailId,
+				new AsyncCallback<ParticipantVO>() {
+
+					@Override
+					public void onFailure(Throwable caught) {
+						tbName.setText(name);
+						tbEmailId.setText(emailId);
+						status = false;
+					}
+
+					@Override
+					public void onSuccess(ParticipantVO result) {
+						tbName.setText(result.getName());
+						tbEmailId.setText(result.getEmail());
+						tbLocation.setText(result.getLocationString());
+						for (String sub : result.getHasSubjects())
+							subWidgetHas.selected.add(sub);
+						for (String sub : result.getNeedSubjects())
+							subWidgetNeed.selected.add(sub);
+						id =result.getId();
+
+						status = true;
+
+					}
+
+				});
 
 		AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
 
@@ -50,6 +76,7 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 			public void onSuccess(List<String> result) {
 				subWidgetHas.addMoreSubjects(result);
 				subWidgetNeed.addMoreSubjects(result);
+
 			}
 
 		};
@@ -79,21 +106,17 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 
 		HorizontalPanel hpGender = new HorizontalPanel();
 		hpGender.add(new Label("Gender"));
-		rbMale = new RadioButton("Gender", "male");
-		rbFemale = new RadioButton("Gender", "female");
-		rbMale.setChecked(true);
-		hpGender.add(rbMale);
-		hpGender.add(rbFemale);
+		rbMail = new RadioButton("Gender", "M");
+		rbFemail = new RadioButton("Gender", "F");
+		rbMail.setChecked(true);
+		hpGender.add(rbMail);
+		hpGender.add(rbFemail);
 		verticalPanel_1.add(hpGender);
-		if(rbMale.isChecked()){
-			gender = rbMale.getText();
-		} else {
-			gender = rbFemale.getText();
-		}
 
 		HorizontalPanel hpEmailId = new HorizontalPanel();
 
 		tbEmailId = new TextBox();
+		tbEmailId.setEnabled(false);
 		hpEmailId.add(new Label("Mail Id"));
 		hpEmailId.add(tbEmailId);
 		verticalPanel_1.add(hpEmailId);
@@ -138,7 +161,7 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 
 	@Override
 	public void onClick(ClickEvent event) {
-		
+
 		if (event.getSource() == btnSave) {
 			lData = mapUI.getLocationDetails();
 			if (!(subWidgetHas.selected.getSubjects().isEmpty() && subWidgetNeed.selected
@@ -147,28 +170,45 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 				Window.alert("save button called  "
 						+ subWidgetHas.selected.getSubjects().size() + " :: "
 						+ subWidgetNeed.selected.getSubjects().size());
-				ParticipantVO partVO = new ParticipantVO(null,
-						tbName.getText(), gender, tbEmailId.getText(), lData
-								.getLatitude(), lData.getLongitude(),
-						tbLocation.getText(), lData.getRadius(),
-						subWidgetHas.selected.getSubjects(),
+				
+				ParticipantVO partVO = new ParticipantVO(id, tbName.getText(), "M", tbEmailId.getText(), lData.getLatitude(),
+						lData.getLongitude(),tbLocation.getText(), lData.getRadius(), subWidgetHas.selected.getSubjects(),
 						subWidgetNeed.selected.getSubjects());
-				service.create(partVO, new AsyncCallback<ParticipantVO>() {
+				if (!status) {
+					service.create(partVO, new AsyncCallback<ParticipantVO>() {
 
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert("Unable to save your data"
-								+ caught.getMessage());
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert("Unable to Create the Profile"
+									+ caught.getMessage());
 
-					}
+						}
 
-					@Override
-					public void onSuccess(ParticipantVO result) {
+						@Override
+						public void onSuccess(ParticipantVO result) {
 
-						Window.alert("Your data has been saved");
-						hideProfileDialog();
-					}
-				});
+							Window.alert("Your data has been saved");
+							hideProfileDialog();
+						}
+					});
+				} else {
+					service.update(partVO, new AsyncCallback<ParticipantVO>() {
+
+						@Override
+						public void onFailure(Throwable caught) {
+							Window.alert("Sorry, No changes has been made"+caught.getMessage());
+						}
+
+						@Override
+						public void onSuccess(ParticipantVO result) {
+							Window.alert("Updated sucessfully");
+							hideProfileDialog();
+
+						}
+
+					});
+				}
+
 			}
 
 		}

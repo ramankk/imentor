@@ -90,9 +90,9 @@ public class HeaderWidget extends Composite {
 			public void execute() {
 				if (!status) {
 					RootPanel.get("tome").add(
-							new ToMeWidget("amicjxkhhg@kawanan.com"));
+							new ToMeWidget("test1@k.com"));
 					RootPanel.get("activity").add(
-							new LocalActivity("amicjxkhhg@kawanan.com"));
+							new LocalActivity("test1@k.com"));
 					status = true;
 				}
 			}
@@ -107,7 +107,7 @@ public class HeaderWidget extends Composite {
 
 			@Override
 			public void execute() {
-				ProfileDialogBox profileDialogBox = new ProfileDialogBox();
+				ProfileDialogBox profileDialogBox = new ProfileDialogBox("test1@k.com","test1");
 				profileDialogBox.show();
 				profileDialogBox.center();
 			}
