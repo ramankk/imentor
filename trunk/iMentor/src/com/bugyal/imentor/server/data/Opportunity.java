@@ -70,11 +70,18 @@ public class Opportunity implements LocationCapable {
 	@Persistent
 	private long lastModifiedTime;
 	
+	@Persistent
+	private String message;
+	
 	// TODO(raman): Add notes in oppurtunity as well. (also in oppVO)
 
 	@PersistenceCapable
 	static class ChangeInfo implements Serializable {
 
+		@PrimaryKey
+	    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+	    private Key key;
+		
 		@Persistent
 		private Key modifier;
 
@@ -97,7 +104,7 @@ public class Opportunity implements LocationCapable {
 	}
 
 	Opportunity(Location location, List<String> subjects, int requiredMentors,
-			List<Participant> contacts, int priority) {
+			List<Participant> contacts, int priority, String message, Participant savedBy) {
 		super();
 		this.subjects = subjects;
 		this.requiredMentors = requiredMentors;
@@ -107,15 +114,22 @@ public class Opportunity implements LocationCapable {
 		this.contacts = new ArrayList<Key>();
 
 		if (contacts != null) {
-			for (Participant m : contacts) {
+			for (int i = 0; i < contacts.size(); i++) {
+				Participant m = contacts.get(i);
 				this.contacts.add(m.getKey());
 			}
 		}
 		setLocation(location);
 		this.active = true; // active when created.
+		this.changeInfo = new ArrayList<ChangeInfo>();
+		if(savedBy != null){
+			ChangeInfo c= new ChangeInfo(savedBy.getKey(), "created");
+			changeInfo.add(c);
+		}
 		
 		this.createdTime = System.currentTimeMillis();
 		this.lastModifiedTime = System.currentTimeMillis();
+		this.message = message;
 	}
 
 	public Point getLocation() {
@@ -141,9 +155,18 @@ public class Opportunity implements LocationCapable {
 		return subjects;
 	}
 
+	public void resetSubjects(List<String> subjects, Participant who){
+		this.subjects.clear();
+		this.subjects.addAll(subjects);
+	}
+	
+	public void appendSubjects(List<String> subjects, Participant who){
+		this.subjects.addAll(subjects);
+	}
+	
 	public void addSubject(String subject, Participant who) {
-		this.changeInfo.add(new ChangeInfo(who.getKey(), "Added subject "
-				+ subject));
+//		this.changeInfo.add(new ChangeInfo(who.getKey(), "Added subject "
+//				+ subject));
 		this.subjects.add(subject);
 		this.lastModifiedTime = System.currentTimeMillis();
 	}
@@ -271,5 +294,13 @@ public class Opportunity implements LocationCapable {
 	 */
 	public long getLastModifiedTime() {
 		return lastModifiedTime;
+	}
+
+	public void setMessage(String message) {
+		this.message = message;
+	}
+
+	public String getMessage() {
+		return message;
 	}
 }

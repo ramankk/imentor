@@ -24,14 +24,14 @@ public class DataGenerator {
 		for (int i = 0; i < count; i++) {
 			String name = rs.nextString();
 			String email = rs.nextString() + "@kawanan.com";
-
+			
 			List<String> hasSubjects = getRandomList();
 			List<String> needSubjects = getRandomList();
 
 			ParticipantManager participantManager = MentorManager.INSTANCE
 					.getParticipantManager();
 			Participant participant = participantManager.createParticipant(
-					name, getRandomLocation(), email);
+					name, getRandomGender(), getRandomLocation(), email);
 
 			for (String subject : hasSubjects) {
 				participantManager.addHasKnowledge(participant, subject,
@@ -46,9 +46,8 @@ public class DataGenerator {
 				List<Participant> contacts = new ArrayList<Participant>();
 				contacts.add(participant);
 				MentorManager.INSTANCE.getOpportunityManager()
-						.createOpportunity(getRandomLocation(),
-								getRandomList(), r.nextInt(7), contacts,
-								r.nextInt(4));
+						.createOpportunity(getRandomLocation(), getRandomList(),
+								r.nextInt(7), contacts, r.nextInt(4), rs.nextString(), participant);
 			}
 
 		}
@@ -62,6 +61,13 @@ public class DataGenerator {
 		return location;
 	}
 
+	private String getRandomGender(){
+		Random random = new Random();
+		String[] arr = {"male", "female"};
+		String gender = arr[random.nextInt(2)];
+		return gender;
+	}
+	
 	private List<String> getRandomList() {
 		Random random = new Random();
 		String[] arr = { "ENGLISH", "TELUGU", "MATH", "PHYSICS", "CHEMISTRY",

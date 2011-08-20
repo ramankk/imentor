@@ -95,7 +95,7 @@ public class SubjectsSuggestWidget extends Composite {
 	public final SuggestBox suggestBox = new SuggestBox(oracle);
 	public final SelectedItemsList selected = new SelectedItemsList();
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public SubjectsSuggestWidget() {
 		suggestBox.addSelectionHandler(new SelectionHandler() {
 			@Override

@@ -1,6 +1,5 @@
 package com.bugyal.imentor.frontend.client;
 
-import com.bugyal.imentor.frontend.shared.SearchResponse;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;

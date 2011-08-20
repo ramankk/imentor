@@ -27,9 +27,11 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 	TextBox tbName, tbEmailId;
 	LocationData lData = new LocationData();
 
-	RadioButton rbMail, rbFemail;
+	RadioButton rbMale, rbFemale;
 	MapUI mapUI;
+	String gender;
 
+	@SuppressWarnings("deprecation")
 	public ProfileDialogBox() {
 
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
@@ -77,12 +79,17 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 
 		HorizontalPanel hpGender = new HorizontalPanel();
 		hpGender.add(new Label("Gender"));
-		rbMail = new RadioButton("Gender", "M");
-		rbFemail = new RadioButton("Gender", "F");
-		rbMail.setChecked(true);
-		hpGender.add(rbMail);
-		hpGender.add(rbFemail);
+		rbMale = new RadioButton("Gender", "male");
+		rbFemale = new RadioButton("Gender", "female");
+		rbMale.setChecked(true);
+		hpGender.add(rbMale);
+		hpGender.add(rbFemale);
 		verticalPanel_1.add(hpGender);
+		if(rbMale.isChecked()){
+			gender = rbMale.getText();
+		} else {
+			gender = rbFemale.getText();
+		}
 
 		HorizontalPanel hpEmailId = new HorizontalPanel();
 
@@ -131,7 +138,7 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 
 	@Override
 	public void onClick(ClickEvent event) {
-
+		
 		if (event.getSource() == btnSave) {
 			lData = mapUI.getLocationDetails();
 			if (!(subWidgetHas.selected.getSubjects().isEmpty() && subWidgetNeed.selected
@@ -141,7 +148,7 @@ public class ProfileDialogBox extends DialogBox implements ClickHandler {
 						+ subWidgetHas.selected.getSubjects().size() + " :: "
 						+ subWidgetNeed.selected.getSubjects().size());
 				ParticipantVO partVO = new ParticipantVO(null,
-						tbName.getText(), tbEmailId.getText(), lData
+						tbName.getText(), gender, tbEmailId.getText(), lData
 								.getLatitude(), lData.getLongitude(),
 						tbLocation.getText(), lData.getRadius(),
 						subWidgetHas.selected.getSubjects(),

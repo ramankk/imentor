@@ -1,81 +1,87 @@
 package com.bugyal.imentor.frontend.client;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.DoubleClickEvent;
-import com.google.gwt.event.dom.client.DoubleClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ScrollPanel;
 import com.google.gwt.user.client.ui.StackPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class OpportunityDialogBox extends DialogBox implements ClickHandler {
-	SubjectsSuggestWidget subWidget = new SubjectsSuggestWidget();
-	MentorServiceAsync service;
-	TextArea txtMessage;
-	TextArea tbLocation = new TextArea();
-	Button btnCreate, btnCancel, btnClear, btnPrev, btnNext;
-	List<OpportunityVO> myOpps = new ArrayList<OpportunityVO>();
-	LocationData lData = new LocationData();
-	MapUI mapUI;
-	int oppCount=0;
-	StackPanel stackPanel = new StackPanel();
+	private final SubjectsSuggestWidget subWidget = new SubjectsSuggestWidget();
+
+	private final TextArea txtMessage = new TextArea();;
+	private final TextArea tbLocation = new TextArea();
+	private final StackPanel stackPanel = new StackPanel();
+
+	private OpportunityVO showingOpportunity = null;
+
+	private static MapUI mapUI;
+	private MentorServiceAsync service;
+
+	private Button btnCreate, btnCancel, btnClear;
+	private LocationData lData = new LocationData();
+	private String emailId;
+
+	private MyOpportunitiesWidget myOppWidget;
+
+	private final AsyncCallback<List<String>> getSubjectsCallback = new AsyncCallback<List<String>>() {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert("Fail to get Subjects list");
+		}
+
+		@Override
+		public void onSuccess(List<String> result) {
+			Window.alert("success to get Subjects list");
+			subWidget.addMoreSubjects(result);
+		}
+	};
+
+	private final AsyncCallback<List<OpportunityVO>> getOpportuniesCallback = new AsyncCallback<List<OpportunityVO>>() {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert("Unable to get opportunity" + caught.getMessage());
+		}
+
+		@Override
+		public void onSuccess(List<OpportunityVO> result) {
+			Window.alert("Success to get Subjects list");
+			addMyOpportunities(result);
+		}
+	};
 
 	public OpportunityDialogBox() {
-
+		myOppWidget = new MyOpportunitiesWidget(this);
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 		setSize("400px", "608px");
 		setHTML("Opportunity");
+		emailId = "sridhar@kawa";
 
-		AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
+		// TODO(raman,sridhar): Get Subjects only once per browser and resuse
+		// it.. dont let every
+		// widget fetch its own list of subjects.
+		Window.alert("getsub");
+		service.getSubjects(getSubjectsCallback);
+		Window.alert("getOpp");
+		service.getOpportunitiesById(emailId, getOpportuniesCallback);
 
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Fail to get Subjects list");
-			}
-
-			@Override
-			public void onSuccess(List<String> result) {
-				subWidget.addMoreSubjects(result);
-			}
-		};
-		service.getSubjects(callback);
-		
-		AsyncCallback<List<OpportunityVO>> callback1 = new AsyncCallback<List<OpportunityVO>>() {
-
-			@Override
-			public void onFailure(Throwable caught) {
-				Window.alert("Unable to get opportunity"+ caught.getMessage());
-			}
-
-			@Override
-			public void onSuccess(List<OpportunityVO> result) {
-				Window.alert(""+result.size());
-				myOpps=result;
-		//		if(result.size()!=0)
-					myOpps();
-			}
-
-		};
-		service.getOpportunitiesById("hm09j25q0n@kawanan.com", callback1);
-		
 		setWidget(horizontalPanel);
 		horizontalPanel.setSize("750px", "558px");
 
 		VerticalPanel verticalPanel = new VerticalPanel();
-		
 		verticalPanel.setSize("259px", "558px");
 
 		Label lblSubjects = new Label("Subjects:");
@@ -93,14 +99,15 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 		Label lblMessage = new Label("Message:");
 		verticalPanel.add(lblMessage);
 
-		txtMessage = new TextArea();
 		verticalPanel.add(txtMessage);
 		txtMessage.setSize("245px", "90px");
 
 		btnClear = new Button("Clear");
 		btnClear.addClickHandler(this);
+
 		btnCreate = new Button("Save");
 		btnCreate.addClickHandler(this);
+
 		btnCancel = new Button("Cancel");
 		btnCancel.addClickHandler(this);
 
@@ -109,145 +116,130 @@ public class OpportunityDialogBox extends DialogBox implements ClickHandler {
 		hp.add(btnCreate);
 		hp.add(btnCancel);
 		verticalPanel.add(hp);
-		
-		Label myOppLabel = new Label("My Opportunities:");
-//		HorizontalPanel hp1 = new HorizontalPanel();
-		btnPrev = new Button("My Opp");
-//		btnNext = new Button("Next");
-//		hp1.add(myOppLabel);
-		hp.add(btnPrev);
-		btnPrev.addClickHandler(this);
-//		hp1.add(btnNext);
-//		btnNext.addClickHandler(this);
-//		verticalPanel.add(hp1);
 
-		stackPanel.add(verticalPanel,"Set Opportunity");
-		
+		stackPanel.add(verticalPanel, "Set Opportunity");
+
 		horizontalPanel.add(stackPanel);
 		mapUI = new MapUI(false, tbLocation);
 		mapUI.setWidth("500px");
 		horizontalPanel.add(mapUI);
 	}
 
+	private void addMyOpportunities(List<OpportunityVO> myOpportunities) {
+		if (myOpportunities.size() == 0) {
+			Window.alert(" " + myOpportunities.size());
+			stackPanel.add(new Label("No opportunity is created by you.. "),
+					"My Opportunity");
+		} else {
+			Window.alert(" " + myOpportunities.size());
+			myOppWidget.setOpportunities(myOpportunities);
+			stackPanel.add(myOppWidget, "My Opportunity");
+		}
+	}
+
+	public void showOpportunity(OpportunityVO o) {
+		subWidget.selected.clearAll();
+		// TODO(Sridhar, Ravi): Propagate message to the datastore and get it
+		// back, no more faking the message.
+		txtMessage.setText("");
+		tbLocation.setText(o.getLocString());
+		mapUI.setMarkerLocation(o.getLatitude(), o.getLongitude());
+		subWidget.selected.clearAll();
+		for (String sub : o.getSubjects()) {
+			subWidget.selected.add(sub);
+		}
+		stackPanel.showStack(0);
+		showingOpportunity = o;
+	}
+
 	@Override
 	public void onClick(ClickEvent event) {
 		lData = mapUI.getLocationDetails();
 		if (event.getSource() == btnCreate) {
-
 			if (!(subWidget.selected.getSubjects().isEmpty())
 					&& !(tbLocation.getText().contains("Please, Use the Map"))) {
+				Window.alert("form validated !! ");
+				Long id = showingOpportunity == null ? null
+						: showingOpportunity.getId();
+				OpportunityVO oppVO = new OpportunityVO(id,
+						subWidget.selected.getSubjects(), 1, 0,
+						lData.getLatitude(), lData.getLongitude(), 1,
+						tbLocation.getText(), txtMessage.getText());
 
-				OpportunityVO oppVO = new OpportunityVO(null,
-						subWidget.selected.getSubjects(), 0, 0,
-						lData.getLatitude(), lData.getLongitude(), 0,
-						tbLocation.getText());
+				if (id == null) {
+					// Create mode.
+					Window.alert("new Opportunity !! ");
+					service.createOpportunity(emailId, oppVO,
+							new AsyncCallback<OpportunityVO>() {
 
-				service.createOpportunity(oppVO,
-						new AsyncCallback<OpportunityVO>() {
+								@Override
+								public void onFailure(Throwable caught) {
+									Window.alert("Sorry, Unble to Create the Opportunity "
+											+ caught.getMessage());
+								}
 
-							@Override
-							public void onFailure(Throwable caught) {
-								Window.alert("Sorry, Unble to Create the Opportunity"
-										+ caught.getMessage());
-							}
+								@Override
+								public void onSuccess(OpportunityVO result) {
+									Window.alert("You Have successfully created an Opportunity");
+									clearOpportunity();
+									hideOpportunityDialogBox();
+									service.getOpportunitiesById(emailId,
+											getOpportuniesCallback);
+								}
 
-							@Override
-							public void onSuccess(OpportunityVO result) {
-								Window.alert("You Have successfully created an Opportunity");
-								hideOpportunityDialogBox();
-							}
+							});
+				} else {
+					// edit mode.
+					Window.alert("update Opportunity !! ");
+					service.updateOpportunity(oppVO, emailId,
+							new AsyncCallback<OpportunityVO>() {
 
-						});
+								@Override
+								public void onFailure(Throwable caught) {
+									Window.alert("Sorry, Unble to Create the Opportunity "
+											+ caught.getMessage());
+								}
+
+								@Override
+								public void onSuccess(OpportunityVO result) {
+									Window.alert("You Have successfully updated an Opportunity");
+									clearOpportunity();
+									hideOpportunityDialogBox();
+									service.getOpportunitiesById(emailId,
+											getOpportuniesCallback);
+								}
+							});
+				}
+
 			}
-
 		}
 
 		if (event.getSource() == btnCancel) {
-			subWidget.selected.clearAll();
-			tbLocation.setText("Please, Use the Map");
-			txtMessage.setText("");
+			clearOpportunity();
 			hideOpportunityDialogBox();
 		}
 
 		if (event.getSource() == btnClear) {
-			subWidget.selected.clearAll();
-			tbLocation.setText("Please, Use the Map");
-			txtMessage.setText("");
+			clearOpportunity();
 		}
-		
-		if(event.getSource() == btnPrev){
-			if(myOpps.get(oppCount)!= null){
-				subWidget.selected.clearAll();
-				txtMessage.setText("");
-				tbLocation.setText(myOpps.get(oppCount).getLocString());
-				mapUI.setMarkerLocation(myOpps.get(oppCount).getLatitude(), myOpps.get(oppCount).getLongitude());
-				for(String sub: myOpps.get(oppCount).getSubjects())
-					subWidget.selected.add(sub);
-				oppCount++;
-			}
-		}
-//		
-//		if(event.getSource() == btnNext){
-//			if(myOpps.get(oppCount)!= null){
-//				subWidget.selected.clearAll();
-//				txtMessage.setText("");
-//				tbLocation.setText(myOpps.get(oppCount).getLocString());
-//				mapUI.setMarkerLocation(myOpps.get(oppCount).getLatitude(), myOpps.get(oppCount).getLongitude());
-//				for(String sub: myOpps.get(oppCount).getSubjects())
-//					subWidget.selected.add(sub);
-//				oppCount--;
-//			}
-//			
-//		}
 
+	}
+
+	protected void clearOpportunity() {
+		subWidget.selected.clearAll();
+		tbLocation.setText("Please, Use the Map");
+		txtMessage.setText("");
+		showingOpportunity = null;
 	}
 
 	protected void hideOpportunityDialogBox() {
 		this.hide();
 	}
-	
-	
-	private void myOpps(){
-		if(myOpps.size() == 0){
-			stackPanel.add(new Label("No opportunity is created by you.. "),"My Opportunity");
-		}else {
-			ScrollPanel scroller = new ScrollPanel();
-			for(final OpportunityVO opp : myOpps){
-				String subs=opp.getSubjects().get(0);
-				int size=opp.getSubjects().size();				
-				for(int i=1; i<size; i++ ){
-					subs+=","+opp.getSubjects().get(i);
-				}
-				VerticalPanel vp = new VerticalPanel();
-				Button edit = new Button("Edit");
-				Label l = new Label("Subject: "+subs+"\n"+"Location: "+opp.getLocString()+"\n");
-				l.addClickHandler(new ClickHandler(){
 
-					@Override
-					public void onClick(ClickEvent event) {
-						mapUI.setMarkerLocation(opp.getLatitude(), opp.getLongitude());
-					}
-					
-				});
-				edit.addClickHandler(new ClickHandler(){
-
-					@Override
-					public void onClick(ClickEvent event) {
-						subWidget.selected.clearAll();
-						txtMessage.setText("");
-						tbLocation.setText(myOpps.get(oppCount).getLocString());
-						mapUI.setMarkerLocation(myOpps.get(oppCount).getLatitude(), myOpps.get(oppCount).getLongitude());
-						for(String sub: myOpps.get(oppCount).getSubjects())
-							subWidget.selected.add(sub);
-						stackPanel.showStack(0);
-					}
-					
-				});
-				vp.add(l);
-				vp.add(edit);
-				scroller.add(vp);
-			}
-			stackPanel.add(scroller,"My Opportunity");
-		}
+	public void showOnMap(OpportunityVO o) {
+		mapUI.setMarkerLocation(o.getLatitude(), o.getLongitude());
 	}
+
+	// TODO(Sridhar, Ravi): How to go to creat-new-oppporutnity after checking
+	// my-list-of-opportunities.. ?!!
 }

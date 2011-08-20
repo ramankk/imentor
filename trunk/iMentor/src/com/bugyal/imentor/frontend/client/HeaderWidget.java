@@ -12,6 +12,7 @@ import com.google.gwt.user.client.ui.MenuItemSeparator;
 public class HeaderWidget extends Composite {
 
 	static boolean status = false;
+
 	public HeaderWidget() {
 		initWidget(getHeaderWidget());
 	}
@@ -50,38 +51,27 @@ public class HeaderWidget extends Composite {
 
 	private Command seedRandomDataCommand() {
 		return new Command() {
-			
+
 			@Override
 			public void execute() {
 				DataGenerator dataGenerator = new DataGenerator();
 				dataGenerator.show();
 				dataGenerator.center();
-				
-				/*MentorServiceAsync service = GWT.create(MentorService.class);
-				service.generateRandomData(new AsyncCallback<Void>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						Window.alert("Exception : " + caught.getMessage());
-					}
-
-					@Override
-					public void onSuccess(Void result) {
-						Window.alert("Data generation complete ");
-					}
-				});*/
 			}
 
 		};
 	}
+
+	private OpportunityDialogBox opportunityDialogBox = null;
 
 	public Command opportunityCommand() {
 		return new Command() {
 
 			@Override
 			public void execute() {
-
-				OpportunityDialogBox opportunityDialogBox = new OpportunityDialogBox();
+				if (opportunityDialogBox == null) {
+					opportunityDialogBox = new OpportunityDialogBox();
+				}
 				opportunityDialogBox.show();
 				opportunityDialogBox.center();
 			}
@@ -94,9 +84,11 @@ public class HeaderWidget extends Composite {
 
 			@Override
 			public void execute() {
-				if(!status){
-					RootPanel.get("tome").add(new ToMeWidget("amicjxkhhg@kawanan.com"));
-					RootPanel.get("activity").add(new LocalActivity("amicjxkhhg@kawanan.com"));
+				if (!status) {
+					RootPanel.get("tome").add(
+							new ToMeWidget("amicjxkhhg@kawanan.com"));
+					RootPanel.get("activity").add(
+							new LocalActivity("amicjxkhhg@kawanan.com"));
 					status = true;
 				}
 			}

@@ -1,13 +1,8 @@
 package com.bugyal.imentor.frontend.client;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import com.gargoylesoftware.htmlunit.javascript.host.Event;
 import com.google.gwt.junit.client.GWTTestCase;
-import com.google.gwt.maps.client.MapWidget;
-
-import com.google.gwt.user.client.ui.SuggestBox;
 import com.google.gwt.user.client.ui.TextArea;
 
 public class ProfileDialogTest extends GWTTestCase {
@@ -21,6 +16,7 @@ public class ProfileDialogTest extends GWTTestCase {
 	public void checkDisplay()
 	{
 		ProfileDialogBox profileDialogBox = new ProfileDialogBox();
+		@SuppressWarnings("unused")
 		TextArea location = profileDialogBox.tbLocation;
 //		
 //		TextArea t1= profileDialogBox.textArea;

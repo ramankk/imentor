@@ -10,12 +10,14 @@ public class LRUCache<K, V> {
 	private LinkedHashMap<K, V> map;
 	private int cacheSize;
 
+	@SuppressWarnings("serial")
 	public LRUCache(int cacheSize) {
 		this.cacheSize = cacheSize;
 		int hashTableCapacity = (int) Math
 				.ceil(cacheSize / hashTableLoadFactor) + 1;
 		map = new LinkedHashMap<K, V>(hashTableCapacity, hashTableLoadFactor,
-				true) {
+				true) {				
+
 			@Override
 			protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {
 				return size() > LRUCache.this.cacheSize;

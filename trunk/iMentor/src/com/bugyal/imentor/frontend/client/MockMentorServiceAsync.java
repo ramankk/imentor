@@ -10,25 +10,17 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class MockMentorServiceAsync implements MentorServiceAsync {
 
-//	Set<ParticipantVO> created = new HashSet<ParticipantVO>();
-	
+	// Set<ParticipantVO> created = new HashSet<ParticipantVO>();
+
 	@Override
 	public void create(ParticipantVO p, AsyncCallback<ParticipantVO> callback) {
-	//	created.add(p);
+		// created.add(p);
 		callback.onSuccess(p);
 	}
-	
+
 	public boolean isCreated(ParticipantVO p) {
-//		return created.contains(p);
+		// return created.contains(p);
 		return false;
-	}
-	
-
-	@Override
-	public void createOpportunity(OpportunityVO o,
-			AsyncCallback<OpportunityVO> callback) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
@@ -38,7 +30,6 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 
 	}
 
-	
 	@Override
 	public void getSubjects(AsyncCallback<List<String>> callback) {
 		String[] subs = { "abc", "def" };
@@ -53,16 +44,9 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 	}
 
 	@Override
-	public void updateOpportunity(OpportunityVO o,
-			AsyncCallback<OpportunityVO> callback) {
-		// TODO Auto-generated method stub
-
-	}
-
-	@Override
 	public void feedToMe(String emailId, AsyncCallback<SearchResponse> callback) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -70,34 +54,46 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 			String strlocation, int radius, List<String> hasSubs,
 			List<String> needSubs, AsyncCallback<SearchResponse> callback) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void localActivity(String email,
 			AsyncCallback<SearchResponse> asyncCallback) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void generateRandomData(int range, AsyncCallback<Void> asyncCallback) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void deleteRecords(AsyncCallback<Long> callback) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void getOpportunitiesById(String emailId,
 			AsyncCallback<List<OpportunityVO>> callback) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
+	@Override
+	public void createOpportunity(String emailId, OpportunityVO o,
+			AsyncCallback<OpportunityVO> callback) {
+		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void updateOpportunity(OpportunityVO o, String emailId,
+			AsyncCallback<OpportunityVO> callback) {
+		// TODO Auto-generated method stub
+
+	}
 }
