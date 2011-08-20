@@ -210,6 +210,9 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		Opportunity o = null;
 		try {
 			o = pm.getObjectById(Opportunity.class, key);
+			// Magic to load knowledge and notes.
+			o.getChangeInfo();
+			o.getContacts();
 		} finally {
 			pm.close();
 		}
