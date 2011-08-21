@@ -40,12 +40,12 @@ public class RankerTest {
 				200000, Arrays.asList("science"), Arrays.asList("chemistry",
 						"physics"));
 
-		sr1.add(new SearchResult(p1, true, Arrays.asList("maths", "science")));
+		sr1.add(new SearchResult(p1, true, Arrays.asList("maths", "science"), 12));
 
-		sr1.add(new SearchResult(p2, false, Arrays.asList("maths")));
-		sr1.add(new SearchResult(p3, false, Arrays.asList("maths", "science")));
-		sr1.add(new SearchResult(p4, false, Arrays.asList("maths")));
-		sr1.add(new SearchResult(p5, false, Arrays.asList("science")));
+		sr1.add(new SearchResult(p2, false, Arrays.asList("maths"), 2));
+		sr1.add(new SearchResult(p3, false, Arrays.asList("maths", "science"), 8));
+		sr1.add(new SearchResult(p4, false, Arrays.asList("maths"), 18));
+		sr1.add(new SearchResult(p5, false, Arrays.asList("science"), 28));
 	}
 
 	@After

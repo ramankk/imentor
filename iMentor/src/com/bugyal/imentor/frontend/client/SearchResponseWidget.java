@@ -27,7 +27,7 @@ public class SearchResponseWidget extends Composite {
 	private int currentPage;
 
 	public SearchResponseWidget() {
-		this(7); // default size
+		this(10); // default size
 	}
 	
 	public SearchResponseWidget(int size) {
@@ -90,7 +90,6 @@ public class SearchResponseWidget extends Composite {
 			}
 		}
 		backwardButton.setEnabled(currentPage != 0);
-//		Window.alert("size "+ searchResults.size()+" page " + currentPage + "resutl " + searchResults.size()/pageSize);
 
 		// Need to check it out by sridhar...!
 		if( currentPage == (searchResults.size()/pageSize) ) {

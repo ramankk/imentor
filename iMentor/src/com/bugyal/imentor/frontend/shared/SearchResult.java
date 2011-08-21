@@ -10,7 +10,8 @@ public class SearchResult implements IsSerializable, Comparable<SearchResult> {
 	private boolean has;
 	private ParticipantVO p;
 	private OpportunityVO o;
-	
+
+	private String distance;
 	private List<String> subjects;
 	
 	// TODO(Raman, Sridhar): This is temporary, should Ideally use an Enum.
@@ -21,14 +22,13 @@ public class SearchResult implements IsSerializable, Comparable<SearchResult> {
 		
 	}
 	
-	public SearchResult(ParticipantVO p, boolean has, List<String> subjects) {
+	public SearchResult(ParticipantVO p, boolean has, List<String> subjects, double distance) {
 		isTypeParticipant = true;
 		this.p = p;
 		this.has = has;
-		// AppEngine arraylist = normal arraylist..
+		this.distance = getDistanceString(distance);
+		// AppEngine array list = normal array list..
 		this.subjects = appEngineListToSimpleList(subjects);
-		// strip participantVO object to reduce network-foot-print.
-		//this.p.trim();
 	}
 	
 	public static final List<String> appEngineListToSimpleList(List<String> subjects) {
@@ -39,14 +39,12 @@ public class SearchResult implements IsSerializable, Comparable<SearchResult> {
 		return returnList;
 	}
 	
-	public SearchResult(OpportunityVO o, List<String> subjects) {
-		// AppEngine arraylist = normal arraylist..
+	public SearchResult(OpportunityVO o, List<String> subjects, double distance) {
 		this.o = o;
 		this.isTypeParticipant = false;
+		// AppEngine array list = normal array list..
 		this.subjects = appEngineListToSimpleList(subjects);
-		
-		// strip opportunityVO object to reduce network-foot-print.
-		//this.o.trim();
+		this.distance = getDistanceString(distance);
 	}
 
 	public boolean isHas() {
@@ -82,6 +80,19 @@ public class SearchResult implements IsSerializable, Comparable<SearchResult> {
 		    return p.getLatitude();
 		} else {
 			return o.getLatitude();
+		}
+	}
+	
+	public String getDistance() {
+		return distance;
+	}
+	
+	public String getDistanceString(double distanceInMtrs) {
+		int dist = (int) distanceInMtrs;
+		if (dist < 1000) {
+			return dist + " meters";
+		} else {
+			return ((int)(dist/100))/10 + " kms"; 
 		}
 	}
 	
