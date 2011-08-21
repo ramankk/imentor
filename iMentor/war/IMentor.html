@@ -36,13 +36,11 @@
 					FB.api(
 					{
 						method : 'fql.query',
-						query : 'SELECT name,sex,email FROM user WHERE uid='
-								+ userId
+						query : 'SELECT name,sex,email FROM user WHERE uid=' + userId
 					},
 					function(response) {
 						document.getElementById("name").innerHTML = response[0].name;
-						document
-								.getElementById("email").innerHTML = response[0].email;
+						document.getElementById("email").innerHTML = response[0].email;
 						showIMentorApp();
 					});
 				} else {
@@ -52,14 +50,14 @@
 		};
 	</script>  
     <div class="main">
-    	<div id="test"></div>
-		<div class="top">
+    	<div class="top">
 			<div id="head" class="menu"></div>
 		</div>
 		<div class="bar">
 			<b id="name"></b><b id="email"></b>
 		</div>
 		<div class="middle" id="middle" width="100%"></div>
+		<div id="imentortest"></div>
 		<div class="bottom">
 		</div>
 	</div>

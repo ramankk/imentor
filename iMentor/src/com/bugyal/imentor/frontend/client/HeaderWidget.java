@@ -113,4 +113,9 @@ public class HeaderWidget extends Composite {
 	public UserDetails getUserDetails() {
 		return this.userDetails;
 	}
+
+	// for testing
+	public void setEmailForTest(String email) {
+		this.userDetails.setEmail(email);
+	}
 }

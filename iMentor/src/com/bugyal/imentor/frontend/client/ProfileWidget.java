@@ -80,7 +80,6 @@ public class ProfileWidget extends Composite implements ClickHandler {
 				subWidgetNeed.selected.clearAll();
 				subWidgetHas.addMoreSubjects(result);
 				subWidgetNeed.addMoreSubjects(result);
-
 			}
 		};
 		service.getSubjects(callback);
