@@ -13,7 +13,7 @@ public class IMentor implements EntryPoint {
 		setShowTrigger2(this);
 		
 		// TODO(raman): Remove this line, don't submit.
-		//loadApp();
+		loadApp();
 	}
 	
 	public void loadApp(){
