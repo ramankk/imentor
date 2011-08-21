@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.beoui.geocell.GeocellUtils;
+import com.beoui.geocell.model.Point;
 import com.bugyal.imentor.MentorException;
 import com.bugyal.imentor.frontend.client.LocationData;
 import com.bugyal.imentor.frontend.client.MentorService;
@@ -248,6 +250,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			String strlocation, int radius, List<String> hasSubs,
 			List<String> needSubs) {
 		SearchResponse response = new SearchResponse();
+		Point pt = new Point(latitude, longitude);
 		try {
 			Set<String> hasSubjects = new HashSet<String>();
 			Set<String> needSubjects = new HashSet<String>();
@@ -274,7 +277,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 					}
 				}
 				has.add(new SearchResult(ValueObjectGenerator.create(p), true,
-						matchingSubs));
+						matchingSubs, GeocellUtils.distance(pt, p.getLocation())));
 			}
 
 			for (Participant p : pm.searchParticipantsBySubjects(hasSubs,
@@ -286,7 +289,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 					}
 				}
 				need.add(new SearchResult(ValueObjectGenerator.create(p),
-						false, matchingSubs));
+						false, matchingSubs, GeocellUtils.distance(pt, p.getLocation())));
 			}
 
 			for (Opportunity o : om.searchOpportunities(location, hasSubs)) {
@@ -298,7 +301,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 					}
 				}
 				need.add(new SearchResult(ValueObjectGenerator.create(o),
-						matchingSubs));
+						matchingSubs, GeocellUtils.distance(pt, o.getLocation())));
 			}
 			response.setHas(has);
 			response.setNeed(need);
@@ -360,15 +363,16 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 					pi.getLoc().getActiveRadius());
 
 			for (Participant p : pm.searchParticipantsByLocation(location)) {
+				double distance = GeocellUtils.distance(pi.getLocation(), p.getLocation());
 				has.add(new SearchResult(ValueObjectGenerator.create(p), true,
-						p.getHasSubjects()));
+						p.getHasSubjects(), distance));
 				need.add(new SearchResult(ValueObjectGenerator.create(p),
-						false, p.getNeedSubjects()));
+						false, p.getNeedSubjects(), distance));
 			}
 
 			for (Opportunity o : om.allOpportunites(location)) {
 				need.add(new SearchResult(ValueObjectGenerator.create(o), o
-						.getSubjects()));
+						.getSubjects(), GeocellUtils.distance(pi.getLocation(), o.getLocation())));
 			}
 			response.setHas(has);
 			response.setNeed(need);

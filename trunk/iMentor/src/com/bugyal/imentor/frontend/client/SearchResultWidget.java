@@ -2,57 +2,63 @@ package com.bugyal.imentor.frontend.client;
 
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Label;
 
 public class SearchResultWidget extends Composite {
 
-	String[] colors = { "#FFB90F", "#DAA520" };
+	String[] colors = {"#F0FAFA", "#FFFFFF"};
 
-	Label name = new Label();
-	Label rel = new Label();
-	Label subjects = new Label();
-
-	HorizontalPanel hp = new HorizontalPanel();
+	Label message = new Label();
+	Label distance = new Label();
+	Anchor pursueLink = new Anchor("->");
+	
+	FlexTable table = new FlexTable();
 
 	public SearchResultWidget(boolean isEven) {
-		hp.setSize("600px", "30px");
+		table.setSize("600px", "24px");
 
-		DOM.setStyleAttribute(hp.getElement(), "backgroundColor",
+		DOM.setStyleAttribute(table.getElement(), "backgroundColor",
 				isEven ? colors[0] : colors[1]);
 
-		hp.add(name);
-		hp.add(subjects);
-		hp.add(rel);
+		table.setWidget(0, 0, message);
+		table.getFlexCellFormatter().setColSpan(0, 0, 5);
+		table.setWidget(0, 6, distance);
+		table.setWidget(0, 7, pursueLink);
 
-		initWidget(hp);
+		initWidget(table);
 	}
 
 	public void setResult(SearchResult result) {
+		StringBuilder messageString = new StringBuilder(); 
 		if (result.isTypeParticipant()) {
-			name.setText(result.getP().getName());
-
+			table.setTitle(result.getP().getLocationString());
+			messageString.append(result.getP().getName());
 			if (result.isHas()) {
-				rel.setText(" can help you in ");
+				messageString.append(" can help you in ");
 			} else {
-				rel.setText(" is looking for your help in ");
+				messageString.append(" is looking for your help in ");
 			}
 		} else {
-			name.setText("Opportunity in ");
-			rel.setText("at "+result.getO().getLocString());
+			table.setTitle(result.getO().getLocString());
+			messageString.append("Opportunity in ");
 		}
-		String subs = " ";
+		messageString.append(" [");
 		for (String str : result.getSubjects()) {
-			subs += str + ", ";
+			messageString.append(str).append(", ");
 		}
-		subjects.setText(subs.substring(0, subs.length() - 2));
+		messageString.append("] ");
+		message.setText(messageString.toString());
+		
+		distance.setText(result.getDistance());
 	}
 
 	public void clear() {
-		name.setText("");
-		rel.setText("");
-		subjects.setText("");
+		message.setText("");
+		distance.setText("");
+		pursueLink.setHref("#");
 	}
 
 }

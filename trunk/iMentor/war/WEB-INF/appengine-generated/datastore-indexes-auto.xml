@@ -1,14 +1,14 @@
-<!-- Indices written at Sun, 21 Aug 2011 11:39:54 UTC -->
+<!-- Indices written at Sun, 21 Aug 2011 17:19:08 UTC -->
 
 <datastore-indexes>
 
-    <!-- Used 54 times in query history -->
+    <!-- Used 14 times in query history -->
     <datastore-index kind="Participant" ancestor="false" source="auto">
         <property name="geocells" direction="asc"/>
         <property name="lastModifiedTime" direction="asc"/>
     </datastore-index>
 
-    <!-- Used 30 times in query history -->
+    <!-- Used 20 times in query history -->
     <datastore-index kind="Opportunity" ancestor="false" source="auto">
         <property name="active" direction="asc"/>
         <property name="geocells" direction="asc"/>
