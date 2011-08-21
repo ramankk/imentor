@@ -93,14 +93,12 @@ public class ParticipantManagerImplTest {
 		printCells(p);
 		printCells(p2);
 		
-		/*pmi.addHasKnowledge(p, "Math", 5, p);
-		pmi.addHasKnowledge(p, "CS", 6, p);
+		pmi.addHasKnowledge(p, Arrays.asList(new String[]{"Math", "CS"}), 5, p);
+		pmi.addHasKnowledge(p2, Arrays.asList(new String[]{"Math", "Photography"}), 3, p);
 		
-		pmi.addHasKnowledge(p2, "Math", 3, p);
-		pmi.addHasKnowledge(p2, "Photography", 5, p2);
+		pmi.addNeedKnowledge(p2, Arrays.asList(new String[]{"CS"}), 4, p2);
+		pmi.addNeedKnowledge(p, Arrays.asList(new String[]{"Photography"}), 3, p);
 		
-		pmi.addNeedKnowledge(p2, "CS", 4, p2);
-		pmi.addNeedKnowledge(p, "Photography", 3, p);*/
 		
 		List<Participant> pl = pmi.searchParticipantsBySubject("CS", dummyLoc1, true);
 		assertEquals(1, pl.size());
