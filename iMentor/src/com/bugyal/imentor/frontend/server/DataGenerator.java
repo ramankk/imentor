@@ -14,16 +14,22 @@ import com.bugyal.imentor.server.data.Participant;
 
 public class DataGenerator {
 	private Random r = new Random();
-	private RandomString rs = new RandomString(10);
-
+	private RandomString rs = new RandomString(5);
+	
 	DataGenerator(int count) throws MentorException {
 		createRandomParticipants(count);
 	}
 
 	void createRandomParticipants(int count) throws MentorException {
 		for (int i = 0; i < count; i++) {
-			String name = rs.nextString();
-			String email = rs.nextString() + "@kawanan.com";
+			String name = "";
+			String gender = getRandomGender();
+			if (gender.equals("male")) {
+				name = Names.BOYS.get(r.nextInt(Names.BOYS.size()));
+			} else {
+				name = Names.GIRLS.get(r.nextInt(Names.GIRLS.size()));
+			}
+			String email = name + "." + rs.nextString() + "@kawanan.com";
 			
 			List<String> hasSubjects = getRandomList();
 			List<String> needSubjects = getRandomList();
@@ -31,7 +37,7 @@ public class DataGenerator {
 			ParticipantManager participantManager = MentorManager.INSTANCE
 					.getParticipantManager();
 			Participant participant = participantManager.createParticipant(
-					name, getRandomGender(), getRandomLocation(), email);
+					name, gender, getRandomLocation(), email);
 
 			participantManager.addHasKnowledge(participant,  hasSubjects, 1, participant);
 			participantManager.addNeedKnowledge(participant, needSubjects, 1, participant);
@@ -49,38 +55,38 @@ public class DataGenerator {
 	}
 
 	// 17.535368,78.222656, 17.264105,78.717041
+	// 31.989442,72.949219, 7.406048,87.758789
 	
 	private Location getRandomLocation() {
-		Location location = new Location(nextDouble(17.26, 17.53, r),
-				nextDouble(78.22, 78.72, r), rs.nextString(), r.nextInt(100));
+	    Location location = new Location(nextDouble(17.26, 17.53, r),
+                            nextDouble(78.22, 78.72, r), rs.nextString(), r.nextInt(100));
+	    // For more spread data (most of india)
+	    //    	Location location = new Location(nextDouble(7.4, 32.0, r),
+	    //				nextDouble(72.95, 87.75, r), rs.nextString(), r.nextInt(100));
 		return location;
 	}
 
 	private String getRandomGender(){
-		Random random = new Random();
 		String[] arr = {"male", "female"};
-		String gender = arr[random.nextInt(2)];
+		String gender = arr[r.nextInt(2)];
 		return gender;
 	}
 	
+	static final String[] subjects = { "ENGLISH", "TELUGU", "MATH", "PHYSICS", "CHEMISTRY",
+			"ECONOMICS", "CIVICS", "HISTORY", "GEOGRAPHY",
+			"COMPUTER_SCIENCE", "Science", "NETWORKING" };
+	
 	private List<String> getRandomList() {
-		Random random = new Random();
-		String[] arr = { "ENGLISH", "TELUGU", "MATH", "PHYSICS", "CHEMISTRY",
-				"ECONOMICS", "CIVICS", "HISTORY", "GEOGRAPHY",
-				"COMPUTER_SCIENCE", "Science", "NETWORKING" };
-
 		List<String> returnList = new ArrayList<String>();
-	//	returnList.add(arr[random.nextInt(arr.length)]);
-		
-		int count = random.nextInt(3) + 1;
+		int count = r.nextInt(3) + 1;
 				
 		Set<Integer> included = new HashSet<Integer>();
 		for (int i = 0; i < count; ) {
-			int r = random.nextInt(arr.length);
+			int r1 = r.nextInt(subjects.length);
 			if (! included.contains(r)) {
 			  i++;
-			  included.add(r);
-			  returnList.add(arr[r]);
+			  included.add(r1);
+			  returnList.add(subjects[r1]);
 			}
 		}
 		
