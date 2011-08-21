@@ -19,11 +19,13 @@ public class LocalActivity extends Composite {
 	SearchResponseWidget allResults;
 		
 	FlowPanel flowpanel;
-		
-	public LocalActivity(String emailId) {
+	HeaderWidget header;
+	String lastEmailId = null;
+	
+	public LocalActivity(HeaderWidget header) {
+		this.header = header;
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 		allResults = new SearchResponseWidget();
-		Label lActivity = new Label("Loacl Activity");
 		flowpanel = new FlowPanel();
 		flowpanel.add(allResults);
 		
@@ -33,7 +35,7 @@ public class LocalActivity extends Composite {
 		
 		// TODO(sridhar): Show it as loading... change the mouse icon to loading..  
 		showWaitCursor();
-		getDataFeeds(emailId);
+		getDataFeeds(header.getUserDetails().getEmail());
 	}
 	
 	public void getDataFeeds(String emailId) {
@@ -64,6 +66,12 @@ public class LocalActivity extends Composite {
 	 
 	public static void showDefaultCursor() {
 	    DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "default");
+	}
+
+	public void reloadIfNeeded() {
+		if (! header.getUserDetails().getEmail().equals(lastEmailId)) {
+			getDataFeeds(header.getUserDetails().getEmail());
+		}
 	}
 
 }

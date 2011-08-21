@@ -22,9 +22,13 @@ public class ToMeWidget extends Composite {
 	SearchResponseWidget needResults;
 
 	TabPanel tabPanel;
-
+	
+	String lastEmailId = null;
+	HeaderWidget header = null;
+	
 	// Constructor for ToMeWidget
-	public ToMeWidget(String emailId) {
+	public ToMeWidget(HeaderWidget header) {
+		this.header = header;
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 		allResults = new SearchResponseWidget();
 		hasResults = new SearchResponseWidget();
@@ -54,11 +58,11 @@ public class ToMeWidget extends Composite {
 		initWidget(tabPanel);
 
 		showWaitCursor();
-		getDataFeeds(emailId);
+		getDataFeeds(header.getUserDetails().getEmail());
 	}
 
 	// Method to Get data from DataStore
-	public void getDataFeeds(String emailId) {
+	public void getDataFeeds(final String emailId) {
 
 		service.feedToMe(emailId, new AsyncCallback<SearchResponse>() {
 			@Override
@@ -79,6 +83,8 @@ public class ToMeWidget extends Composite {
 				allResults.setResults(all);
 				hasResults.setResults(result.getHas());
 				needResults.setResults(result.getNeed());
+				
+				lastEmailId = emailId;
 			}
 		});
 	}
@@ -89,5 +95,11 @@ public class ToMeWidget extends Composite {
 
 	public static void showDefaultCursor() {
 		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "default");
+	}
+
+	public void reloadIfNeeded() {
+		if (! header.getUserDetails().getEmail().equals(lastEmailId)) {
+			getDataFeeds(header.getUserDetails().getEmail());
+		}
 	}
 }

@@ -4,8 +4,9 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 
 public class MainPageWidget extends Composite {
-	private ToMeWidget myFeeds = new ToMeWidget("amicjxkhhg@kawanan.com");
-	private LocalActivity localActivity = new LocalActivity("amicjxkhhg@kawanan.com");
+	private ToMeWidget myFeeds = null;
+	private LocalActivity localActivity = null;
+	
 	private FlexTable homePanel = new FlexTable();
 	
 	private SearchWidget searchWidget = new SearchWidget();
@@ -20,6 +21,9 @@ public class MainPageWidget extends Composite {
 	
 	public MainPageWidget(HeaderWidget header) {
 		this.menuPanel = header;
+		
+		this.myFeeds = new ToMeWidget(header);
+		this.localActivity = new LocalActivity(header);
 		
 		homePanel.setWidget(0, 0, myFeeds);
 		homePanel.setWidget(1, 0, localActivity);
@@ -38,6 +42,8 @@ public class MainPageWidget extends Composite {
 	}
 	
 	public void showHomeWidget() {
+		myFeeds.reloadIfNeeded();
+		localActivity.reloadIfNeeded();
 		ft.setWidget(1, 0, homePanel);
 	}
 	
@@ -52,5 +58,4 @@ public class MainPageWidget extends Composite {
 	public void showOpportunityPanel() {
 		ft.setWidget(1, 0, opportunityPanel);
 	}
-
 }
