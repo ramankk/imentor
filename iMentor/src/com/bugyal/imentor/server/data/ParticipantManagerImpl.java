@@ -58,7 +58,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		for (String need : needSubjects) {
 			i.addKnowledge(new Participant.Knowledge(need, l, suggestedBy.getKey(), false));
 		}
-		//save(i);
+		save(i);
 	}
 
 	@Override
