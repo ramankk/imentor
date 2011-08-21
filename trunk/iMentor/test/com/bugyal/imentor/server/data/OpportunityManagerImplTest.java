@@ -41,21 +41,21 @@ public class OpportunityManagerImplTest {
 		List<Participant> plist = new ArrayList<Participant>();
 		plist.add(p);
 		
-	//	Opportunity o1 = omi.createOpportunity(TestLocations.KPHB, subjects, 2, plist, 7);
+		Opportunity o1 = omi.createOpportunity(TestLocations.KPHB, subjects, 2, plist, 7, "", p);
 		
 		List<String> ss = new ArrayList<String>();
 		ss.add("CS");
 		
 		List<Opportunity> oList = omi.searchOpportunities(TestLocations.GACHIBOWLI, ss);
 		assertEquals(1, oList.size());
-//		assertEquals(o1, oList.get(0));
+		assertEquals(o1, oList.get(0));
 		
 		oList = omi.searchOpportunities(TestLocations.BODUPPAL_10, ss);
 		assertEquals(0, oList.size());
 		
 		oList = omi.searchOpportunities(TestLocations.BODUPPAL_25, ss);
 		assertEquals(1, oList.size());
-//		assertEquals(o1, oList.get(0));
+		assertEquals(o1, oList.get(0));
 	}
 
 }
