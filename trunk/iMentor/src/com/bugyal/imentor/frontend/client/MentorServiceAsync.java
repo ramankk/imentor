@@ -16,36 +16,32 @@ public interface MentorServiceAsync {
 
 	void update(ParticipantVO p, AsyncCallback<ParticipantVO> callback);
 
-	void updateOpportunity(OpportunityVO o, String emailId,
+	void updateOpportunity(OpportunityVO o,
 			AsyncCallback<OpportunityVO> callback);
 
 	void getSubjects(AsyncCallback<List<String>> callback);
 
-	void feedToMe(String emailId, AsyncCallback<SearchResponse> callback);
+	void feedToMe(AsyncCallback<SearchResponse> callback);
 
 	void filterList(double latitude, double longitude, String strlocation,
 			int radius, List<String> hasSubs, List<String> needSubs,
 			AsyncCallback<SearchResponse> callback);
 
 
-	void getParticipantVOByEmailId(String emailId,
-			AsyncCallback<ParticipantVO> callback);
+	void getParticipantVOByEmailId(AsyncCallback<ParticipantVO> callback);
 
 	void createSession(String emailId, AsyncCallback<Void> callback);
 
-	void validateSession(String emailId, AsyncCallback<Boolean> callback);
+	void deleteSession(AsyncCallback<Boolean> callback);
 
-	void deleteSession(String emailId, AsyncCallback<Boolean> callback);
-
-	void localActivity(String email, AsyncCallback<SearchResponse> asyncCallback);
+	void localActivity(AsyncCallback<SearchResponse> asyncCallback);
 
 	void generateRandomData(int range, AsyncCallback<Void> asyncCallback);
 
 	void deleteRecords(AsyncCallback<Long> asyncCallback);
 
-	void getOpportunitiesById(String emailId,
-			AsyncCallback<List<OpportunityVO>> callback);
+	void getOpportunitiesById(AsyncCallback<List<OpportunityVO>> callback);
 
-	void createOpportunity(String emailId, OpportunityVO o,
+	void createOpportunity(OpportunityVO o,
 			AsyncCallback<OpportunityVO> callback);	
 }

@@ -1,20 +1,26 @@
 package com.bugyal.imentor.frontend.client;
 
+import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
-import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.MenuBar;
 import com.google.gwt.user.client.ui.MenuItem;
 import com.google.gwt.user.client.ui.MenuItemSeparator;
 
 public class HeaderWidget extends Composite {
+
 	private MainPageWidget mainPage = null;
 	private UserDetails userDetails = null;
 	private MenuBar menuBar;
 	
+	MentorServiceAsync service;
+	
 	public HeaderWidget(UserDetails userDetails) {
 		this.userDetails = userDetails;
+		service = (MentorServiceAsync) GWT.create(MentorService.class);
 		
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		horizontalPanel.setWidth("377px");
@@ -23,7 +29,20 @@ public class HeaderWidget extends Composite {
 		initWidget(horizontalPanel);
 	}
 	
+	private AsyncCallback<Void> sessionCallback = new AsyncCallback<Void>() {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			Window.alert("Cannot create session");
+		}
+
+		@Override
+		public void onSuccess(Void result) {
+			Window.alert("Session created.");
+		}};
+	
 	public void init() {
+		service.createSession(userDetails.getEmail(), sessionCallback);
 		mainPage = new MainPageWidget(this);
 		initMenuBar(menuBar);
 	}
@@ -114,5 +133,6 @@ public class HeaderWidget extends Composite {
 	// for testing
 	public void setEmailForTest(String email) {
 		this.userDetails.setEmail(email);
+		service.createSession(userDetails.getEmail(), sessionCallback);
 	}
 }

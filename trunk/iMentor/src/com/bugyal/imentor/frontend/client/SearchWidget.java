@@ -18,11 +18,9 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -35,19 +33,19 @@ public class SearchWidget extends Composite implements ClickHandler,
 	LocationData locationData;
 	TextArea location;
 	SubjectsSuggestWidget subjectsSuggestWidget;
-	ListBox  listBox;
+	ListBox listBox;
 	SearchResponse sResponse;
 
 	SearchResponseWidget searchResultsWidget = new SearchResponseWidget();
-	
+
 	FlexTable resultsPanel = new FlexTable();
 
 	public SearchWidget() {
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
-		
+
 		mapUI = new MapUI(true, location);
 		mapUI.setWidth("600px");
-		
+
 		VerticalPanel mainPanel = new VerticalPanel();
 		mainPanel.setSize("750px", "756px");
 		mainPanel.add(buildSearchForm());
@@ -56,16 +54,16 @@ public class SearchWidget extends Composite implements ClickHandler,
 
 		showMapView();
 		locationData = mapUI.getLocationDetails();
-		
+
 		initWidget(mainPanel);
 	}
-	
+
 	public void showListView() {
 		isMapViewDisplayed = false;
 		viewToggler.setText(MAP_VIEW);
 		resultsPanel.setWidget(0, 0, searchResultsWidget);
 	}
-	
+
 	public void showMapView() {
 		isMapViewDisplayed = true;
 		viewToggler.setText(LIST_VIEW);
@@ -76,9 +74,9 @@ public class SearchWidget extends Composite implements ClickHandler,
 	private static final String MAP_VIEW = "Map View";
 	private boolean isMapViewDisplayed = true;
 	private final Button viewToggler = new Button(LIST_VIEW);
-	
+
 	private Button buildViewToggler() {
-		
+
 		viewToggler.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
@@ -87,7 +85,8 @@ public class SearchWidget extends Composite implements ClickHandler,
 				} else {
 					showMapView();
 				}
-			}});
+			}
+		});
 		return viewToggler;
 	}
 
@@ -97,10 +96,11 @@ public class SearchWidget extends Composite implements ClickHandler,
 
 		VerticalPanel subjectPanel = new VerticalPanel();
 		VerticalPanel locationPanel = new VerticalPanel();
-		
+
 		Label subLabel = new Label("Select Subjects :");
-		subjectsSuggestWidget = new SubjectsSuggestWidget(new ArrayList<String>());
-		
+		subjectsSuggestWidget = new SubjectsSuggestWidget(
+				new ArrayList<String>());
+
 		AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
 
 			@Override
@@ -115,28 +115,26 @@ public class SearchWidget extends Composite implements ClickHandler,
 
 		};
 		service.getSubjects(callback);
-//		subjectsSuggestWidget.suggestBox.setWidth("243px");
-//		subjectsSuggestWidget.setSize("250px", "75px");
-		
+		// subjectsSuggestWidget.suggestBox.setWidth("243px");
+		// subjectsSuggestWidget.setSize("250px", "75px");
+
 		subjectPanel.add(subLabel);
 		subjectPanel.add(subjectsSuggestWidget);
-//		subjectPanel.setSize("255px", "315px");
-		
+		// subjectPanel.setSize("255px", "315px");
+
 		Label locLabel = new Label("Select Location:");
 		location = new TextArea();
 		location.setText("Please, Use the Map");
 		location.setEnabled(false);
 		location.setSize("243px", "75px");
 
-		
 		locationPanel.add(locLabel);
 		locationPanel.add(location);
-		
+
 		HorizontalPanel dropDown = new HorizontalPanel();
-		
-		
+
 		dropDown.add(new Label("Search By:"));
-		listBox =new ListBox();
+		listBox = new ListBox();
 		listBox.addItem("All");
 		listBox.addItem("Mentors");
 		listBox.addItem("Mentee/opp");
@@ -144,16 +142,12 @@ public class SearchWidget extends Composite implements ClickHandler,
 		searchBtn = new Button("Search");
 		searchBtn.addClickHandler(this);
 		dropDown.add(searchBtn);
-		
-		
+
 		locationPanel.add(dropDown);
-		
+
 		horizontalPanel.add(subjectPanel);
 		horizontalPanel.add(locationPanel);
-				
-		
-		
-		
+
 		VerticalPanel verticalPanel_2 = new VerticalPanel();
 		horizontalPanel.add(verticalPanel_2);
 		verticalPanel_2.setSize("483px", "314px");
@@ -167,10 +161,10 @@ public class SearchWidget extends Composite implements ClickHandler,
 		verticalPanel_2.setCellHorizontalAlignment(horizontalPanel_2,
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		horizontalPanel_2.setSize("57px", "29px");
-		
+
 		return horizontalPanel;
 	}
-	
+
 	@Override
 	public void onClick(ClickEvent event) {
 
@@ -198,9 +192,9 @@ public class SearchWidget extends Composite implements ClickHandler,
 				location.setText("");// get from logged in user TODO Sundeep
 			}
 
-			service.filterList(locationData.getLatitude(),
-					locationData.getLongitude(), location.getText(),
-					locationData.getRadius(), hasSubs, needSubs,
+			service.filterList(locationData.getLatitude(), locationData
+					.getLongitude(), location.getText(), locationData
+					.getRadius(), hasSubs, needSubs,
 					new AsyncCallback<SearchResponse>() {
 
 						@Override
@@ -217,13 +211,13 @@ public class SearchWidget extends Composite implements ClickHandler,
 
 					});
 		}
-//		} else if (event.getSource() == rbtnMentor) {
-//			searchResultsWidget.setResults(sResponse.getHas());
-//		} else if (event.getSource() == rbtnMentee) {
-//			searchResultsWidget.setResults(sResponse.getNeed());
-//		} else {
-//			searchResultsWidget.setResults(sResponse.getAllResults());
-//		}
+		// } else if (event.getSource() == rbtnMentor) {
+		// searchResultsWidget.setResults(sResponse.getHas());
+		// } else if (event.getSource() == rbtnMentee) {
+		// searchResultsWidget.setResults(sResponse.getNeed());
+		// } else {
+		// searchResultsWidget.setResults(sResponse.getAllResults());
+		// }
 	}
 
 	@SuppressWarnings("deprecation")

@@ -43,8 +43,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 
 		final UserDetails userDetails = mainPage.getUserDetails();
-		service.getParticipantVOByEmailId(userDetails.getEmail(),
-				new AsyncCallback<ParticipantVO>() {
+		service.getParticipantVOByEmailId(new AsyncCallback<ParticipantVO>() {
 
 					@Override
 					public void onFailure(Throwable caught) {
@@ -101,7 +100,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		HorizontalPanel genderHorizontal = new HorizontalPanel();
 		rbMail = new RadioButton("Gender", "M");
 		rbFemail = new RadioButton("Gender", "F");
-		rbMail.setChecked(true);
+		rbMail.setValue(true);
 		genderHorizontal.add(new Label("Gender "));
 		genderHorizontal.add(rbMail);
 		genderHorizontal.add(rbFemail);
@@ -115,6 +114,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		VerticalPanel locationVertical = new VerticalPanel();
 		locationVertical.add(new Label("Location:"));
 		locationVertical.add(tbLocation);
+
 		tbLocation.setText(lData.getLocation());
 		tbLocation.setSize("215px", "40px");
 		
@@ -139,6 +139,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		subjectsHorizontal.setCellHorizontalAlignment(wantSubVertical, HasHorizontalAlignment.ALIGN_RIGHT);
 		
 		HorizontalPanel buttonsHorizontal = new HorizontalPanel();
+
 		btnClear = new Button("Clear");
 		btnClear.addClickHandler(this);
 		buttonsHorizontal.add(btnClear);

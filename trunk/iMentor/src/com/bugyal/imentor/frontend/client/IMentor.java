@@ -11,9 +11,6 @@ public class IMentor implements EntryPoint {
 	public void onModuleLoad() {
 		setShowTrigger(this);
 		setShowTrigger2(this);
-		
-		// TODO(raman): Remove this line, don't submit.
-		loadApp();
 	}
 	
 	public void loadApp(){

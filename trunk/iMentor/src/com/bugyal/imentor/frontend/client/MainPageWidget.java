@@ -4,6 +4,7 @@ import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 
 public class MainPageWidget extends Composite {
+
 	private ToMeWidget myFeeds = null;
 	private LocalActivity localActivity = null;
 	

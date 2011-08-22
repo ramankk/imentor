@@ -58,13 +58,13 @@ public class ToMeWidget extends Composite {
 		initWidget(tabPanel);
 
 		showWaitCursor();
-		getDataFeeds(header.getUserDetails().getEmail());
+		getDataFeeds();
 	}
 
 	// Method to Get data from DataStore
-	public void getDataFeeds(final String emailId) {
+	public void getDataFeeds() {
 
-		service.feedToMe(emailId, new AsyncCallback<SearchResponse>() {
+		service.feedToMe(new AsyncCallback<SearchResponse>() {
 			@Override
 			public void onFailure(Throwable caught) {
 				Window.alert("unable to load" + caught.getMessage());
@@ -73,18 +73,16 @@ public class ToMeWidget extends Composite {
 
 			@Override
 			public void onSuccess(SearchResponse result) {
-
 				List<SearchResult> all = new ArrayList<SearchResult>();
 
 				all.addAll(result.getAllResults());
-
 				showDefaultCursor();
 
 				allResults.setResults(all);
 				hasResults.setResults(result.getHas());
 				needResults.setResults(result.getNeed());
 				
-				lastEmailId = emailId;
+				lastEmailId = header.getUserDetails().getEmail();
 			}
 		});
 	}
@@ -99,7 +97,7 @@ public class ToMeWidget extends Composite {
 
 	public void reloadIfNeeded() {
 		if (! header.getUserDetails().getEmail().equals(lastEmailId)) {
-			getDataFeeds(header.getUserDetails().getEmail());
+			getDataFeeds();
 		}
 	}
 }

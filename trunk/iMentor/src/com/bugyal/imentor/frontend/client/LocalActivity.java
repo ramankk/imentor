@@ -11,7 +11,6 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class LocalActivity extends Composite {
@@ -35,11 +34,11 @@ public class LocalActivity extends Composite {
 		
 		// TODO(sridhar): Show it as loading... change the mouse icon to loading..  
 		showWaitCursor();
-		getDataFeeds(header.getUserDetails().getEmail());
+		getDataFeeds();
 	}
 	
-	public void getDataFeeds(String emailId) {
-		service.localActivity(emailId, new AsyncCallback<SearchResponse>() {
+	public void getDataFeeds() {
+		service.localActivity(new AsyncCallback<SearchResponse>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
@@ -70,7 +69,7 @@ public class LocalActivity extends Composite {
 
 	public void reloadIfNeeded() {
 		if (! header.getUserDetails().getEmail().equals(lastEmailId)) {
-			getDataFeeds(header.getUserDetails().getEmail());
+			getDataFeeds();
 		}
 	}
 

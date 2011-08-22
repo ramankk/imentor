@@ -8,7 +8,6 @@ import java.util.Set;
 import com.beoui.geocell.GeocellUtils;
 import com.beoui.geocell.model.Point;
 import com.bugyal.imentor.MentorException;
-import com.bugyal.imentor.frontend.client.LocationData;
 import com.bugyal.imentor.frontend.client.MentorService;
 import com.bugyal.imentor.frontend.shared.MeException;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
@@ -32,6 +31,7 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 @SuppressWarnings("serial")
 public class MentorServiceImpl extends RemoteServiceServlet implements
 		MentorService {
+	private static final String USER_ID = "UserId";
 	private static final List<String> SUBJECTS_LIST = new ArrayList<String>();
 	private static final Ranker feedRanker = new Ranker().addScorer(
 			new DistanceScorer()).addScorer(new SubjectCorrelationScorer());
@@ -116,11 +116,11 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		pm.save(pi);
 	}
 	
-	private void save(Opportunity oi, OpportunityVO o, String emailId) throws MentorException {
+	private void save(Opportunity oi, OpportunityVO o) throws MentorException {
 		Location location = new Location(o.getLatitude(), o.getLongitude(),
 				o.getLocString(), o.getRadius());
 		oi.setLocation(location);		
-		Participant savedBy = pm.findParticipantByEmail(emailId);
+		Participant savedBy = pm.findParticipantByEmail(getUserId());
 		
 		if(o.getSubjects() != null) {
 			oi.resetSubjects(o.getSubjects(), savedBy);	
@@ -133,8 +133,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	
-	public OpportunityVO createOpportunity(String emailId, OpportunityVO o) throws MeException {
+	public OpportunityVO createOpportunity(OpportunityVO o) throws MeException {
 		if (o.getId() != null) {
 			throw new MeException("Cannot create already created participant");
 		}
@@ -146,7 +145,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		
 		Participant participant=null;
 		try {
-			participant = pm.findParticipantByEmail(emailId);
+			participant = pm.findParticipantByEmail(getUserId());
 			if (participant != null) {
 			  contacts.add(participant);
 			}
@@ -190,7 +189,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public OpportunityVO updateOpportunity(OpportunityVO o, String emailId) throws MeException {
+	public OpportunityVO updateOpportunity(OpportunityVO o) throws MeException {
 		if (o.getId() == null) {
 			throw new MeException("New opportunity, cannot update.");
 		}
@@ -200,7 +199,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 
 		try {
 			oi = om.findById(key);
-			save(oi, o, emailId);
+			save(oi, o);
 		} catch (MentorException m) {
 			throw new MeException(m.getMessage());
 		}
@@ -315,10 +314,10 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 
 	
 	@Override
-	public SearchResponse feedToMe(String emailId) throws MeException {
+	public SearchResponse feedToMe() throws MeException {
 		SearchResponse response = null;
 		try {
-			Participant pi = pm.findParticipantByEmail(emailId);
+			Participant pi = pm.findParticipantByEmail(getUserId());
 			if (pi == null) {
 				return new SearchResponse();
 			}
@@ -336,10 +335,10 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		return response;
 	}
 
-	public ParticipantVO getParticipantVOByEmailId(String emailId)
+	public ParticipantVO getParticipantVOByEmailId()
 			throws MeException {
 		try {
-			Participant participant = pm.findParticipantByEmail(emailId);
+			Participant participant = pm.findParticipantByEmail(getUserId());
 			return ValueObjectGenerator.create(participant);
 		} catch (MentorException e) {
 			e.printStackTrace();
@@ -348,13 +347,13 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	@Override
-	public SearchResponse localActivity(String emailId) {
+	public SearchResponse localActivity() {
 		SearchResponse response = new SearchResponse();
 		try {
 			List<SearchResult> has = new ArrayList<SearchResult>();
 			List<SearchResult> need = new ArrayList<SearchResult>();
 
-			Participant pi = pm.findParticipantByEmail(emailId);
+			Participant pi = pm.findParticipantByEmail(getUserId());
 			if (pi == null) {
 				return response;
 			}
@@ -384,10 +383,10 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public List<OpportunityVO> getOpportunitiesById(String emailId) {
+	public List<OpportunityVO> getOpportunitiesById() {
 		Participant p = null;
 		try {
-			p = pm.findParticipantByEmail(emailId);
+			p = pm.findParticipantByEmail(getUserId());
 			if (p == null) {
 				return new ArrayList<OpportunityVO>();
 			}
@@ -401,28 +400,17 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public void createSession(String emailId) throws MeException {
-		// HttpServletRequest request = this.getThreadLocalRequest();
-		// HTTPSession session = request.getSession();
-		// session.setAttribute("Username", Username);
-
-		// same as above
-		getThreadLocalRequest().getSession().setAttribute("UserId", emailId);
-
+		getThreadLocalRequest().getSession().setAttribute(USER_ID, emailId);
+	}
+	
+	private String getUserId() {
+		return (String) getThreadLocalRequest().getSession().getAttribute(USER_ID);
 	}
 
 	@Override
-	public boolean validateSession(String emailId) throws MeException {
-		if (getThreadLocalRequest().getSession().getAttribute("UserId") != null) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	public boolean deleteSession(String emailId) throws MeException {
-		if (getThreadLocalRequest().getSession().getAttribute("Username") != null) {
-			getThreadLocalRequest().getSession().removeAttribute("UserId");
+	public boolean deleteSession() throws MeException {
+		if (getThreadLocalRequest().getSession().getAttribute(USER_ID) != null) {
+			getThreadLocalRequest().getSession().removeAttribute(USER_ID);
 			return true;
 		} else {
 			return false;

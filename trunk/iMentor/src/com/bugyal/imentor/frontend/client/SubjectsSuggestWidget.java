@@ -31,7 +31,7 @@ public class SubjectsSuggestWidget extends Composite {
 
 		oracle = new MultiWordSuggestOracle();
 		suggestBox = new SuggestBox(oracle);
-		suggestBox.setWidth("0px");
+		suggestBox.setWidth("50px");
 		DOM.setStyleAttribute(suggestBox.getElement(), "border", "0");
 		DOM.setStyleAttribute(suggestBox.getElement(), "outline", "0");
 		this.oracle.addAll(subjects);
@@ -116,6 +116,8 @@ public class SubjectsSuggestWidget extends Composite {
 	public void clearAll() {
 		list.clear();
 		flowpanel.clear();
+		
+		flowpanel.add(suggestBox);
 	}
 
 	public void addMoreSubjects(String subject) {
