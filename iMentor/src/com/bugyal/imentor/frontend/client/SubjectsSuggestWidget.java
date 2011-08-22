@@ -16,107 +16,106 @@ import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.MultiWordSuggestOracle;
 import com.google.gwt.user.client.ui.SuggestBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class SubjectsSuggestWidget extends Composite {
 
-	public class SelectedItemsList extends Composite {
+	final MultiWordSuggestOracle oracle;
+	public final SuggestBox suggestBox;
 
-		private final FlowPanel flowpanel;
-		private List<String> list;
-		private boolean status;
+	private final FlowPanel flowpanel;
+	private List<String> list;
+	private boolean status;
 
-		public SelectedItemsList() {
-			flowpanel = new FlowPanel();
-			flowpanel.addStyleName("flowPanelCSS");
+	@SuppressWarnings("unchecked")
+	public SubjectsSuggestWidget(List<String> subjects) {
 
-			list = new ArrayList<String>();
-			initWidget(flowpanel);
-		}
+		oracle = new MultiWordSuggestOracle();
+		suggestBox = new SuggestBox(oracle);
+		suggestBox.setWidth("0px");
+		DOM.setStyleAttribute(suggestBox.getElement(), "border", "0");
+		DOM.setStyleAttribute(suggestBox.getElement(), "outline", "0");
+		this.oracle.addAll(subjects);
 
-		public boolean add(String item) {
-			HTML html = new HTML("<a>x</a>");
-			html.setStyleName("removeSubjectCSS");
+		flowpanel = new FlowPanel();
+		flowpanel.addStyleName("flowPanelCSS");
 
-			status = false;
-			for (String s : list) {
-				if (s.equalsIgnoreCase(item)) {
-					status = true;
-					break;
-				}
-			}
-			if (!status) {
-				list.add(item);
-				final FlexTable flextable = new FlexTable();
-				flextable.addStyleName("itemSubjectCSS");
+		flowpanel.addDomHandler(new ClickHandler() {
 
-				flextable.setWidget(0, 0, new Label(item));
-				flextable.setWidget(0, 1, html);
-				// flextable.getElement().getStyle().setProperty("display",
-				// "inline");
-
-				DOM.setStyleAttribute(flextable.getElement(), "border",
-						"1px solid #00f");
-				flowpanel.add(flextable);
-				status = true;
-
-				flextable.addClickHandler(new ClickHandler() {
-					@Override
-					public void onClick(ClickEvent event) {
-						final int cellIndex = flextable.getCellForEvent(event)
-								.getCellIndex();
-						if (cellIndex == 1) {
-							String temp = flextable.getText(0, 0);
-							flextable.removeFromParent();
-							remove(temp);
-						}
-					}// onClick
-				});
+			@Override
+			public void onClick(ClickEvent event) {
+				suggestBox.setFocus(true);
 			}
 
-			return status;
-		}
+		}, ClickEvent.getType());
 
-		public boolean remove(String item) {
-			return list.remove(item);
-		}
+		flowpanel.add(suggestBox);
 
-		public List<String> getSubjects() {
-			return list;
-		}
+		list = new ArrayList<String>();
 
-		public void clearAll() {
-			list.clear();
-			flowpanel.clear();
-		}
-	}
-
-	final MultiWordSuggestOracle oracle = new MultiWordSuggestOracle();
-	public final SuggestBox suggestBox = new SuggestBox(oracle);
-	public final SelectedItemsList selected = new SelectedItemsList();
-
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public SubjectsSuggestWidget() {
 		suggestBox.addSelectionHandler(new SelectionHandler() {
 			@Override
 			public void onSelection(SelectionEvent event) {
 				String str = suggestBox.getText();
-				if (selected.add(str)) {
+				if (add(str)) {
 					suggestBox.setText("");
 				}
 			}
 		});
-
-		VerticalPanel panel = new VerticalPanel();
-		panel.add(suggestBox);
-		panel.add(selected);
-
-		initWidget(panel);
+		initWidget(flowpanel);
 	}
 
-	public SubjectsSuggestWidget(List<String> subjects) {
-		this();
-		this.oracle.addAll(subjects);
+	public boolean add(String item) {
+		HTML html = new HTML("<a>x</a>");
+		html.setStyleName("removeSubjectCSS");
+
+		status = false;
+		for (String s : list) {
+			if (s.equalsIgnoreCase(item)) {
+				status = true;
+				break;
+			}
+		}
+		if (!status) {
+			list.add(item);
+			final FlexTable flextable = new FlexTable();
+			flextable.addStyleName("itemSubjectCSS");
+
+			flextable.setWidget(0, 0, new Label(item));
+			flextable.setWidget(0, 1, html);
+
+			DOM.setStyleAttribute(flextable.getElement(), "border",
+					"1px solid #00f");
+			flowpanel.insert(flextable, flowpanel.getWidgetCount() - 1);
+			status = true;
+
+			flextable.addClickHandler(new ClickHandler() {
+				@Override
+				public void onClick(ClickEvent event) {
+					final int cellIndex = flextable.getCellForEvent(event)
+							.getCellIndex();
+					if (cellIndex == 1) {
+						String temp = flextable.getText(0, 0);
+						flextable.removeFromParent();
+						remove(temp);
+					}
+				}// onClick
+			});
+		}
+
+		return status;
+	}
+
+	public boolean remove(String item) {
+		return list.remove(item);
+	}
+
+	public List<String> getSubjects() {
+		return list;
+	}
+
+	public void clearAll() {
+		list.clear();
+		flowpanel.clear();
 	}
 
 	public void addMoreSubjects(String subject) {
@@ -128,6 +127,7 @@ public class SubjectsSuggestWidget extends Composite {
 	}
 
 	public List<String> getSelected() {
-		return this.selected.getSubjects();
+		return this.getSubjects();
 	}
+
 }
