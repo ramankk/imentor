@@ -18,9 +18,6 @@ public class HeaderWidget extends Composite {
 		
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		horizontalPanel.setWidth("377px");
-		Image image = new Image("");
-		image.setPixelSize(100, 30);
-		horizontalPanel.add(image);
 		menuBar = new MenuBar(false);
 		horizontalPanel.add(menuBar);
 		initWidget(horizontalPanel);
