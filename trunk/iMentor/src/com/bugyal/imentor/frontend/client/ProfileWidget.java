@@ -11,6 +11,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
@@ -86,78 +87,81 @@ public class ProfileWidget extends Composite implements ClickHandler {
 			}
 		};
 		service.getSubjects(callback);
-
-		horizontalPanel.setSize("750px", "558px");
-
-		VerticalPanel verticalPanel = new VerticalPanel();
-		horizontalPanel.add(verticalPanel);
-		verticalPanel.setSize("259px", "558px");
-
-		HorizontalPanel horizontalPanel_1 = new HorizontalPanel();
-		verticalPanel.add(horizontalPanel_1);
-		horizontalPanel_1.setSize("255px", "129px");
-
-		VerticalPanel verticalPanel_1 = new VerticalPanel();
-		horizontalPanel_1.add(verticalPanel_1);
-		verticalPanel_1.setSize("144px", "126px");
-
-		HorizontalPanel hpName = new HorizontalPanel();
-
+		
+		VerticalPanel mainPanel = new VerticalPanel();
+		
+		VerticalPanel leftVertical = new VerticalPanel();
+		leftVertical.setHeight("200px");
+		
+		HorizontalPanel nameHorizontal = new HorizontalPanel();
+		nameHorizontal.add(new Label("Name "));
 		tbName = new TextBox();
-		hpName.add(new Label("Name:"));
-		hpName.add(tbName);
-		verticalPanel_1.add(hpName);
-
-		HorizontalPanel hpGender = new HorizontalPanel();
-		hpGender.add(new Label("Gender"));
+		nameHorizontal.add(tbName);
+				
+		HorizontalPanel genderHorizontal = new HorizontalPanel();
 		rbMail = new RadioButton("Gender", "M");
 		rbFemail = new RadioButton("Gender", "F");
 		rbMail.setChecked(true);
-		hpGender.add(rbMail);
-		hpGender.add(rbFemail);
-		verticalPanel_1.add(hpGender);
-
-		HorizontalPanel hpEmailId = new HorizontalPanel();
-
+		genderHorizontal.add(new Label("Gender "));
+		genderHorizontal.add(rbMail);
+		genderHorizontal.add(rbFemail);
+		
+		HorizontalPanel mailHorizontal = new HorizontalPanel();
 		tbEmailId = new TextBox();
 		tbEmailId.setEnabled(false);
-		hpEmailId.add(new Label("Mail Id"));
-		hpEmailId.add(tbEmailId);
-		verticalPanel_1.add(hpEmailId);
-
-		Label lblLocation = new Label("Location:");
-		verticalPanel.add(lblLocation);
-
-		verticalPanel.add(tbLocation);
+		mailHorizontal.add(new Label("Mail Id"));
+		mailHorizontal.add(tbEmailId);		
+		
+		VerticalPanel locationVertical = new VerticalPanel();
+		locationVertical.add(new Label("Location:"));
+		locationVertical.add(tbLocation);
 		tbLocation.setText(lData.getLocation());
-		tbLocation.setSize("245px", "40px");
-
-		Label lblSubjectsYouNeed = new Label("Subjects You know:");
-		verticalPanel.add(lblSubjectsYouNeed);
-		verticalPanel.add(subWidgetHas);
-
-		Label lblSujectsYouWant = new Label("Sujects You Want:");
-		verticalPanel.add(lblSujectsYouWant);
-		verticalPanel.add(subWidgetNeed);
-
-		HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
-		verticalPanel.add(horizontalPanel_2);
-		horizontalPanel_2.setSpacing(30);
-		horizontalPanel_2.setSize("258px", "30px");
-
+		tbLocation.setSize("215px", "40px");
+		
+		leftVertical.add(nameHorizontal);
+		leftVertical.add(genderHorizontal);
+		leftVertical.add(mailHorizontal);
+		leftVertical.add(locationVertical);
+		
+		VerticalPanel knowSubVertical = new VerticalPanel();
+		knowSubVertical.add(new Label("Subjects you know"));
+		knowSubVertical.add(subWidgetHas);
+		
+		VerticalPanel wantSubVertical = new VerticalPanel();
+		wantSubVertical.add(new Label("Subjects you want"));
+		wantSubVertical.add(subWidgetNeed);
+		
+		HorizontalPanel subjectsHorizontal = new HorizontalPanel();
+		subjectsHorizontal.setWidth("530px");
+		subjectsHorizontal.add(knowSubVertical);
+		subjectsHorizontal.add(wantSubVertical);
+		subjectsHorizontal.setCellHorizontalAlignment(knowSubVertical, HasHorizontalAlignment.ALIGN_RIGHT);
+		subjectsHorizontal.setCellHorizontalAlignment(wantSubVertical, HasHorizontalAlignment.ALIGN_RIGHT);
+		
+		HorizontalPanel buttonsHorizontal = new HorizontalPanel();
 		btnClear = new Button("Clear");
-		horizontalPanel_2.add(btnClear);
 		btnClear.addClickHandler(this);
-
+		buttonsHorizontal.add(btnClear);
+		
 		btnSave = new Button("Save");
-		horizontalPanel_2.add(btnSave);
 		btnSave.addClickHandler(this);
+		buttonsHorizontal.add(btnSave);
 
-		mapUI = new MapUI(true, tbLocation);
-		mapUI.setSize("400px", "400px");
-		horizontalPanel.add(mapUI);
-
-		initWidget(horizontalPanel);
+		VerticalPanel rightVertical = new VerticalPanel();
+		rightVertical.add(subjectsHorizontal);
+		rightVertical.add(buttonsHorizontal);
+		rightVertical.setCellHorizontalAlignment(buttonsHorizontal, HasHorizontalAlignment.ALIGN_RIGHT);
+		
+		HorizontalPanel topHorizontal = new HorizontalPanel();
+		topHorizontal.setSize("750px","200px");
+		topHorizontal.add(leftVertical);
+		topHorizontal.add(rightVertical);
+		
+		mainPanel.add(topHorizontal);
+		mapUI = new MapUI(true, tbLocation);			
+		mainPanel.add(mapUI);
+		
+		initWidget(mainPanel);
 	}
 
 	@Override
