@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.StackPanel;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
@@ -22,7 +22,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 
 	private final TextArea txtMessage = new TextArea();;
 	private final TextArea tbLocation = new TextArea();
-	private final StackPanel stackPanel = new StackPanel();
+	private final TabPanel tabPanel = new TabPanel();
 
 	private OpportunityVO showingOpportunity = null;
 
@@ -65,7 +65,6 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		this.mainPage = mainPage;
 
 		myOppWidget = new MyOpportunitiesWidget(this);
-		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 
 		// TODO(raman,sridhar): Get Subjects only once per browser and resuse
@@ -74,58 +73,61 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		service.getSubjects(getSubjectsCallback);
 		service.getOpportunitiesById(mainPage.getUserDetails().getEmail(),
 				getOpportuniesCallback);
-
-		horizontalPanel.setSize("750px", "558px");
-
-		VerticalPanel verticalPanel = new VerticalPanel();
-		verticalPanel.setSize("259px", "558px");
-
-		Label lblSubjects = new Label("Subjects:");
-		verticalPanel.add(lblSubjects);
-		verticalPanel.add(subWidget);
-
-		Label lblLocation = new Label("Location:");
-		verticalPanel.add(lblLocation);
-
-		verticalPanel.add(tbLocation);
+		
+		VerticalPanel subjectsVertical = new VerticalPanel();
+		subjectsVertical.add(new Label("Subjects"));
+		subjectsVertical.add(subWidget);
+	
+		VerticalPanel messageVertical = new VerticalPanel();
+		messageVertical.setSize("250px", "130px");
+		messageVertical.add(new Label("Message"));
+		messageVertical.add(txtMessage);
+		txtMessage.setSize("210px", "100px");
+		
+		VerticalPanel locationVertical = new VerticalPanel();
+		locationVertical.setSize("250px", "130px");
+		locationVertical.add(new Label("Location"));
+		locationVertical.add(tbLocation);
 		tbLocation.setText(lData.getLocation());
-		tbLocation.setSize("245px", "40px");
+		tbLocation.setSize("215px", "50px");
 		tbLocation.setText("Please, Use the Map");
-
-		Label lblMessage = new Label("Message:");
-		verticalPanel.add(lblMessage);
-
-		verticalPanel.add(txtMessage);
-		txtMessage.setSize("245px", "90px");
-
 		btnClear = new Button("Clear");
 		btnClear.addClickHandler(this);
-
 		btnCreate = new Button("Save");
 		btnCreate.addClickHandler(this);
-
 		HorizontalPanel hp = new HorizontalPanel();
 		hp.add(btnClear);
 		hp.add(btnCreate);
-		verticalPanel.add(hp);
-
-		stackPanel.add(verticalPanel, "Set Opportunity");
-
-		horizontalPanel.add(stackPanel);
+		locationVertical.add(hp);
+		
+		HorizontalPanel topHorizontal = new HorizontalPanel();
+		topHorizontal.setWidth("750px");
+		topHorizontal.add(subjectsVertical);
+		topHorizontal.add(messageVertical);
+		topHorizontal.add(locationVertical);
+		
+		tabPanel.setSize("750px", "200px");
+		
+		
+		tabPanel.add(topHorizontal,"Set Opportunity");
+		tabPanel.selectTab(0);
 		mapUI = new MapUI(false, tbLocation);
 		mapUI.setWidth("500px");
-		horizontalPanel.add(mapUI);
+		
+		VerticalPanel mainPanel = new VerticalPanel();
+		mainPanel.add(tabPanel);
+		mainPanel.add(mapUI);
 
-		initWidget(horizontalPanel);
+		initWidget(mainPanel);
 	}
 
 	private void addMyOpportunities(List<OpportunityVO> myOpportunities) {
 		if (myOpportunities.size() == 0) {
-			stackPanel.add(new Label("No opportunity is created by you.. "),
+			tabPanel.add(new Label("No opportunity is created by you.. "),
 					"My Opportunity");
 		} else {
 			myOppWidget.setOpportunities(myOpportunities);
-			stackPanel.add(myOppWidget, "My Opportunity");
+			tabPanel.add(myOppWidget, "My Opportunity");
 		}
 	}
 
@@ -140,7 +142,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		for (String sub : o.getSubjects()) {
 			subWidget.add(sub);
 		}
-		stackPanel.showStack(0);
+		tabPanel.selectTab(0);
 		showingOpportunity = o;
 	}
 
