@@ -339,7 +339,9 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 					.getLon(), pi.getLoc().getLocationString(), pi.getLoc()
 					.getActiveRadius(), pi.getHasSubjects(), pi
 					.getNeedSubjects());
-
+			
+			response = filterMe(pi, response);
+			
 			feedRanker.rank(response, pi);
 			return response;
 		} catch (MentorException e) {
@@ -390,6 +392,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			}
 			response.setHas(has);
 			response.setNeed(need);
+			response = filterMe(pi, response);
 			return response;
 		} catch (MentorException e) {
 			e.printStackTrace();
@@ -397,6 +400,33 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		return response;
 	}
 
+	private SearchResponse filterMe(Participant pi, SearchResponse response){
+		String email = pi.getEmail();
+		SearchResponse result= new SearchResponse();
+		List<SearchResult> hasSub = new ArrayList<SearchResult>();
+		List<SearchResult> needSub = new ArrayList<SearchResult>();
+		
+		for(SearchResult has: response.getHas()){
+			if(!(has.getP().getEmail().equals(email))){
+				hasSub.add(has);
+			}
+		}
+		for(SearchResult need: response.getNeed()) {
+			try{
+				if(!(need.getP().getEmail().equals(email))) {				
+					needSub.add(need);
+				}
+			} catch(NullPointerException e){
+				needSub.add(need);
+			}
+		}	
+		result.setHas(hasSub);
+		result.setNeed(needSub);
+		return result;
+	}
+
+	
+	
 	@Override
 	public List<OpportunityVO> getOpportunitiesById() {
 		Participant p = null;
