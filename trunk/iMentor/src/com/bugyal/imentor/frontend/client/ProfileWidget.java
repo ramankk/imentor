@@ -1,5 +1,6 @@
 package com.bugyal.imentor.frontend.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
@@ -19,8 +20,10 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class ProfileWidget extends Composite implements ClickHandler {
 	MentorServiceAsync service;
-	SubjectsSuggestWidget subWidgetHas = new SubjectsSuggestWidget();
-	SubjectsSuggestWidget subWidgetNeed = new SubjectsSuggestWidget();
+	SubjectsSuggestWidget subWidgetHas = new SubjectsSuggestWidget(
+			new ArrayList<String>());
+	SubjectsSuggestWidget subWidgetNeed = new SubjectsSuggestWidget(
+			new ArrayList<String>());
 	TextArea tbLocation = new TextArea();
 	Button btnClear, btnSave;
 	TextBox tbName, tbEmailId;
@@ -31,13 +34,13 @@ public class ProfileWidget extends Composite implements ClickHandler {
 	MapUI mapUI;
 
 	MainPageWidget mainPage = null;
-	
+
 	public ProfileWidget(MainPageWidget mainPage) {
 		this.mainPage = mainPage;
-		
+
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
-		
+
 		final UserDetails userDetails = mainPage.getUserDetails();
 		service.getParticipantVOByEmailId(userDetails.getEmail(),
 				new AsyncCallback<ParticipantVO>() {
@@ -59,9 +62,9 @@ public class ProfileWidget extends Composite implements ClickHandler {
 						tbEmailId.setText(result.getEmail());
 						tbLocation.setText(result.getLocationString());
 						for (String sub : result.getHasSubjects())
-							subWidgetHas.selected.add(sub);
+							subWidgetHas.add(sub);
 						for (String sub : result.getNeedSubjects())
-							subWidgetNeed.selected.add(sub);
+							subWidgetNeed.add(sub);
 						id = result.getId();
 
 						status = true;
@@ -76,8 +79,8 @@ public class ProfileWidget extends Composite implements ClickHandler {
 
 			@Override
 			public void onSuccess(List<String> result) {
-				subWidgetHas.selected.clearAll();
-				subWidgetNeed.selected.clearAll();
+				subWidgetHas.clearAll();
+				subWidgetNeed.clearAll();
 				subWidgetHas.addMoreSubjects(result);
 				subWidgetNeed.addMoreSubjects(result);
 			}
@@ -153,7 +156,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		mapUI = new MapUI(true, tbLocation);
 		mapUI.setSize("400px", "400px");
 		horizontalPanel.add(mapUI);
-		
+
 		initWidget(horizontalPanel);
 	}
 
@@ -162,14 +165,15 @@ public class ProfileWidget extends Composite implements ClickHandler {
 
 		if (event.getSource() == btnSave) {
 			lData = mapUI.getLocationDetails();
-			if (!(subWidgetHas.selected.getSubjects().isEmpty() && subWidgetNeed.selected
-					.getSubjects().isEmpty()) && (tbLocation.getText() != null)) {
+			if (!(subWidgetHas.getSubjects().isEmpty() && subWidgetNeed
+					.getSubjects().isEmpty())
+					&& (tbLocation.getText() != null)) {
 
 				ParticipantVO partVO = new ParticipantVO(id, tbName.getText(),
-						"M", tbEmailId.getText(), lData.getLatitude(),
-						lData.getLongitude(), tbLocation.getText(),
-						lData.getRadius(), subWidgetHas.selected.getSubjects(),
-						subWidgetNeed.selected.getSubjects());
+						"M", tbEmailId.getText(), lData.getLatitude(), lData
+								.getLongitude(), tbLocation.getText(), lData
+								.getRadius(), subWidgetHas.getSubjects(),
+						subWidgetNeed.getSubjects());
 				if (!status) {
 					service.create(partVO, new AsyncCallback<ParticipantVO>() {
 
@@ -206,8 +210,8 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		if (event.getSource() == btnClear) {
 			tbName.setText(null);
 			tbEmailId.setText(null);
-			subWidgetHas.selected.clearAll();
-			subWidgetNeed.selected.clearAll();
+			subWidgetHas.clearAll();
+			subWidgetNeed.clearAll();
 		}
 	}
 }

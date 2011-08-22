@@ -21,6 +21,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.RadioButton;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TextArea;
@@ -34,7 +35,7 @@ public class SearchWidget extends Composite implements ClickHandler,
 	LocationData locationData;
 	TextArea location;
 	SubjectsSuggestWidget subjectsSuggestWidget;
-	RadioButton rbtnAll, rbtnMentor, rbtnMentee;
+	ListBox  listBox;
 	SearchResponse sResponse;
 
 	SearchResponseWidget searchResultsWidget = new SearchResponseWidget();
@@ -94,15 +95,12 @@ public class SearchWidget extends Composite implements ClickHandler,
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		horizontalPanel.setSize("750px", "317px");
 
-		VerticalPanel filterPanel = new VerticalPanel();
-		horizontalPanel.add(filterPanel);
-		filterPanel.setSize("255px", "315px");
-
-		Label label = new Label("Select Subjects :");
-		filterPanel.add(label);
-
-		subjectsSuggestWidget = new SubjectsSuggestWidget();
-
+		VerticalPanel subjectPanel = new VerticalPanel();
+		VerticalPanel locationPanel = new VerticalPanel();
+		
+		Label subLabel = new Label("Select Subjects :");
+		subjectsSuggestWidget = new SubjectsSuggestWidget(new ArrayList<String>());
+		
 		AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
 
 			@Override
@@ -117,25 +115,45 @@ public class SearchWidget extends Composite implements ClickHandler,
 
 		};
 		service.getSubjects(callback);
-		subjectsSuggestWidget.suggestBox.setWidth("243px");
-		filterPanel.add(subjectsSuggestWidget);
-		subjectsSuggestWidget.setSize("250px", "75px");
-
-		Label label_1 = new Label("Select Location:");
-		filterPanel.add(label_1);
-
+//		subjectsSuggestWidget.suggestBox.setWidth("243px");
+//		subjectsSuggestWidget.setSize("250px", "75px");
+		
+		subjectPanel.add(subLabel);
+		subjectPanel.add(subjectsSuggestWidget);
+//		subjectPanel.setSize("255px", "315px");
+		
+		Label locLabel = new Label("Select Location:");
 		location = new TextArea();
-		filterPanel.add(location);
 		location.setText("Please, Use the Map");
 		location.setEnabled(false);
 		location.setSize("243px", "75px");
 
+		
+		locationPanel.add(locLabel);
+		locationPanel.add(location);
+		
+		HorizontalPanel dropDown = new HorizontalPanel();
+		
+		
+		dropDown.add(new Label("Search By:"));
+		listBox =new ListBox();
+		listBox.addItem("All");
+		listBox.addItem("Mentors");
+		listBox.addItem("Mentee/opp");
+		dropDown.add(listBox);
 		searchBtn = new Button("Search");
 		searchBtn.addClickHandler(this);
-		filterPanel.add(searchBtn);
-		filterPanel.setCellHorizontalAlignment(searchBtn,
-				HasHorizontalAlignment.ALIGN_RIGHT);
-
+		dropDown.add(searchBtn);
+		
+		
+		locationPanel.add(dropDown);
+		
+		horizontalPanel.add(subjectPanel);
+		horizontalPanel.add(locationPanel);
+				
+		
+		
+		
 		VerticalPanel verticalPanel_2 = new VerticalPanel();
 		horizontalPanel.add(verticalPanel_2);
 		verticalPanel_2.setSize("483px", "314px");
@@ -143,31 +161,6 @@ public class SearchWidget extends Composite implements ClickHandler,
 		HorizontalPanel horizontalPanel_3 = new HorizontalPanel();
 		verticalPanel_2.add(horizontalPanel_3);
 		horizontalPanel_3.setSize("491px", "33px");
-
-		Label lblNewLabel = new Label("Search By:");
-		horizontalPanel_3.add(lblNewLabel);
-		horizontalPanel_3.setCellVerticalAlignment(lblNewLabel,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-		horizontalPanel_3.setCellHorizontalAlignment(lblNewLabel,
-				HasHorizontalAlignment.ALIGN_CENTER);
-
-		rbtnAll = new RadioButton("new name", "All");
-		rbtnAll.addClickHandler(this);
-		horizontalPanel_3.add(rbtnAll);
-		horizontalPanel_3.setCellVerticalAlignment(rbtnAll,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-
-		rbtnMentor = new RadioButton("new name", "Mentor");
-		rbtnMentor.addClickHandler(this);
-		horizontalPanel_3.add(rbtnMentor);
-		horizontalPanel_3.setCellVerticalAlignment(rbtnMentor,
-				HasVerticalAlignment.ALIGN_MIDDLE);
-
-		rbtnMentee = new RadioButton("new name", "Mentee & Oppurtunities");
-		rbtnMentee.addClickHandler(this);
-		horizontalPanel_3.add(rbtnMentee);
-		horizontalPanel_3.setCellVerticalAlignment(rbtnMentee,
-				HasVerticalAlignment.ALIGN_MIDDLE);
 
 		HorizontalPanel horizontalPanel_2 = new HorizontalPanel();
 		verticalPanel_2.add(horizontalPanel_2);
@@ -223,14 +216,14 @@ public class SearchWidget extends Composite implements ClickHandler,
 						}
 
 					});
-
-		} else if (event.getSource() == rbtnMentor) {
-			searchResultsWidget.setResults(sResponse.getHas());
-		} else if (event.getSource() == rbtnMentee) {
-			searchResultsWidget.setResults(sResponse.getNeed());
-		} else {
-			searchResultsWidget.setResults(sResponse.getAllResults());
 		}
+//		} else if (event.getSource() == rbtnMentor) {
+//			searchResultsWidget.setResults(sResponse.getHas());
+//		} else if (event.getSource() == rbtnMentee) {
+//			searchResultsWidget.setResults(sResponse.getNeed());
+//		} else {
+//			searchResultsWidget.setResults(sResponse.getAllResults());
+//		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -242,7 +235,7 @@ public class SearchWidget extends Composite implements ClickHandler,
 			pList.add(p.getP());
 		}
 		showDefaultCursor();
-		rbtnAll.setChecked(true);
+		listBox.setSelectedIndex(0);
 		mapUI.addPartMarkers(1, pList);
 	}
 

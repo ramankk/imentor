@@ -1,5 +1,6 @@
 package com.bugyal.imentor.frontend.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
@@ -17,7 +18,7 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class OpportunityPanel extends Composite implements ClickHandler {
-	private final SubjectsSuggestWidget subWidget = new SubjectsSuggestWidget();
+	private final SubjectsSuggestWidget subWidget = new SubjectsSuggestWidget(new ArrayList<String>());
 
 	private final TextArea txtMessage = new TextArea();;
 	private final TextArea tbLocation = new TextArea();
@@ -129,15 +130,15 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 	}
 
 	public void showOpportunity(OpportunityVO o) {
-		subWidget.selected.clearAll();
+		subWidget.clearAll();
 		// TODO(Sridhar, Ravi): Propagate message to the datastore and get it
 		// back, no more faking the message.
 		txtMessage.setText("");
 		tbLocation.setText(o.getLocString());
 		mapUI.setMarkerLocation(o.getLatitude(), o.getLongitude());
-		subWidget.selected.clearAll();
+		subWidget.clearAll();
 		for (String sub : o.getSubjects()) {
-			subWidget.selected.add(sub);
+			subWidget.add(sub);
 		}
 		stackPanel.showStack(0);
 		showingOpportunity = o;
@@ -147,12 +148,12 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 	public void onClick(ClickEvent event) {
 		lData = mapUI.getLocationDetails();
 		if (event.getSource() == btnCreate) {
-			if (!(subWidget.selected.getSubjects().isEmpty())
+			if (!(subWidget.getSubjects().isEmpty())
 					&& !(tbLocation.getText().contains("Please, Use the Map"))) {
 				Long id = showingOpportunity == null ? null
 						: showingOpportunity.getId();
 				OpportunityVO oppVO = new OpportunityVO(id,
-						subWidget.selected.getSubjects(), 1, 0,
+						subWidget.getSubjects(), 1, 0,
 						lData.getLatitude(), lData.getLongitude(), 1,
 						tbLocation.getText(), txtMessage.getText());
 
@@ -208,7 +209,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 	}
 
 	protected void clearOpportunity() {
-		subWidget.selected.clearAll();
+		subWidget.clearAll();
 		tbLocation.setText("Please, Use the Map");
 		txtMessage.setText("");
 		showingOpportunity = null;
