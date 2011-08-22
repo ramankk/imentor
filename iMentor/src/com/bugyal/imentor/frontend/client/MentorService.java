@@ -2,7 +2,6 @@ package com.bugyal.imentor.frontend.client;
 
 import java.util.List;
 
-import com.bugyal.imentor.MentorException;
 import com.bugyal.imentor.frontend.shared.MeException;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
@@ -17,12 +16,14 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface MentorService extends RemoteService {
 
 	ParticipantVO create(ParticipantVO p) throws MeException;
-	OpportunityVO createOpportunity(String emailId, OpportunityVO o) throws MeException;
+
+	OpportunityVO createOpportunity(OpportunityVO o) throws MeException;
 
 	ParticipantVO update(ParticipantVO p) throws MeException;
-	OpportunityVO updateOpportunity(OpportunityVO o, String emailId) throws MeException;
 
-	SearchResponse feedToMe(String emilId) throws MeException;
+	OpportunityVO updateOpportunity(OpportunityVO o) throws MeException;
+
+	SearchResponse feedToMe() throws MeException;
 
 	List<OpportunityVO> find(List<String> subjects, ParticipantVO me)
 			throws MeException;
@@ -31,20 +32,19 @@ public interface MentorService extends RemoteService {
 
 	SearchResponse filterList(double latitude, double longitude,
 			String strlocation, int radius, List<String> hasSubs,
-			List<String> needSubs);
-	
-	ParticipantVO getParticipantVOByEmailId(String emailId) throws MeException;
-	
+			List<String> needSubs) throws MeException;
+
+	ParticipantVO getParticipantVOByEmailId() throws MeException;
+
 	void createSession(String emailId) throws MeException;
-	boolean validateSession(String emailId)throws MeException;
-	boolean deleteSession(String emailId) throws MeException;
-		
-	SearchResponse localActivity(String email);
-	
+
+	boolean deleteSession() throws MeException;
+
+	SearchResponse localActivity() throws MeException;
+
 	void generateRandomData(int range) throws MeException;
 
-	long deleteRecords();
-	
-	List<OpportunityVO> getOpportunitiesById(String emailId);
+	long deleteRecords() throws MeException;
 
+	List<OpportunityVO> getOpportunitiesById() throws MeException;
 }

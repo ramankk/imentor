@@ -47,7 +47,7 @@ public class MentorServiceImplTest {
 		assertNotNull(pvo.getId());
 		assertTrue(pvo.getId() > 0);
 		
-		msi.createOpportunity("", new OpportunityVO(null, subjects, 2, 6, TestLocations.GACHIBOWLI.getLatitude(),
+		msi.createOpportunity(new OpportunityVO(null, subjects, 2, 6, TestLocations.GACHIBOWLI.getLatitude(),
 				TestLocations.GACHIBOWLI.getLongitude(), 10,
 				TestLocations.GACHIBOWLI.getLocationString(), "message"));
 		

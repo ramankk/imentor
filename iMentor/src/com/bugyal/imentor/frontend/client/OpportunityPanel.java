@@ -71,8 +71,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		// it.. dont let every
 		// widget fetch its own list of subjects.
 		service.getSubjects(getSubjectsCallback);
-		service.getOpportunitiesById(mainPage.getUserDetails().getEmail(),
-				getOpportuniesCallback);
+		service.getOpportunitiesById(getOpportuniesCallback);
 		
 		VerticalPanel subjectsVertical = new VerticalPanel();
 		subjectsVertical.add(new Label("Subjects"));
@@ -161,8 +160,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 
 				if (id == null) {
 					// Create mode.
-					service.createOpportunity(mainPage.getUserDetails()
-							.getEmail(), oppVO,
+					service.createOpportunity(oppVO,
 							new AsyncCallback<OpportunityVO>() {
 
 								@Override
@@ -174,16 +172,13 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 								@Override
 								public void onSuccess(OpportunityVO result) {
 									clearOpportunity();
-									service.getOpportunitiesById(mainPage
-											.getUserDetails().getEmail(),
-											getOpportuniesCallback);
+									service.getOpportunitiesById(getOpportuniesCallback);
 								}
 
 							});
 				} else {
 					// edit mode.
-					service.updateOpportunity(oppVO, mainPage.getUserDetails()
-							.getEmail(), new AsyncCallback<OpportunityVO>() {
+					service.updateOpportunity(oppVO, new AsyncCallback<OpportunityVO>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
@@ -194,9 +189,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 						@Override
 						public void onSuccess(OpportunityVO result) {
 							clearOpportunity();
-							service.getOpportunitiesById(mainPage
-									.getUserDetails().getEmail(),
-									getOpportuniesCallback);
+							service.getOpportunitiesById(getOpportuniesCallback);
 						}
 					});
 				}
