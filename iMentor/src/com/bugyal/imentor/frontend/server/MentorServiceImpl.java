@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Logger;
 
 import com.beoui.geocell.GeocellUtils;
 import com.beoui.geocell.model.Point;
@@ -31,14 +32,22 @@ import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 @SuppressWarnings("serial")
 public class MentorServiceImpl extends RemoteServiceServlet implements
 		MentorService {
-	private static final String USER_ID = "UserId";
+
 	private static final List<String> SUBJECTS_LIST = new ArrayList<String>();
 	private static final Ranker feedRanker = new Ranker().addScorer(
 			new DistanceScorer()).addScorer(new SubjectCorrelationScorer());
-	private static final ParticipantManager pm = MentorManager.INSTANCE.getParticipantManager();
-	private static final OpportunityManager om = MentorManager.INSTANCE.getOpportunityManager();
+	private static final ParticipantManager pm = MentorManager.INSTANCE
+			.getParticipantManager();
+	private static final OpportunityManager om = MentorManager.INSTANCE
+			.getOpportunityManager();
 	private static final MentorManager mm = MentorManager.INSTANCE;
+
+	private static final String USER_ID = "UserId";
+	private static final String PROVIDER_ID = "ProviderId";
+	private static final String PROVIDER = "Provider";
 	
+	private static final Logger LOG = Logger.getLogger(MentorServiceImpl.class.getName());
+
 	static {
 		SUBJECTS_LIST.add("Computers");
 		SUBJECTS_LIST.add("Physics");
@@ -78,10 +87,11 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				.getLocationString(), p.getRadius());
 		Participant pi = null;
 		try {
-			pi = pm.createParticipant(p.getName(), p.getGender(), location, p.getEmail());
+			pi = pm.createParticipant(p.getName(), p.getGender(), location, p
+					.getEmail());
 			pm.addHasKnowledge(pi, p.getHasSubjects(), 1, pi);
 			pm.addNeedKnowledge(pi, p.getNeedSubjects(), 1, pi);
-			
+
 			save(pi, p);
 		} catch (MentorException m) {
 			throw new MeException(m.getMessage());
@@ -97,8 +107,8 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		Location location = new Location(p.getLatitude(), p.getLongitude(), p
 				.getLocationString(), p.getRadius());
 		clearSubjects(pi);
-		if (p.getHasSubjects() != null) {	
-			
+		if (p.getHasSubjects() != null) {
+
 			pm.addHasKnowledge(pi, p.getHasSubjects(), 5, pi);
 		}
 
@@ -115,21 +125,21 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		pi.clearSubjects();
 		pm.save(pi);
 	}
-	
+
 	private void save(Opportunity oi, OpportunityVO o) throws MentorException {
-		Location location = new Location(o.getLatitude(), o.getLongitude(),
-				o.getLocString(), o.getRadius());
-		oi.setLocation(location);		
+		Location location = new Location(o.getLatitude(), o.getLongitude(), o
+				.getLocString(), o.getRadius());
+		oi.setLocation(location);
 		Participant savedBy = pm.findParticipantByEmail(getUserId());
-		
-		if(o.getSubjects() != null) {
-			oi.resetSubjects(o.getSubjects(), savedBy);	
+
+		if (o.getSubjects() != null) {
+			oi.resetSubjects(o.getSubjects(), savedBy);
 		}
-		
+
 		oi.setPriority(o.getPriority(), savedBy);
 		oi.setActive(true, savedBy);
 		oi.setRequiredParticipants(o.getRequiredMentors(), savedBy);
- 		om.update(oi, savedBy);
+		om.update(oi, savedBy);
 	}
 
 	@Override
@@ -142,21 +152,22 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				.getLocString(), o.getRadius());
 		Opportunity oi = null;
 		List<Participant> contacts = new ArrayList<Participant>();
-		
-		Participant participant=null;
+
+		Participant participant = null;
 		try {
 			participant = pm.findParticipantByEmail(getUserId());
 			if (participant != null) {
-			  contacts.add(participant);
+				contacts.add(participant);
 			}
 		} catch (MentorException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}	
-		
+		}
+
 		// TODO(raman): Understand why MentorException is not getting thrown.
 		oi = om.createOpportunity(location, o.getSubjects(), o
-				.getRequiredMentors(), contacts, o.getPriority(), o.getMessage(), participant);
+				.getRequiredMentors(), contacts, o.getPriority(), o
+				.getMessage(), participant);
 
 		if (oi != null) {
 			return ValueObjectGenerator.create(oi);
@@ -176,7 +187,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				.getId());
 
 		try {
-			pi = pm.findById(key);			
+			pi = pm.findById(key);
 			save(pi, p);
 		} catch (MentorException m) {
 			throw new MeException(m.getMessage());
@@ -195,7 +206,8 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		}
 
 		Opportunity oi = null;
-		Key key = KeyFactory.createKey(Opportunity.class.getSimpleName(), o.getId());
+		Key key = KeyFactory.createKey(Opportunity.class.getSimpleName(), o
+				.getId());
 
 		try {
 			oi = om.findById(key);
@@ -276,7 +288,8 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 					}
 				}
 				has.add(new SearchResult(ValueObjectGenerator.create(p), true,
-						matchingSubs, GeocellUtils.distance(pt, p.getLocation())));
+						matchingSubs, GeocellUtils
+								.distance(pt, p.getLocation())));
 			}
 
 			for (Participant p : pm.searchParticipantsBySubjects(hasSubs,
@@ -288,7 +301,8 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 					}
 				}
 				need.add(new SearchResult(ValueObjectGenerator.create(p),
-						false, matchingSubs, GeocellUtils.distance(pt, p.getLocation())));
+						false, matchingSubs, GeocellUtils.distance(pt, p
+								.getLocation())));
 			}
 
 			for (Opportunity o : om.searchOpportunities(location, hasSubs)) {
@@ -300,7 +314,8 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 					}
 				}
 				need.add(new SearchResult(ValueObjectGenerator.create(o),
-						matchingSubs, GeocellUtils.distance(pt, o.getLocation())));
+						matchingSubs, GeocellUtils
+								.distance(pt, o.getLocation())));
 			}
 			response.setHas(has);
 			response.setNeed(need);
@@ -312,7 +327,6 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		return response;
 	}
 
-	
 	@Override
 	public SearchResponse feedToMe() throws MeException {
 		SearchResponse response = null;
@@ -335,8 +349,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		return response;
 	}
 
-	public ParticipantVO getParticipantVOByEmailId()
-			throws MeException {
+	public ParticipantVO getParticipantVOByEmailId() throws MeException {
 		try {
 			Participant participant = pm.findParticipantByEmail(getUserId());
 			return ValueObjectGenerator.create(participant);
@@ -345,7 +358,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		}
 		return null;
 	}
-	
+
 	@Override
 	public SearchResponse localActivity() {
 		SearchResponse response = new SearchResponse();
@@ -362,7 +375,8 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 					pi.getLoc().getActiveRadius());
 
 			for (Participant p : pm.searchParticipantsByLocation(location)) {
-				double distance = GeocellUtils.distance(pi.getLocation(), p.getLocation());
+				double distance = GeocellUtils.distance(pi.getLocation(), p
+						.getLocation());
 				has.add(new SearchResult(ValueObjectGenerator.create(p), true,
 						p.getHasSubjects(), distance));
 				need.add(new SearchResult(ValueObjectGenerator.create(p),
@@ -371,7 +385,8 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 
 			for (Opportunity o : om.allOpportunites(location)) {
 				need.add(new SearchResult(ValueObjectGenerator.create(o), o
-						.getSubjects(), GeocellUtils.distance(pi.getLocation(), o.getLocation())));
+						.getSubjects(), GeocellUtils.distance(pi.getLocation(),
+						o.getLocation())));
 			}
 			response.setHas(has);
 			response.setNeed(need);
@@ -390,21 +405,32 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			if (p == null) {
 				return new ArrayList<OpportunityVO>();
 			}
-			List<Opportunity> opportunities = om.searchOpportunitiesByKey(p.getKey());
+			List<Opportunity> opportunities = om.searchOpportunitiesByKey(p
+					.getKey());
 			return ValueObjectGenerator.createOpportunityVOs(opportunities);
-		} catch(MentorException e) {
+		} catch (MentorException e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 
 	@Override
-	public void createSession(String emailId) throws MeException {
+	public void createSession(String emailId, String provider, String providerId)
+			throws MeException {
 		getThreadLocalRequest().getSession().setAttribute(USER_ID, emailId);
+		getThreadLocalRequest().getSession().setAttribute(PROVIDER, provider);
+		getThreadLocalRequest().getSession().setAttribute(PROVIDER_ID,
+				providerId);
+
+		LOG.info("Created session for " + emailId + ", provider: " + provider
+				+ ", id: " + providerId);
+		System.out.println("Created session for " + emailId + ", provider: " + provider
+				+ ", id: " + providerId);
 	}
-	
+
 	private String getUserId() {
-		return (String) getThreadLocalRequest().getSession().getAttribute(USER_ID);
+		return (String) getThreadLocalRequest().getSession().getAttribute(
+				USER_ID);
 	}
 
 	@Override
@@ -416,6 +442,5 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			return false;
 		}
 	}
-
 
 }

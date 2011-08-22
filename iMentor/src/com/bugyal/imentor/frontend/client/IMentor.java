@@ -13,10 +13,11 @@ public class IMentor implements EntryPoint {
 		setShowTrigger2(this);
 	}
 	
-	public void loadApp(){
+	public void loadApp(String fbId){
 		UserDetails userDetails = new UserDetails();
 		userDetails.setName(RootPanel.get("name").getElement().getInnerHTML());
 		userDetails.setEmail(RootPanel.get("email").getElement().getInnerHTML());
+		userDetails.setFbId(fbId);
 		
 		HeaderWidget headerWidget = new HeaderWidget(userDetails);
 		headerWidget.init();
@@ -29,8 +30,8 @@ public class IMentor implements EntryPoint {
 	}
 	
 	public native void setShowTrigger(IMentor x)/*-{
-    	$wnd.showIMentorApp = function () {
-			x.@com.bugyal.imentor.frontend.client.IMentor::loadApp()();
+    	$wnd.showIMentorApp = function (s) {
+			x.@com.bugyal.imentor.frontend.client.IMentor::loadApp(Ljava/lang/String;)(s);
     	};
 	}-*/;
 	

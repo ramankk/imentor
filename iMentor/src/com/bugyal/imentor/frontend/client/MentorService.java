@@ -36,7 +36,7 @@ public interface MentorService extends RemoteService {
 
 	ParticipantVO getParticipantVOByEmailId() throws MeException;
 
-	void createSession(String emailId) throws MeException;
+	void createSession(String emailId, String provider, String providerId) throws MeException;
 
 	boolean deleteSession() throws MeException;
 

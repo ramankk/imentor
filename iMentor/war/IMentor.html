@@ -41,7 +41,7 @@
 					function(response) {
 						document.getElementById("name").innerHTML = response[0].name;
 						document.getElementById("email").innerHTML = response[0].email;
-						showIMentorApp();
+						showIMentorApp(userId);
 					});
 				} else {
 					alert('not login');
@@ -54,7 +54,7 @@
 			<div id="head" class="menu"></div>
 		</div>
 		<div class="bar">
-			<b id="name"></b><b id="email"></b>
+			<b id="name"></b>&nbsp;(<b id="email"></b>)&nbsp;<input id="fid" type="hidden"></b>
 			<fb:login-button perms='email' autologoutlink='true'></fb:login-button>
 		</div>
 		<div class="middle" id="middle" width="100%"></div>

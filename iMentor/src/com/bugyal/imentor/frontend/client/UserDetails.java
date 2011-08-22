@@ -1,7 +1,8 @@
 package com.bugyal.imentor.frontend.client;
 
 public class UserDetails {
-	private String name,email;
+	private String name, email;
+	private String fbId;
 
 	public String getName() {
 		return name;
@@ -19,4 +20,11 @@ public class UserDetails {
 		this.email = email;
 	}
 
+	public String getFbId() {
+		return fbId;
+	}
+
+	public void setFbId(String fbId) {
+		this.fbId = fbId;
+	}
 }
