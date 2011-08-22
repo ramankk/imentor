@@ -42,7 +42,8 @@ public class HeaderWidget extends Composite {
 		}};
 	
 	public void init() {
-		service.createSession(userDetails.getEmail(), sessionCallback);
+		service.createSession(userDetails.getEmail(), "facebook", 
+				userDetails.getFbId(), sessionCallback);
 		mainPage = new MainPageWidget(this);
 		initMenuBar(menuBar);
 	}
@@ -133,6 +134,7 @@ public class HeaderWidget extends Composite {
 	// for testing
 	public void setEmailForTest(String email) {
 		this.userDetails.setEmail(email);
-		service.createSession(userDetails.getEmail(), sessionCallback);
+		service.createSession(userDetails.getEmail(), "facebook",
+				userDetails.getFbId(), sessionCallback);
 	}
 }

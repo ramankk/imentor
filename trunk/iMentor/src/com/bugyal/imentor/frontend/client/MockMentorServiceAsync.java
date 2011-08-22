@@ -23,12 +23,6 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 	}
 
 	@Override
-	public void createSession(String emailId, AsyncCallback<Void> callback) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
 	public void deleteRecords(AsyncCallback<Long> asyncCallback) {
 		// TODO Auto-generated method stub
 		
@@ -100,6 +94,13 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 	@Override
 	public void updateOpportunity(OpportunityVO o,
 			AsyncCallback<OpportunityVO> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void createSession(String emailId, String provider,
+			String providerId, AsyncCallback<Void> callback) {
 		// TODO Auto-generated method stub
 		
 	}
