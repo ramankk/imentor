@@ -48,4 +48,6 @@ public interface MentorService extends RemoteService {
 	long deleteRecords() throws MeException;
 
 	List<OpportunityVO> getOpportunitiesById() throws MeException;
+
+	boolean addMentorAndMentee(Boolean isHas, String mentorMailId);
 }

@@ -44,5 +44,7 @@ public interface MentorServiceAsync {
 	void getOpportunitiesById(AsyncCallback<List<OpportunityVO>> callback);
 
 	void createOpportunity(OpportunityVO o,
-			AsyncCallback<OpportunityVO> callback);	
+			AsyncCallback<OpportunityVO> callback);
+
+	void addMentorAndMentee(Boolean isHas, String mentorMailId, AsyncCallback<Boolean> callback);	
 }

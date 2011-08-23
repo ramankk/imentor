@@ -1,7 +1,10 @@
 package com.bugyal.imentor.frontend.client;
 
 import com.bugyal.imentor.frontend.shared.SearchResult;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
@@ -9,13 +12,14 @@ import com.google.gwt.user.client.ui.Label;
 
 public class SearchResultWidget extends Composite {
 
-	String[] colors = {"#F0FAFA", "#FFFFFF"};
+	String[] colors = { "#F0FAFA", "#FFFFFF" };
 
 	Label message = new Label();
 	Label distance = new Label();
 	Anchor pursueLink = new Anchor("->");
-	
+	SearchResult searchResult = null;
 	FlexTable table = new FlexTable();
+	
 
 	public SearchResultWidget(boolean isEven) {
 		table.setSize("730px", "34px");
@@ -27,12 +31,25 @@ public class SearchResultWidget extends Composite {
 		table.getFlexCellFormatter().setColSpan(0, 0, 5);
 		table.setWidget(0, 6, distance);
 		table.setWidget(0, 7, pursueLink);
-
+		pursueLink.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if(searchResult != null){
+					ProfileInfo info = new ProfileInfo(searchResult);
+					info.center();
+				}
+				else{
+					Window.alert("Mentor not found");
+				}
+			}
+		});
 		initWidget(table);
 	}
 
 	public void setResult(SearchResult result) {
-		StringBuilder messageString = new StringBuilder(); 
+		
+		searchResult = result;
+		StringBuilder messageString = new StringBuilder();
 		if (result.isTypeParticipant()) {
 			table.setTitle(result.getP().getLocationString());
 			messageString.append(result.getP().getName());
@@ -51,7 +68,7 @@ public class SearchResultWidget extends Composite {
 		}
 		messageString.append("] ");
 		message.setText(messageString.toString());
-		
+
 		distance.setText(result.getDistance());
 	}
 

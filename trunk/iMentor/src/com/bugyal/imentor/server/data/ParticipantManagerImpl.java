@@ -7,6 +7,7 @@ import java.util.logging.Logger;
 
 import javax.jdo.PersistenceManager;
 import javax.jdo.Query;
+import javax.jdo.Transaction;
 
 import com.beoui.geocell.GeocellManager;
 import com.beoui.geocell.model.GeocellQuery;
@@ -22,7 +23,8 @@ public class ParticipantManagerImpl implements ParticipantManager {
 
 	private static final Logger LOG = Logger
 			.getLogger(ParticipantManagerImpl.class.getCanonicalName());
-	private LRUCache<String,Participant> cache = new LRUCache<String, Participant>(10);
+	private LRUCache<String, Participant> cache = new LRUCache<String, Participant>(
+			10);
 
 	@Override
 	public void addCoParticipant(Participant i, Participant him) {
@@ -32,9 +34,10 @@ public class ParticipantManagerImpl implements ParticipantManager {
 
 	@Override
 	public void addHasKnowledge(Participant i, List<String> hasSubjects, int l,
-			Participant suggestedBy) {	
+			Participant suggestedBy) {
 		for (String has : hasSubjects) {
-			i.addKnowledge(new Participant.Knowledge(has, l, suggestedBy.getKey(), true));
+			i.addKnowledge(new Participant.Knowledge(has, l, suggestedBy
+					.getKey(), true));
 		}
 		save(i);
 	}
@@ -53,10 +56,11 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	}
 
 	@Override
-	public void addNeedKnowledge(Participant i, List<String> needSubjects, int l,
-			Participant suggestedBy) {
+	public void addNeedKnowledge(Participant i, List<String> needSubjects,
+			int l, Participant suggestedBy) {
 		for (String need : needSubjects) {
-			i.addKnowledge(new Participant.Knowledge(need, l, suggestedBy.getKey(), false));
+			i.addKnowledge(new Participant.Knowledge(need, l, suggestedBy
+					.getKey(), false));
 		}
 		save(i);
 	}
@@ -74,8 +78,8 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	}
 
 	@Override
-	public Participant createParticipant(String name, String gender, Location location,
-			String email) throws MentorException {
+	public Participant createParticipant(String name, String gender,
+			Location location, String email) throws MentorException {
 		Participant e = findParticipantByEmail(email);
 		if (e != null) {
 			throw new MentorException("Participant with email " + email
@@ -87,9 +91,10 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	}
 
 	@Override
-	public Participant createParticipant(String name, String gender, Location location,
-			Participant creator) {
-		Participant i = new Participant(name, gender, location, creator.getKey());
+	public Participant createParticipant(String name, String gender,
+			Location location, Participant creator) {
+		Participant i = new Participant(name, gender, location,
+				creator.getKey());
 		save(i);
 		return i;
 	}
@@ -103,7 +108,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		if (participant != null) {
 			return participant;
 		}
-		
+
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 
 		List<Participant> results = null;
@@ -204,15 +209,16 @@ public class ParticipantManagerImpl implements ParticipantManager {
 
 		return results;
 	}
+
 	@Override
-	public long deleteParticipants(){
+	public long deleteParticipants() {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		long n;
 		try {
 			Query q = pm.newQuery(Participant.class);
 			n = q.deletePersistentAll();
 			q.closeAll();
-			
+
 		} finally {
 			pm.close();
 		}
@@ -248,14 +254,14 @@ public class ParticipantManagerImpl implements ParticipantManager {
 
 		return results;
 	}
-	
+
 	@Override
 	public List<Participant> searchParticipantsByLocation(Location l)
 			throws MentorException {
 		long CHECK_TIME = 24 * (60 * 60 * 1000);
-		
+
 		Preconditions.checkNotNull(l);
-		
+
 		long checkTime = System.currentTimeMillis() - CHECK_TIME;
 
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -265,17 +271,21 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		List<Object> params = new ArrayList<Object>();
 		params.add(checkTime);
 
-		String filter = "lastModifiedTime >= updateTimeP" ;
+		String filter = "lastModifiedTime >= updateTimeP";
 
-		GeocellQuery query = new GeocellQuery(filter, "long updateTimeP", params);
+		GeocellQuery query = new GeocellQuery(filter, "long updateTimeP",
+				params);
 
 		try {
-			long t=System.currentTimeMillis();
+			long t = System.currentTimeMillis();
 			System.out.println(t);
-			
-			results = GeocellManager.proximityFetch(center, 50, l.getActiveRadius() * 1000, Participant.class, query, pm, 9);
-			System.out.println(" participant "+ (System.currentTimeMillis()-t));
-			
+
+			results = GeocellManager
+					.proximityFetch(center, 50, l.getActiveRadius() * 1000,
+							Participant.class, query, pm, 9);
+			System.out.println(" participant "
+					+ (System.currentTimeMillis() - t));
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -304,17 +314,22 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		String filter = has ? "hasSubjects" : "needSubjects";
 		filter += ".contains(subjectsP)";
 
-		GeocellQuery query = new GeocellQuery(filter, "String subjectsP", params);
+		GeocellQuery query = new GeocellQuery(filter, "String subjectsP",
+				params);
 
 		try {
-			long t=System.currentTimeMillis();
+			long t = System.currentTimeMillis();
 			System.out.println(t);
-			
-		/*	results = MyGeocellManager.proximityFetch(center, 30,
-					l.getActiveRadius() * 1000, Participant.class, query, pm, 8);*/
-			results = GeocellManager.proximityFetch(center, 30, l.getActiveRadius() * 1000, Participant.class, query, pm, 8);
-			System.out.println(System.currentTimeMillis()-t);
-			
+
+			/*
+			 * results = MyGeocellManager.proximityFetch(center, 30,
+			 * l.getActiveRadius() * 1000, Participant.class, query, pm, 8);
+			 */
+			results = GeocellManager
+					.proximityFetch(center, 30, l.getActiveRadius() * 1000,
+							Participant.class, query, pm, 8);
+			System.out.println(System.currentTimeMillis() - t);
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -330,7 +345,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		Participant p = null;
 		try {
 			p = pm.getObjectById(Participant.class, key);
-			
+
 			// Magic to load knowledge and notes.
 			p.getHas();
 			p.getNotes();
@@ -339,6 +354,35 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		}
 
 		return p;
+	}
+
+	@Override
+	public Boolean addMentorToMentee(Participant mentor, Participant mentee) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
+		try {
+			tx.begin();
+			mentor.addMentee(mentee.getKey());
+			pm.makePersistent(mentor);			
+			tx.commit();
+		} catch (Exception e) {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			return false;
+		}
+		try {
+			tx.begin();
+			mentee.addMentor(mentor.getKey());
+			pm.makePersistent(mentee);
+			tx.commit();			
+		} catch (Exception e) {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			return false;
+		}
+		return true;
 	}
 
 }

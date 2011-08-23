@@ -105,5 +105,12 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 		
 	}
 
+	@Override
+	public void addMentorAndMentee(Boolean isHas, String mentorMailId,
+			AsyncCallback<Boolean> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+
 
 }

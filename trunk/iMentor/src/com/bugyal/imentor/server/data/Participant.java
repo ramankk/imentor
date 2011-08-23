@@ -3,7 +3,9 @@ package com.bugyal.imentor.server.data;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -52,10 +54,10 @@ public class Participant implements LocationCapable {
 	private List<Knowledge> knowledge;
 
 	@Persistent
-	private List<Key> mentors; // points to another participant
+	private Set<Key> mentors; // points to another participant
 
 	@Persistent
-	private List<Key> mentees; // points to another participant
+	private Set<Key> mentees; // points to another participant
 
 	@Persistent
 	private List<Key> coParticipants; // social-group of participants
@@ -341,12 +343,14 @@ public class Participant implements LocationCapable {
 		return filter(true);
 	}
 
+	@SuppressWarnings("unchecked")
 	List<Key> getMentors() {
-		return mentors;
+		return (List<Key>) mentors;
 	}
 
+	@SuppressWarnings("unchecked")
 	Participant setMentors(List<Key> mentors) {
-		this.mentors = mentors;
+		this.mentors = (Set<Key>) mentors;
 		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
@@ -363,12 +367,14 @@ public class Participant implements LocationCapable {
 		return this;
 	}
 
+	@SuppressWarnings("unchecked")
 	List<Key> getMentees() {
-		return mentees;
+		return (List<Key>) mentees;
 	}
 
+	@SuppressWarnings("unchecked")
 	Participant setMentees(List<Key> mentees) {
-		this.mentees = mentees;
+		this.mentees = (Set<Key>) mentees;
 		this.lastModifiedTime = System.currentTimeMillis();
 		return this;
 	}
@@ -461,8 +467,8 @@ public class Participant implements LocationCapable {
 
 	private void init() {
 		this.interests = new ArrayList<String>();
-		this.mentees = new ArrayList<Key>();
-		this.mentors = new ArrayList<Key>();
+		this.mentees = new HashSet<Key>();
+		this.mentors = new HashSet<Key>();
 		this.knowledge = new ArrayList<Knowledge>();
 		this.coParticipants = new ArrayList<Key>();
 		this.notes = new ArrayList<Note>();
