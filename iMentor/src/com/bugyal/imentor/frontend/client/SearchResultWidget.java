@@ -60,5 +60,4 @@ public class SearchResultWidget extends Composite {
 		distance.setText("");
 		pursueLink.setHref("#");
 	}
-
 }

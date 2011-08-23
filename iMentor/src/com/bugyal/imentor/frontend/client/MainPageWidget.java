@@ -34,7 +34,6 @@ public class MainPageWidget extends Composite {
 		profilePanel = new ProfileWidget(this);
 		opportunityPanel = new OpportunityPanel(this);
 		
-		showHomeWidget();
 		initWidget(ft);
 	}
 
@@ -58,5 +57,9 @@ public class MainPageWidget extends Composite {
 
 	public void showOpportunityPanel() {
 		ft.setWidget(1, 0, opportunityPanel);
+	}
+	
+	public HeaderWidget getHeaderWidget() {
+		return menuPanel;
 	}
 }
