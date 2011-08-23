@@ -445,7 +445,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public void createSession(String emailId, String provider, String providerId)
+	public boolean createSession(String emailId, String provider, String providerId)
 			throws MeException {
 		getThreadLocalRequest().getSession().setAttribute(USER_ID, emailId);
 		getThreadLocalRequest().getSession().setAttribute(PROVIDER, provider);
@@ -456,6 +456,11 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				+ ", id: " + providerId);
 		System.out.println("Created session for " + emailId + ", provider: " + provider
 				+ ", id: " + providerId);
+		if (getParticipantVOByEmailId() != null) {
+			return true;
+	    } else {
+			return false;
+		}
 	}
 
 	private String getUserId() {

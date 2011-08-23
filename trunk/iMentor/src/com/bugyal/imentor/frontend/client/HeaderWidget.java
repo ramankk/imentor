@@ -1,5 +1,7 @@
 package com.bugyal.imentor.frontend.client;
 
+
+import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
 import com.google.gwt.user.client.Window;
@@ -15,8 +17,8 @@ public class HeaderWidget extends Composite {
 	private MainPageWidget mainPage = null;
 	private UserDetails userDetails = null;
 	private MenuBar menuBar;
-	
 	MentorServiceAsync service;
+	private boolean newUser = false;
 	
 	public HeaderWidget(UserDetails userDetails) {
 		this.userDetails = userDetails;
@@ -26,28 +28,48 @@ public class HeaderWidget extends Composite {
 		horizontalPanel.setWidth("377px");
 		menuBar = new MenuBar(false);
 		horizontalPanel.add(menuBar);
+		service = (MentorServiceAsync) GWT.create(MentorService.class);
+		mainPage = new MainPageWidget(this);
 		initWidget(horizontalPanel);
 	}
 	
-	private AsyncCallback<Void> sessionCallback = new AsyncCallback<Void>() {
+	private AsyncCallback<Boolean> sessionCallback = new AsyncCallback<Boolean>() {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Cannot create session");
+			setViewForNewUser();
 		}
 
 		@Override
-		public void onSuccess(Void result) {
-			Window.alert("Session created.");
+		public void onSuccess(Boolean result) {
+			if (result) {
+				setViewToReturningUser();
+			} else {
+				setViewForNewUser();
+			}
 		}};
 	
 	public void init() {
-		service.createSession(userDetails.getEmail(), "facebook", 
-				userDetails.getFbId(), sessionCallback);
-		mainPage = new MainPageWidget(this);
+		if (userDetails.getEmail() != null || userDetails.getEmail().equals("")) {
+			service.createSession(userDetails.getEmail(), "facebook", 
+					userDetails.getFbId(), sessionCallback);
+		} else {
+			setViewForNewUser();
+		}
+	}
+	
+	private void setViewToReturningUser() {
+		newUser = false;
+		mainPage.showHomeWidget();
 		initMenuBar(menuBar);
 	}
 
+	private void setViewForNewUser() {
+		newUser = true;
+		initMenuBar(menuBar);
+		mainPage.showProfilePanel();
+	}
+	
 	private void initMenuBar(MenuBar menuBar) {
 		MenuItem mntmHome = new MenuItem("Home", false, homeCommand());
 		menuBar.addItem(mntmHome);
@@ -95,7 +117,9 @@ public class HeaderWidget extends Composite {
 		return new Command() {
 			@Override
 			public void execute() {
-				mainPage.showOpportunityPanel();
+				if (!newUser) {
+					mainPage.showOpportunityPanel();
+				}
 			}
 		};
 	}
@@ -104,7 +128,9 @@ public class HeaderWidget extends Composite {
 		return new Command() {
 			@Override
 			public void execute() {
-				mainPage.showHomeWidget();
+				if (!newUser) {
+					mainPage.showHomeWidget();
+				}
 			}
 		};
 	}
@@ -136,5 +162,11 @@ public class HeaderWidget extends Composite {
 		this.userDetails.setEmail(email);
 		service.createSession(userDetails.getEmail(), "facebook",
 				userDetails.getFbId(), sessionCallback);
+	}
+
+	public void setNewUser(boolean b) {
+		if (newUser != b) {
+			init();
+		}
 	}
 }

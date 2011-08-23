@@ -190,6 +190,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 
 						@Override
 						public void onSuccess(ParticipantVO result) {
+							mainPage.getHeaderWidget().setNewUser(false);
 							mainPage.showHomeWidget();
 						}
 					});

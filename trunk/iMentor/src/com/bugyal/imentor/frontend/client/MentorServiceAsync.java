@@ -31,7 +31,7 @@ public interface MentorServiceAsync {
 	void getParticipantVOByEmailId(AsyncCallback<ParticipantVO> callback);
 
 	void createSession(String emailId, String provider, String providerId,
-			AsyncCallback<Void> callback);
+			AsyncCallback<Boolean> callback);
 
 	void deleteSession(AsyncCallback<Boolean> callback);
 

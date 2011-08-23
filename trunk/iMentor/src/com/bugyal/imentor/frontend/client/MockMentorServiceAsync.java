@@ -100,7 +100,7 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 
 	@Override
 	public void createSession(String emailId, String provider,
-			String providerId, AsyncCallback<Void> callback) {
+			String providerId, AsyncCallback<Boolean> callback) {
 		// TODO Auto-generated method stub
 		
 	}
