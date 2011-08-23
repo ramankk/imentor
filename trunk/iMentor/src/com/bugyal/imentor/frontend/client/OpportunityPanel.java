@@ -111,11 +111,12 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		tabPanel.add(topHorizontal,"Set Opportunity");
 		tabPanel.selectTab(0);
 		mapUI = new MapUI(false, tbLocation);
-		mapUI.setWidth("500px");
-		
+		TabPanel map = new TabPanel();
+		map.add(mapUI, "Map View");
+		map.selectTab(0);
 		VerticalPanel mainPanel = new VerticalPanel();
 		mainPanel.add(tabPanel);
-		mainPanel.add(mapUI);
+		mainPanel.add(map);
 
 		initWidget(mainPanel);
 	}

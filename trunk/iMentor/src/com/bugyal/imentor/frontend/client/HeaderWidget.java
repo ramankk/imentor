@@ -1,10 +1,8 @@
 package com.bugyal.imentor.frontend.client;
 
 
-import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Command;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HorizontalPanel;
@@ -90,11 +88,11 @@ public class HeaderWidget extends Composite {
 		MenuItem searchData = new MenuItem("Search", false, searchCommand());
 		menuBar.addItem(searchData);
 
-		if (IMentor.TEST_MODE_FLAG) {
-			MenuItem randomData = new MenuItem("Seed Data", false,
-					seedRandomDataCommand());
-			menuBar.addItem(randomData);
-		}
+//		if (IMentor.TEST_MODE_FLAG) {
+//			MenuItem randomData = new MenuItem("Seed Data", false,
+//					seedRandomDataCommand());
+//			menuBar.addItem(randomData);
+//		}
 	}
 	
 	public MainPageWidget getMainPage() {

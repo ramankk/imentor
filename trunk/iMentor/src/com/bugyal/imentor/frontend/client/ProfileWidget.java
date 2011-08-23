@@ -7,14 +7,17 @@ import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -31,17 +34,14 @@ public class ProfileWidget extends Composite implements ClickHandler {
 	LocationData lData = new LocationData();
 	boolean status = false;
 	long id;
-	RadioButton rbMail, rbFemail;
+	RadioButton rbMale, rbFemale;
 	MapUI mapUI;
 
 	MainPageWidget mainPage = null;
 
 	public ProfileWidget(MainPageWidget mainPage) {
 		this.mainPage = mainPage;
-
-		HorizontalPanel horizontalPanel = new HorizontalPanel();
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
-
 		final UserDetails userDetails = mainPage.getUserDetails();
 		service.getParticipantVOByEmailId(new AsyncCallback<ParticipantVO>() {
 
@@ -88,40 +88,41 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		service.getSubjects(callback);
 		
 		VerticalPanel mainPanel = new VerticalPanel();
-		
-		VerticalPanel leftVertical = new VerticalPanel();
-		leftVertical.setHeight("200px");
-		
+				
 		HorizontalPanel nameHorizontal = new HorizontalPanel();
 		nameHorizontal.add(new Label("Name "));
 		tbName = new TextBox();
-		nameHorizontal.add(tbName);
-				
+		nameHorizontal.add(tbName);		
 		HorizontalPanel genderHorizontal = new HorizontalPanel();
-		rbMail = new RadioButton("Gender", "M");
-		rbFemail = new RadioButton("Gender", "F");
-		rbMail.setValue(true);
+		rbMale = new RadioButton("Gender", "M");
+		rbFemale = new RadioButton("Gender", "F");
+		rbMale.setValue(true);
 		genderHorizontal.add(new Label("Gender "));
-		genderHorizontal.add(rbMail);
-		genderHorizontal.add(rbFemail);
-		
+		genderHorizontal.add(rbMale);
+		genderHorizontal.add(rbFemale);
 		HorizontalPanel mailHorizontal = new HorizontalPanel();
 		tbEmailId = new TextBox();
+		//TODO:(ravi) remove when you submit
+		tbEmailId.setText("teja.cse596@gmail.com");
 		tbEmailId.setEnabled(false);
 		mailHorizontal.add(new Label("Mail Id"));
 		mailHorizontal.add(tbEmailId);		
 		
+		HorizontalPanel personalHorizontal = new HorizontalPanel();
+		personalHorizontal.setWidth("750px");
+		personalHorizontal.add(nameHorizontal);
+		personalHorizontal.add(genderHorizontal);
+		personalHorizontal.add(mailHorizontal);
+		personalHorizontal.setCellHorizontalAlignment(mailHorizontal, HasHorizontalAlignment.ALIGN_RIGHT);
+		
 		VerticalPanel locationVertical = new VerticalPanel();
-		locationVertical.add(new Label("Location:"));
+		Label l= new Label("Location:");
+		l.setHeight("29px");
+		locationVertical.add(l);
 		locationVertical.add(tbLocation);
 
 		tbLocation.setText(lData.getLocation());
-		tbLocation.setSize("215px", "40px");
-		
-		leftVertical.add(nameHorizontal);
-		leftVertical.add(genderHorizontal);
-		leftVertical.add(mailHorizontal);
-		leftVertical.add(locationVertical);
+		tbLocation.setSize("215px", "45px");
 		
 		VerticalPanel knowSubVertical = new VerticalPanel();
 		knowSubVertical.add(new Label("Subjects you know"));
@@ -131,12 +132,13 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		wantSubVertical.add(new Label("Subjects you want"));
 		wantSubVertical.add(subWidgetNeed);
 		
-		HorizontalPanel subjectsHorizontal = new HorizontalPanel();
-		subjectsHorizontal.setWidth("530px");
-		subjectsHorizontal.add(knowSubVertical);
-		subjectsHorizontal.add(wantSubVertical);
-		subjectsHorizontal.setCellHorizontalAlignment(knowSubVertical, HasHorizontalAlignment.ALIGN_RIGHT);
-		subjectsHorizontal.setCellHorizontalAlignment(wantSubVertical, HasHorizontalAlignment.ALIGN_RIGHT);
+		HorizontalPanel middleHorizontal = new HorizontalPanel();
+		middleHorizontal.setWidth("750px");
+		middleHorizontal.add(locationVertical);
+		middleHorizontal.add(knowSubVertical);
+		middleHorizontal.add(wantSubVertical);
+		middleHorizontal.setCellHorizontalAlignment(knowSubVertical, HasHorizontalAlignment.ALIGN_RIGHT);
+		middleHorizontal.setCellHorizontalAlignment(wantSubVertical, HasHorizontalAlignment.ALIGN_RIGHT);
 		
 		HorizontalPanel buttonsHorizontal = new HorizontalPanel();
 
@@ -147,20 +149,21 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		btnSave = new Button("Save");
 		btnSave.addClickHandler(this);
 		buttonsHorizontal.add(btnSave);
+		
+		VerticalPanel topVertical = new VerticalPanel();
+		topVertical.add(personalHorizontal);
+		topVertical.add(middleHorizontal);
+		topVertical.add(buttonsHorizontal);
+		topVertical.setCellHorizontalAlignment(buttonsHorizontal, HasHorizontalAlignment.ALIGN_RIGHT);
+		topVertical.setHeight("180px");
 
-		VerticalPanel rightVertical = new VerticalPanel();
-		rightVertical.add(subjectsHorizontal);
-		rightVertical.add(buttonsHorizontal);
-		rightVertical.setCellHorizontalAlignment(buttonsHorizontal, HasHorizontalAlignment.ALIGN_RIGHT);
-		
-		HorizontalPanel topHorizontal = new HorizontalPanel();
-		topHorizontal.setSize("750px","200px");
-		topHorizontal.add(leftVertical);
-		topHorizontal.add(rightVertical);
-		
-		mainPanel.add(topHorizontal);
-		mapUI = new MapUI(true, tbLocation);			
-		mainPanel.add(mapUI);
+		mainPanel.add(new HTML("<h3>Your Profile :</h3>"));
+		mainPanel.add(topVertical);
+		mapUI = new MapUI(true, tbLocation);	
+		TabPanel map = new TabPanel();
+		map.add(mapUI,"Map View");
+		map.selectTab(0);
+		mainPanel.add(map);
 		
 		initWidget(mainPanel);
 	}

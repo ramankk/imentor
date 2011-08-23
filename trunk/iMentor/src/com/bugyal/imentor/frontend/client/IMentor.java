@@ -11,6 +11,7 @@ public class IMentor implements EntryPoint {
 	public void onModuleLoad() {
 		setShowTrigger(this);
 		setShowTrigger2(this);
+	//	loadApp("abc");
 	}
 	
 	public void loadApp(String fbId){

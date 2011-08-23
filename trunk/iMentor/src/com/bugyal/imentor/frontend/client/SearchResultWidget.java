@@ -18,7 +18,7 @@ public class SearchResultWidget extends Composite {
 	FlexTable table = new FlexTable();
 
 	public SearchResultWidget(boolean isEven) {
-		table.setSize("600px", "24px");
+		table.setSize("730px", "34px");
 
 		DOM.setStyleAttribute(table.getElement(), "backgroundColor",
 				isEven ? colors[0] : colors[1]);
