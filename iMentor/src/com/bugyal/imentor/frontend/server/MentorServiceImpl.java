@@ -10,6 +10,8 @@ import com.beoui.geocell.GeocellUtils;
 import com.beoui.geocell.model.Point;
 import com.bugyal.imentor.MentorException;
 import com.bugyal.imentor.frontend.client.MentorService;
+import com.bugyal.imentor.frontend.server.StatsServlet.AverageStat;
+import com.bugyal.imentor.frontend.server.StatsServlet.CountingStat;
 import com.bugyal.imentor.frontend.shared.MeException;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
@@ -322,18 +324,19 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			response.setNeed(need);
 			return response;
 		} catch (MentorException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return response;
 	}
 
+	static AverageStat feedToMeTimeStat = StatsServlet.createAverageStat("feed_to_me_total_time");
+	
 	@Override
 	public SearchResponse feedToMe() throws MeException {
+		long t = System.currentTimeMillis();
 		SearchResponse response = null;
 		try {
 			Participant pi = pm.findParticipantByEmail(getUserId());
-			System.out.println("FeedToMe :: " + pi);
 			if (pi == null) {
 				return new SearchResponse();
 			}
@@ -348,6 +351,8 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			return response;
 		} catch (MentorException e) {
 			e.printStackTrace();
+		} finally {
+			feedToMeTimeStat.inc(System.currentTimeMillis() - t);
 		}
 
 		return response;
@@ -363,15 +368,17 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		return null;
 	}
 
+	static AverageStat localActivityTimeStat = StatsServlet.createAverageStat("local_activity_total_time");
+	
 	@Override
 	public SearchResponse localActivity() {
+		long t = System.currentTimeMillis();
 		SearchResponse response = new SearchResponse();
 		try {
 			List<SearchResult> has = new ArrayList<SearchResult>();
 			List<SearchResult> need = new ArrayList<SearchResult>();
 
 			Participant pi = pm.findParticipantByEmail(getUserId());
-			System.out.println("localactivity:: " + pi);
 			if (pi == null) {
 				return response;
 			}
@@ -399,6 +406,8 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			return response;
 		} catch (MentorException e) {
 			e.printStackTrace();
+		} finally {
+			localActivityTimeStat.inc(System.currentTimeMillis() - t);
 		}
 		return response;
 	}
