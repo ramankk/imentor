@@ -2,6 +2,7 @@ package com.bugyal.imentor.frontend.client;
 
 import java.util.List;
 
+import com.bugyal.imentor.frontend.shared.MentorsResult;
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -25,21 +26,59 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 	SearchResult result = null;
 	FlexTable table=null;
 
-	public ProfileInfo(SearchResult result) {
+	public ProfileInfo(SearchResult results) {
 
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
-		this.result = result;		
+		this.result = results;		
 		setHTML("Profile Info");
 		table = new FlexTable();
-		if(result != null){
-			setData(0, "Name", result.getP().getName());
-			setData(1, "Gender", result.getP().getGender());
-			setData(2, "Email Id", result.getP().getEmail());
-			setData(3, "Location", result.getP().getLocationString());
-			setData(4, "Has Subjects", "Has list");
-			setData(5, "Need Subjects", "Need list");
-			//setData(5, "Mentors ", "Mentors list");
-			//setData(5, "Mentees", "Mentees list");
+		
+		if(results != null){
+			setData(0, "Name", results.getP().getName());
+			setData(1, "Gender", results.getP().getGender());
+			setData(2, "Email Id", results.getP().getEmail());
+			setData(3, "Location", results.getP().getLocationString());
+			StringBuilder haslist = new StringBuilder();
+			for(String s: results.getP().getHasSubjects() ) {
+				haslist.append("  " + s);
+			}
+			setData(4, "Has Subjects", haslist.toString());
+			
+			StringBuilder needlist = new StringBuilder();
+			for(String s: results.getP().getNeedSubjects() ) {
+				needlist.append("  " + s);
+			}
+			setData(5, "Need Subjects", needlist.toString());
+			
+			AsyncCallback<List<MentorsResult>> callback1 = new AsyncCallback<List<MentorsResult>>() {
+
+				@Override
+				public void onFailure(Throwable caught) {
+					// TODO Auto-generated method stub
+					
+				}
+
+				@Override
+				public void onSuccess(List<MentorsResult> result) {
+					if(result.size() != 0) {
+						Window.alert("mentors and metees "+result.size());
+						StringBuilder mentorlist = new StringBuilder();
+						StringBuilder menteelist = new StringBuilder();
+						
+						for(MentorsResult s: result) {
+							if(s.isMentor()){
+								mentorlist.append("  " + s.getName());
+							}
+							else{
+								menteelist.append(" " + s.getName());
+							}
+						}
+						setData(6, "Mentors List ", mentorlist.toString());
+						setData(7, "Mentees List ", menteelist.toString());
+					}					
+				}
+			};			
+			service.getMentorAndMentees(results.getP(), callback1);			
 		}
 		
 		vp.add(table);
@@ -50,7 +89,7 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 		hp.add(persue);
 		vp.add(hp);
 
-		vp.setSize("200px", "150px");
+		vp.setSize("300px", "250px");
 		setWidget(vp);
 
 		cancel.addClickHandler(this);

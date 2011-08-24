@@ -2,6 +2,7 @@ package com.bugyal.imentor.frontend.client;
 
 import java.util.List;
 
+import com.bugyal.imentor.frontend.shared.MentorsResult;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.bugyal.imentor.frontend.shared.SearchResponse;
@@ -108,6 +109,13 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 	@Override
 	public void addMentorAndMentee(Boolean isHas, String mentorMailId,
 			AsyncCallback<Boolean> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getMentorAndMentees(ParticipantVO participantVO,
+			AsyncCallback<List<MentorsResult>> callback1) {
 		// TODO Auto-generated method stub
 		
 	}

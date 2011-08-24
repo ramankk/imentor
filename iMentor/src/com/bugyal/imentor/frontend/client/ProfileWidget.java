@@ -75,7 +75,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		HorizontalPanel mailHorizontal = new HorizontalPanel();
 		tbEmailId = new TextBox();
 		//TODO:(ravi) remove when you submit
-		tbEmailId.setText("teja.cse596@gmail.com");
+		// tbEmailId.setText("teja.cse596@gmail.com");
 		tbEmailId.setEnabled(false);
 		mailHorizontal.add(new Label("Mail Id"));
 		mailHorizontal.add(tbEmailId);
