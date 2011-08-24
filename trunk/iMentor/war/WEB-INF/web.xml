@@ -29,6 +29,15 @@
     <url-pattern>/imentor/mentor</url-pattern>
   </servlet-mapping>
   
+  <servlet>
+        <servlet-name>rstats</servlet-name>
+        <servlet-class>com.bugyal.imentor.frontend.server.StatsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>rstats</servlet-name>
+        <url-pattern>/rstats/*</url-pattern>
+    </servlet-mapping>
+  
    <servlet>
         <servlet-name>appstats</servlet-name>
         <servlet-class>com.google.appengine.tools.appstats.AppstatsServlet</servlet-class>
