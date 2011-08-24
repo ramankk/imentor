@@ -21,6 +21,8 @@ import com.google.appengine.repackaged.com.google.common.base.Preconditions;
 
 public class ParticipantManagerImpl implements ParticipantManager {
 
+	private static final long LOCAL_STREAM_PERIOD = 20* 24 * (60 * 60 * 1000);
+	
 	private static final Logger LOG = Logger
 			.getLogger(ParticipantManagerImpl.class.getCanonicalName());
 	private LRUCache<String, Participant> cache = new LRUCache<String, Participant>(
@@ -120,6 +122,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 			results = (List<Participant>) q.execute(email);
 			for (Participant p : results) {
 				System.out.println("Returning .. " + p.getName());
+				System.out.println("Location : " + p.getLocation());
 			}
 			q.closeAll();
 		} finally {
@@ -258,11 +261,9 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	@Override
 	public List<Participant> searchParticipantsByLocation(Location l)
 			throws MentorException {
-		long CHECK_TIME = 24 * (60 * 60 * 1000);
-
 		Preconditions.checkNotNull(l);
 
-		long checkTime = System.currentTimeMillis() - CHECK_TIME;
+		long checkTime = System.currentTimeMillis() - LOCAL_STREAM_PERIOD;
 
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		List<Participant> results = null;

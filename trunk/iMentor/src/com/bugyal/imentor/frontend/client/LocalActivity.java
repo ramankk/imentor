@@ -73,10 +73,8 @@ public class LocalActivity extends Composite {
 	    DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "default");
 	}
 
-	public void reloadIfNeeded() {
-		if (! header.getUserDetails().getEmail().equals(lastEmailId)) {
-			getDataFeeds();
-		}
+	public void reload() {
+		getDataFeeds();
 	}
 
 }

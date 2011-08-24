@@ -2,6 +2,7 @@
 package com.bugyal.imentor.frontend.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class IMentor implements EntryPoint {
@@ -11,7 +12,6 @@ public class IMentor implements EntryPoint {
 	public void onModuleLoad() {
 		setShowTrigger(this);
 		setShowTrigger2(this);
-	//	loadApp("abc");
 	}
 	
 	public void loadApp(String fbId){
@@ -19,6 +19,11 @@ public class IMentor implements EntryPoint {
 		userDetails.setName(RootPanel.get("name").getElement().getInnerHTML());
 		userDetails.setEmail(RootPanel.get("email").getElement().getInnerHTML());
 		userDetails.setFbId(fbId);
+		
+		if (userDetails.getEmail() == null || userDetails.getEmail().trim().equals("")) {
+			Window.alert("Error occured. Sorry we couldn't find your details");
+			return; // don't load the application.
+		}
 		
 		HeaderWidget headerWidget = new HeaderWidget(userDetails);
 		headerWidget.init();

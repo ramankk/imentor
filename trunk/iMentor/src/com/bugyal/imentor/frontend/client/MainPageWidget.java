@@ -42,8 +42,8 @@ public class MainPageWidget extends Composite {
 	}
 	
 	public void showHomeWidget() {
-		myFeeds.reloadIfNeeded();
-		localActivity.reloadIfNeeded();
+		myFeeds.reload();
+		localActivity.reload();
 		ft.setWidget(1, 0, homePanel);
 	}
 	
@@ -52,6 +52,7 @@ public class MainPageWidget extends Composite {
 	}
 
 	public void showProfilePanel() {
+		profilePanel.init();
 		ft.setWidget(1,	0, profilePanel);
 	}
 
