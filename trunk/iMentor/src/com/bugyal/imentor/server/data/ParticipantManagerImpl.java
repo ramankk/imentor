@@ -350,6 +350,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 			// Magic to load knowledge and notes.
 			p.getHas();
 			p.getNotes();
+			
 		} finally {
 			pm.close();
 		}
@@ -358,13 +359,13 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	}
 
 	@Override
-	public Boolean addMentorToMentee(Participant mentor, Participant mentee) {
+	public boolean addMentorToMentee(Participant mentor, Participant mentee) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
 		try {
-			tx.begin();
-			mentor.addMentee(mentee.getKey());
-			pm.makePersistent(mentor);			
+			tx.begin();			
+			Participant imentor = pm.getObjectById(Participant.class, mentor.getKey());
+			imentor.addMentee(mentee.getKey());
 			tx.commit();
 		} catch (Exception e) {
 			if (tx.isActive()) {
@@ -374,8 +375,8 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		}
 		try {
 			tx.begin();
-			mentee.addMentor(mentor.getKey());
-			pm.makePersistent(mentee);
+			Participant imentee = pm.getObjectById(Participant.class, mentee.getKey());
+			imentee.addMentor(mentor.getKey());
 			tx.commit();			
 		} catch (Exception e) {
 			if (tx.isActive()) {
@@ -385,5 +386,4 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		}
 		return true;
 	}
-
 }

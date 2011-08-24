@@ -3,6 +3,7 @@ package com.bugyal.imentor.frontend.client;
 import java.util.List;
 
 import com.bugyal.imentor.frontend.shared.MeException;
+import com.bugyal.imentor.frontend.shared.MentorsResult;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.bugyal.imentor.frontend.shared.SearchResponse;
@@ -50,4 +51,6 @@ public interface MentorService extends RemoteService {
 	List<OpportunityVO> getOpportunitiesById() throws MeException;
 
 	boolean addMentorAndMentee(Boolean isHas, String mentorMailId);
+
+	List<MentorsResult> getMentorAndMentees(ParticipantVO participantVO);
 }

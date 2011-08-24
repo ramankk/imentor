@@ -343,9 +343,9 @@ public class Participant implements LocationCapable {
 		return filter(true);
 	}
 
-	@SuppressWarnings("unchecked")
-	List<Key> getMentors() {
-		return (List<Key>) mentors;
+	public List<Key> getMentors() {
+		List<Key> m = new ArrayList<Key>(mentors);
+		return m;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -367,11 +367,11 @@ public class Participant implements LocationCapable {
 		return this;
 	}
 
-	@SuppressWarnings("unchecked")
-	List<Key> getMentees() {
-		return (List<Key>) mentees;
+	public List<Key> getMentees() {
+		List<Key> m = new ArrayList<Key>(mentees);
+		return m;
 	}
-
+	
 	@SuppressWarnings("unchecked")
 	Participant setMentees(List<Key> mentees) {
 		this.mentees = (Set<Key>) mentees;

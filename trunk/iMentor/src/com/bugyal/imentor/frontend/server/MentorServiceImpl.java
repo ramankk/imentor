@@ -13,6 +13,7 @@ import com.bugyal.imentor.frontend.client.MentorService;
 import com.bugyal.imentor.frontend.server.StatsServlet.AverageStat;
 import com.bugyal.imentor.frontend.server.StatsServlet.CountingStat;
 import com.bugyal.imentor.frontend.shared.MeException;
+import com.bugyal.imentor.frontend.shared.MentorsResult;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.bugyal.imentor.frontend.shared.SearchResponse;
@@ -507,4 +508,36 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		return false;
 	}
 
+	@Override
+	public List<MentorsResult> getMentorAndMentees(ParticipantVO pi) {
+		List<MentorsResult> result = new ArrayList<MentorsResult>();
+		try {
+			boolean isMentor = true; // for mentors
+			Key key = KeyFactory.createKey(Participant.class.getSimpleName(), pi.getId());
+			
+			Participant m = pm.findById(key);
+			List<Participant> participants = new ArrayList<Participant>();
+			if(m.getMentors().size() == 0){
+				participants = pm.getMentors(m);		
+				for(Participant p: participants) {
+					MentorsResult mentor= new MentorsResult(p.getName(),isMentor);
+					result.add(mentor);
+				}
+				participants.clear();
+			}
+			if(m.getMentees().size() == 0) {
+				isMentor = false; // for mentees
+				participants = pm.getMentees(m);
+				for(Participant p: participants) {
+					MentorsResult mentor= new MentorsResult(p.getName(),isMentor);
+					result.add(mentor);
+				}
+			}
+			return result;
+		} catch (MentorException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return result;
+	}
 }

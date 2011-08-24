@@ -3,16 +3,12 @@ package com.bugyal.imentor.frontend.shared;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 public class ParticipantVO implements Serializable {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7785833027106467978L;
-	/**
-	 * 
-	 */
+	private static final long serialVersionUID = -7785833027106467978L;	
 	private Long id;
 	private String name;
 	private String gender;
@@ -23,6 +19,7 @@ public class ParticipantVO implements Serializable {
 	private List<String> hasSubjects;
 	private List<String> needSubjects;
 	private String locationString;
+	
 
 	// Required for GWT.
 	public ParticipantVO() {
@@ -49,7 +46,7 @@ public class ParticipantVO implements Serializable {
 		this.hasSubjects.addAll(has);
 
 		this.needSubjects = new ArrayList<String>();
-		this.needSubjects.addAll(need);
+		this.needSubjects.addAll(need);		
 	}
 
 	public Long getId() {
@@ -144,6 +141,5 @@ public class ParticipantVO implements Serializable {
 
 	public String getGender() {
 		return gender;
-	}
-
+	}	
 }

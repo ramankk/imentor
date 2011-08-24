@@ -18,6 +18,8 @@ public class HeaderWidget extends Composite {
 	MentorServiceAsync service;
 	private boolean newUser = false;
 	
+	private HeaderWidget me;
+	
 	public HeaderWidget(UserDetails userDetails) {
 		this.userDetails = userDetails;
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
@@ -26,7 +28,11 @@ public class HeaderWidget extends Composite {
 		menuBar = new MenuBar(false);
 		horizontalPanel.add(menuBar);
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
-		mainPage = new MainPageWidget(this);
+		me = this;
+		if (mainPage == null) {
+			// defer loading of mainPagewidget until session is created.
+			mainPage = new MainPageWidget(me);
+		}
 		initWidget(horizontalPanel);
 	}
 	
@@ -39,6 +45,7 @@ public class HeaderWidget extends Composite {
 
 		@Override
 		public void onSuccess(Boolean result) {
+			
 			if (result) {
 				setViewToReturningUser();
 			} else {

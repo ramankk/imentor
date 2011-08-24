@@ -72,7 +72,7 @@ public interface ParticipantManager {
 
 	long deleteParticipants();
 
-	Boolean addMentorToMentee(Participant mentor, Participant mentee);
+	boolean addMentorToMentee(Participant mentor, Participant mentee);
 
 
 }
