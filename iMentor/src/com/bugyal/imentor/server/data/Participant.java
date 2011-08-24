@@ -528,7 +528,7 @@ public class Participant implements LocationCapable {
 
 	@Override
 	public String toString() {
-		return name + " " + key;
+		return name + "(" + key  + ")  @(" + latitude + ", " + longitude + ")";
 	}
 
 	@Persistent

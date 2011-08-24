@@ -7,7 +7,6 @@ import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -41,35 +40,9 @@ public class ProfileWidget extends Composite implements ClickHandler {
 
 	public ProfileWidget(MainPageWidget mainPage) {
 		this.mainPage = mainPage;
+
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
-		final UserDetails userDetails = mainPage.getUserDetails();
-		service.getParticipantVOByEmailId(new AsyncCallback<ParticipantVO>() {
-
-					@Override
-					public void onFailure(Throwable caught) {
-						tbName.setText(userDetails.getName());
-						tbEmailId.setText(userDetails.getEmail());
-						status = false;
-					}
-
-					@Override
-					public void onSuccess(ParticipantVO result) {
-						if (result == null) {
-							Window.alert("No participant found");
-							return;
-						}
-						tbName.setText(result.getName());
-						tbEmailId.setText(result.getEmail());
-						tbLocation.setText(result.getLocationString());
-						for (String sub : result.getHasSubjects())
-							subWidgetHas.add(sub);
-						for (String sub : result.getNeedSubjects())
-							subWidgetNeed.add(sub);
-						id = result.getId();
-
-						status = true;
-					}
-				});
+		init();
 
 		AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
 			@Override
@@ -86,9 +59,8 @@ public class ProfileWidget extends Composite implements ClickHandler {
 			}
 		};
 		service.getSubjects(callback);
-		
+
 		VerticalPanel mainPanel = new VerticalPanel();
-				
 		HorizontalPanel nameHorizontal = new HorizontalPanel();
 		nameHorizontal.add(new Label("Name "));
 		tbName = new TextBox();
@@ -106,8 +78,8 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		tbEmailId.setText("teja.cse596@gmail.com");
 		tbEmailId.setEnabled(false);
 		mailHorizontal.add(new Label("Mail Id"));
-		mailHorizontal.add(tbEmailId);		
-		
+		mailHorizontal.add(tbEmailId);
+
 		HorizontalPanel personalHorizontal = new HorizontalPanel();
 		personalHorizontal.setWidth("750px");
 		personalHorizontal.add(nameHorizontal);
@@ -123,15 +95,15 @@ public class ProfileWidget extends Composite implements ClickHandler {
 
 		tbLocation.setText(lData.getLocation());
 		tbLocation.setSize("215px", "45px");
-		
+
 		VerticalPanel knowSubVertical = new VerticalPanel();
 		knowSubVertical.add(new Label("Subjects you know"));
 		knowSubVertical.add(subWidgetHas);
-		
+
 		VerticalPanel wantSubVertical = new VerticalPanel();
 		wantSubVertical.add(new Label("Subjects you want"));
 		wantSubVertical.add(subWidgetNeed);
-		
+
 		HorizontalPanel middleHorizontal = new HorizontalPanel();
 		middleHorizontal.setWidth("750px");
 		middleHorizontal.add(locationVertical);
@@ -145,11 +117,11 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		btnClear = new Button("Clear");
 		btnClear.addClickHandler(this);
 		buttonsHorizontal.add(btnClear);
-		
+
 		btnSave = new Button("Save");
 		btnSave.addClickHandler(this);
 		buttonsHorizontal.add(btnSave);
-		
+
 		VerticalPanel topVertical = new VerticalPanel();
 		topVertical.add(personalHorizontal);
 		topVertical.add(middleHorizontal);
@@ -164,8 +136,44 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		map.add(mapUI,"Map View");
 		map.selectTab(0);
 		mainPanel.add(map);
-		
+
 		initWidget(mainPanel);
+	}
+
+	public void init() {
+		final UserDetails userDetails = this.mainPage.getUserDetails();
+		
+		service.getParticipantVOByEmailId(new AsyncCallback<ParticipantVO>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				tbName.setText(userDetails.getName());
+				tbEmailId.setText(userDetails.getEmail());
+				status = false;
+			}
+
+			@Override
+			public void onSuccess(ParticipantVO result) {
+				if (result == null) {
+					tbName.setText(userDetails.getName());
+					tbEmailId.setText(userDetails.getEmail());
+					status = false;
+					return;
+				} else {
+					tbName.setText(result.getName());
+					tbEmailId.setText(result.getEmail());
+					tbLocation.setText(result.getLocationString());
+					for (String sub : result.getHasSubjects()) {
+						subWidgetHas.add(sub);
+					}
+					for (String sub : result.getNeedSubjects()) {
+						subWidgetNeed.add(sub);
+					}
+					id = result.getId();
+					status = true;
+				}
+			}
+		});
 	}
 
 	@Override
@@ -174,13 +182,12 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		if (event.getSource() == btnSave) {
 			lData = mapUI.getLocationDetails();
 			if (!(subWidgetHas.getSubjects().isEmpty() && subWidgetNeed
-					.getSubjects().isEmpty())
-					&& (tbLocation.getText() != null)) {
+					.getSubjects().isEmpty()) && (tbLocation.getText() != null)) {
 
 				ParticipantVO partVO = new ParticipantVO(id, tbName.getText(),
-						"M", tbEmailId.getText(), lData.getLatitude(), lData
-								.getLongitude(), tbLocation.getText(), lData
-								.getRadius(), subWidgetHas.getSubjects(),
+						"M", tbEmailId.getText(), lData.getLatitude(),
+						lData.getLongitude(), tbLocation.getText(),
+						lData.getRadius(), subWidgetHas.getSubjects(),
 						subWidgetNeed.getSubjects());
 				if (!status) {
 					service.create(partVO, new AsyncCallback<ParticipantVO>() {

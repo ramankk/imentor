@@ -23,7 +23,6 @@ public class HeaderWidget extends Composite {
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 		
 		HorizontalPanel horizontalPanel = new HorizontalPanel();
-		horizontalPanel.setWidth("377px");
 		menuBar = new MenuBar(false);
 		horizontalPanel.add(menuBar);
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
@@ -69,46 +68,30 @@ public class HeaderWidget extends Composite {
 	}
 	
 	private void initMenuBar(MenuBar menuBar) {
-		MenuItem mntmHome = new MenuItem("Home", false, homeCommand());
-		menuBar.addItem(mntmHome);
-
-		MenuItemSeparator separator = new MenuItemSeparator();
-		menuBar.addSeparator(separator);
+		menuBar.clearItems();
+		if (!newUser) {
+			MenuItem mntmHome = new MenuItem("Home", false, homeCommand());
+			menuBar.addItem(mntmHome);
+			menuBar.addSeparator(new MenuItemSeparator());
+		}
 
 		MenuItem mntmProfile = new MenuItem("Profile", false, profileCommand());
 		menuBar.addItem(mntmProfile);
+		menuBar.addSeparator(new MenuItemSeparator());
 
-		MenuItemSeparator separator_1 = new MenuItemSeparator();
-		menuBar.addSeparator(separator_1);
-
-		MenuItem mntmBuzz = new MenuItem("Opportunity", false,
-				opportunityCommand());
-		menuBar.addItem(mntmBuzz);
-
+		if (!newUser) {
+			MenuItem mntmBuzz = new MenuItem("Opportunities", false,
+					opportunityCommand());
+			menuBar.addItem(mntmBuzz);
+			menuBar.addSeparator(new MenuItemSeparator());
+		}
+		
 		MenuItem searchData = new MenuItem("Search", false, searchCommand());
 		menuBar.addItem(searchData);
-
-//		if (IMentor.TEST_MODE_FLAG) {
-//			MenuItem randomData = new MenuItem("Seed Data", false,
-//					seedRandomDataCommand());
-//			menuBar.addItem(randomData);
-//		}
 	}
 	
 	public MainPageWidget getMainPage() {
  	    return mainPage;
-	}
-	
-	private Command seedRandomDataCommand() {
-		return new Command() {
-
-			@Override
-			public void execute() {
-				DataGenerator dataGenerator = new DataGenerator();
-				dataGenerator.show();
-				dataGenerator.center();
-			}
-		};
 	}
 
 	public Command opportunityCommand() {

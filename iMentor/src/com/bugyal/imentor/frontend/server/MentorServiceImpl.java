@@ -80,7 +80,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public ParticipantVO create(ParticipantVO p) throws MeException {
-		if (p.getId() != null) {
+		if (p.getId() != null && p.getId() != 0) {
 			throw new MeException("Cannot create already created participant");
 		}
 
@@ -333,6 +333,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		SearchResponse response = null;
 		try {
 			Participant pi = pm.findParticipantByEmail(getUserId());
+			System.out.println("FeedToMe :: " + pi);
 			if (pi == null) {
 				return new SearchResponse();
 			}
@@ -370,6 +371,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			List<SearchResult> need = new ArrayList<SearchResult>();
 
 			Participant pi = pm.findParticipantByEmail(getUserId());
+			System.out.println("localactivity:: " + pi);
 			if (pi == null) {
 				return response;
 			}
@@ -456,8 +458,10 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		System.out.println("Created session for " + emailId + ", provider: "
 				+ provider + ", id: " + providerId);
 		if (getParticipantVOByEmailId() != null) {
+			System.out.println("Session created for returning user.");
 			return true;
 	    } else {
+	    	System.out.println("Session created for new user.");
 			return false;
 		}
 	}
