@@ -11,7 +11,6 @@ import com.beoui.geocell.model.Point;
 import com.bugyal.imentor.MentorException;
 import com.bugyal.imentor.frontend.client.MentorService;
 import com.bugyal.imentor.frontend.server.StatsServlet.AverageStat;
-import com.bugyal.imentor.frontend.server.StatsServlet.CountingStat;
 import com.bugyal.imentor.frontend.shared.MeException;
 import com.bugyal.imentor.frontend.shared.MentorsResult;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;

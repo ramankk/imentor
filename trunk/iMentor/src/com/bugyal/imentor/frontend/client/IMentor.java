@@ -30,17 +30,15 @@ public class IMentor implements EntryPoint {
 			
 		});
 		RootPanel.get("feedback").add(feedback);
-		
-		loadApp("abc");
 	}
 	
-	public void loadApp(String fbId){
+	public void loadApp(String email, String name, String fbId){
 		UserDetails userDetails = new UserDetails();
-		userDetails.setName(RootPanel.get("name").getElement().getInnerHTML());
-		userDetails.setEmail(RootPanel.get("email").getElement().getInnerHTML());
+		userDetails.setName(name);
+		userDetails.setEmail(email);
 		userDetails.setFbId(fbId);
 		
-		if (userDetails.getEmail() == null || userDetails.getEmail().trim().equals("")) {
+		if (email == null || email.trim().equals("")) {
 			Window.alert("Error occured. Sorry we couldn't find your details");
 			return; // don't load the application.
 		}
@@ -56,8 +54,8 @@ public class IMentor implements EntryPoint {
 	}
 	
 	public native void setShowTrigger(IMentor x)/*-{
-    	$wnd.showIMentorApp = function (s) {
-			x.@com.bugyal.imentor.frontend.client.IMentor::loadApp(Ljava/lang/String;)(s);
+    	$wnd.showIMentorApp = function (email, name, id) {
+			x.@com.bugyal.imentor.frontend.client.IMentor::loadApp(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)(email, name, id);
     	};
 	}-*/;
 	
