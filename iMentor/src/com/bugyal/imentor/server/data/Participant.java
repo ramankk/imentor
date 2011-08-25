@@ -86,6 +86,12 @@ public class Participant implements LocationCapable {
 
 	@Persistent
 	private List<String> needSubjects;
+	
+	@Persistent
+	private List<Key> createdOpportunities;
+	
+	@Persistent
+	private Set<Key> mentoringOpportunities;  
 
 	@Persistent
 	private double longitude;
@@ -474,6 +480,8 @@ public class Participant implements LocationCapable {
 		this.notes = new ArrayList<Note>();
 		this.hasSubjects = new ArrayList<String>();
 		this.needSubjects = new ArrayList<String>();
+		this.createdOpportunities = new ArrayList<Key>();
+		this.mentoringOpportunities = new HashSet<Key>();
 		this.createdTime = System.currentTimeMillis();
 		this.lastModifiedTime = System.currentTimeMillis();
 	}
@@ -571,6 +579,35 @@ public class Participant implements LocationCapable {
 
 	public String getGender() {
 		return gender;
+	}
+	
+	public List<Key> getCreatedOpportunities() {
+		return createdOpportunities;
+	}
+
+	public Participant addCreatedOpportuny(Key createdOpportunity) {
+		this.createdOpportunities.add(createdOpportunity);
+		return this;
+	}
+	
+	public Participant removeCreatedOpportunity(Key createdOpportunity) {
+		this.createdOpportunities.remove(createdOpportunity);
+		return this;
+	}
+
+	public List<Key> getMentoringOpportunities() {
+		List<Key> Opportunities = new ArrayList<Key>(mentoringOpportunities); 
+		return Opportunities;
+	}
+
+	public Participant addMentoringOpportunities(Key mentoringOpportunity) {
+		this.mentoringOpportunities.add(mentoringOpportunity);
+		return this;
+	}
+	
+	public Participant removeMentoringOpportunity(Key mentoringOpportunity) {
+		this.mentoringOpportunities.remove(mentoringOpportunity);
+		return this;
 	}
 
 }

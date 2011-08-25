@@ -2,7 +2,9 @@ package com.bugyal.imentor.server.data;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
@@ -47,6 +49,9 @@ public class Opportunity implements LocationCapable {
 
 	@Persistent
 	private List<String> subjects;
+	
+	@Persistent
+	private Set<Key> mentors;
 
 	@Persistent
 	private int requiredMentors;
@@ -78,6 +83,11 @@ public class Opportunity implements LocationCapable {
 	@PersistenceCapable
 	static class ChangeInfo implements Serializable {
 
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
 		@PrimaryKey
 	    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	    private Key key;
@@ -101,6 +111,10 @@ public class Opportunity implements LocationCapable {
 			this.modifier = modifier;
 			this.change = change;
 		}
+
+		public Key getKey() {
+			return key;
+		}
 	}
 
 	Opportunity(Location location, List<String> subjects, int requiredMentors,
@@ -110,7 +124,7 @@ public class Opportunity implements LocationCapable {
 		this.requiredMentors = requiredMentors;
 
 		this.priority = priority;
-
+		this.mentors = new HashSet<Key>();
 		this.contacts = new ArrayList<Key>();
 
 		if (contacts != null) {
@@ -302,5 +316,20 @@ public class Opportunity implements LocationCapable {
 
 	public String getMessage() {
 		return message;
+	}
+
+	public Opportunity addMentor(Key mentor) {
+		this.mentors.add(mentor);
+		return this;
+	}
+
+	public List<Key> getMentors() {
+		List<Key> m = new ArrayList<Key>(mentors);
+		return m;
+	}
+	
+	public Opportunity removeMentor(Key mentor) {
+		this.mentors.remove(mentor);
+		return this;
 	}
 }
