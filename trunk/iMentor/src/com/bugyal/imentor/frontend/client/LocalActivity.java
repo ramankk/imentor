@@ -11,45 +11,49 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
-import com.google.gwt.user.client.ui.HasHorizontalAlignment;
-import com.google.gwt.user.client.ui.HasVerticalAlignment;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class LocalActivity extends Composite {
 	MentorServiceAsync service;
 	SearchResponseWidget allResults;
-		
+
 	FlowPanel flowpanel;
+	TabPanel tabPanel;
 	HeaderWidget header;
 	String lastEmailId = null;
-	
+
 	public LocalActivity(HeaderWidget header) {
 		this.header = header;
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 		allResults = new SearchResponseWidget();
 		flowpanel = new FlowPanel();
 		flowpanel.add(allResults);
-		
-		flowpanel.setSize("750px", "250px");
+
+		tabPanel = new TabPanel();
+		tabPanel.add(flowpanel, "Local Stream");
+		tabPanel.selectTab(0);
+
+		tabPanel.setWidth("730px");
+		tabPanel.addStyleName("table-center");
+
 		VerticalPanel vp = new VerticalPanel();
-		vp.add(flowpanel);
-		vp.setCellVerticalAlignment(flowpanel, HasVerticalAlignment.ALIGN_MIDDLE);
-		vp.setCellHorizontalAlignment(flowpanel, HasHorizontalAlignment.ALIGN_CENTER);
+		vp.add(tabPanel);
+
 		initWidget(vp);
-		
-		// TODO(sridhar): Show it as loading... change the mouse icon to loading..  
 		showWaitCursor();
 		getDataFeeds();
 	}
-	
+
 	public void getDataFeeds() {
 		service.localActivity(new AsyncCallback<SearchResponse>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
 				// TODO Auto-generated method stub
-				Window.alert("Failed to fetch for local activies" + caught.getMessage());
+				Window.alert("Failed to fetch for local activies"
+						+ caught.getMessage());
 			}
 
 			@Override
@@ -57,20 +61,20 @@ public class LocalActivity extends Composite {
 				List<SearchResult> all = new ArrayList<SearchResult>();
 				all.addAll(result.getNeed());
 				all.addAll(result.getHas());
-				
+
 				showDefaultCursor();
-				allResults.setResults(all);				
+				allResults.setResults(all);
 			}
-			
+
 		});
 	}
-	
+
 	public static void showWaitCursor() {
-	    DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "wait");
+		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "wait");
 	}
-	 
+
 	public static void showDefaultCursor() {
-	    DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "default");
+		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "default");
 	}
 
 	public void reload() {

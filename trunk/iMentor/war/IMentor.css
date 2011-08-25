@@ -10,14 +10,23 @@ h1 {
   text-align: center;
 }
 
+element.style {
+vertical-align: middle;
+}
+
 .sendButton {
   display: block;
   font-size: 16pt;
+  border-radius: 3px;
 }
 
 /** Most GWT widgets already have a style name defined */
 .gwt-DialogBox {
   width: 400px;
+}
+
+.gwt-TextArea{
+border-radius: 3px;	
 }
 
 .dialogVPanel {
@@ -74,13 +83,15 @@ h1 {
   background-color: #DDDDDD;
   cursor: pointer;
 }
-
+.gwt-Label {
+	vertical-align: middle;
+	 }
 
 
 
 .main { 
 	padding: 10px; 
-	width: 760px; 
+	width: 740px; 
 	border:1px solid #ccc; 
 	border-color: #2B547E;
 	border-width: 0 1px 1px 1px 1px; 
@@ -88,21 +99,15 @@ h1 {
 }
 
 .top {
-	background: url(images/head1.jpg);
-	width:760px;
+	background: url(images/head3.jpg);
+	width:740px;
 	height:100px;
-}
-
-.bar {
-	background: url(images/fade.jpg);
-	width:758px;
-	height:20px;
 }
 
 .menu {
 	border: 1px solid #ccc;
 	border-width: 0 1px 1px 1px 1px; 
-	margin: 0 0 0 457px;	
+	margin: 0 0 0 430px;	
 }
 
 .tome {
@@ -110,7 +115,7 @@ h1 {
 }
 
 .middle {
-	width: 760px;
+	width: 740px;
 	border: 1px solid #ccc;
 	border-color: #FFFFFF;
 	border-width: 0 1px 1px 1px 1px; 
@@ -118,29 +123,24 @@ h1 {
 }
 
 .main { 
-	width:760px;
+	width:740px;
 	margin:0 auto;
 }
 
 .empBar{
 	background-image:url(images/2.jpg);
-	width:760px;
+	width:740px;
 	height:22px;
 }
 
 .bottom {
 	background-image: url(images/tail3.jpg);
-	width:760px;
+	width:740px;
 	height:100px;
-}
-
-.bar {
-	background-image: url(images/fade.jpg); 
-    width: 760px;
-	height: 20px;
 }
 
 .copyRight {
 	margin: 80px auto;
 }
+
 

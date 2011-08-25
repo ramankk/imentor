@@ -27,7 +27,7 @@ public class SearchResponseWidget extends Composite {
 	private int currentPage;
 
 	public SearchResponseWidget() {
-		this(10); // default size
+		this(7); // default size
 	}
 	
 	public SearchResponseWidget(int size) {
@@ -38,9 +38,9 @@ public class SearchResponseWidget extends Composite {
 			contentPanel.add(resultObjects.get(i));
 		}
 		
-		verticalPanel.setSize("740px", "235px");
+		verticalPanel.setSize("720px", "235px");
 
-		contentPanel.setSize("600px", "180px");
+		contentPanel.setSize("580px", "180px");
 		verticalPanel.add(contentPanel);
 		DOM.setStyleAttribute(contentPanel.getElement(), "border",
 				"1px solid #5CB3FF");
@@ -92,7 +92,8 @@ public class SearchResponseWidget extends Composite {
 		backwardButton.setEnabled(currentPage != 0);
 
 		// Need to check it out by sridhar...!
-		if( currentPage == (searchResults.size()/pageSize) ) {
+		int numPages = searchResults.size()/pageSize;
+		if(numPages == 0 || currentPage == numPages - 1) {
 			forwardButton.setEnabled(false);
 		} else{
 			forwardButton.setEnabled(true);

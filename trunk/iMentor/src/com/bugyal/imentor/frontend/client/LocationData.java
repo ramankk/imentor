@@ -7,6 +7,18 @@ public class LocationData {
 	double latitude;
 	double longitude;
 
+	public LocationData() {
+
+	}
+
+	public LocationData(String location, double latitude, double longitude,
+			int radius) {
+		this.location = location;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.radius = radius;
+	}
+
 	public String getLocation() {
 		return location;
 	}
@@ -37,5 +49,9 @@ public class LocationData {
 
 	public void setLongitude(double longitude) {
 		this.longitude = longitude;
+	}
+
+	public LocationData getLocationData() {
+		return new LocationData(location, latitude, longitude, radius);
 	}
 }

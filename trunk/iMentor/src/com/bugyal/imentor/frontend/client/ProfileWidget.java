@@ -28,7 +28,8 @@ public class ProfileWidget extends Composite implements ClickHandler {
 	SubjectsSuggestWidget subWidgetNeed = new SubjectsSuggestWidget(
 			new ArrayList<String>());
 	TextArea tbLocation = new TextArea();
-	Button btnClear, btnSave;
+	Button btnSave;
+	TabPanel tabPanel;
 	TextBox tbName, tbEmailId;
 	LocationData lData = new LocationData();
 	boolean status = false;
@@ -62,78 +63,81 @@ public class ProfileWidget extends Composite implements ClickHandler {
 
 		VerticalPanel mainPanel = new VerticalPanel();
 		HorizontalPanel nameHorizontal = new HorizontalPanel();
-		nameHorizontal.add(new Label("Name "));
+		nameHorizontal.add(new Label("Name:"));
 		tbName = new TextBox();
-		nameHorizontal.add(tbName);		
+		nameHorizontal.add(tbName);
 		HorizontalPanel genderHorizontal = new HorizontalPanel();
 		rbMale = new RadioButton("Gender", "M");
 		rbFemale = new RadioButton("Gender", "F");
 		rbMale.setValue(true);
-		genderHorizontal.add(new Label("Gender "));
+		genderHorizontal.add(new Label("Gender:"));
 		genderHorizontal.add(rbMale);
 		genderHorizontal.add(rbFemale);
 		HorizontalPanel mailHorizontal = new HorizontalPanel();
 		tbEmailId = new TextBox();
-		//TODO:(ravi) remove when you submit
-		// tbEmailId.setText("teja.cse596@gmail.com");
 		tbEmailId.setEnabled(false);
-		mailHorizontal.add(new Label("Mail Id"));
+		mailHorizontal.add(new Label("Mail Id:"));
 		mailHorizontal.add(tbEmailId);
 
 		HorizontalPanel personalHorizontal = new HorizontalPanel();
-		personalHorizontal.setWidth("750px");
+		personalHorizontal.setWidth("730px");
 		personalHorizontal.add(nameHorizontal);
 		personalHorizontal.add(genderHorizontal);
 		personalHorizontal.add(mailHorizontal);
-		personalHorizontal.setCellHorizontalAlignment(mailHorizontal, HasHorizontalAlignment.ALIGN_RIGHT);
-		
+		personalHorizontal.setCellHorizontalAlignment(mailHorizontal,
+				HasHorizontalAlignment.ALIGN_RIGHT);
+
 		VerticalPanel locationVertical = new VerticalPanel();
-		Label l= new Label("Location:");
-		l.setHeight("29px");
-		locationVertical.add(l);
+		Label labelLocation = new Label("Location:");
+		locationVertical.add(labelLocation);
+		tbLocation = new TextArea();
+		mapUI = new MapUI(true, tbLocation);
 		locationVertical.add(tbLocation);
 
 		tbLocation.setText(lData.getLocation());
-		tbLocation.setSize("215px", "45px");
+		tbLocation.setSize("195px", "45px");
 
 		VerticalPanel knowSubVertical = new VerticalPanel();
-		knowSubVertical.add(new Label("Subjects you know"));
+		knowSubVertical.add(new Label("Subjects know:"));
 		knowSubVertical.add(subWidgetHas);
 
 		VerticalPanel wantSubVertical = new VerticalPanel();
-		wantSubVertical.add(new Label("Subjects you want"));
+		wantSubVertical.add(new Label("Subjects want:"));
 		wantSubVertical.add(subWidgetNeed);
 
 		HorizontalPanel middleHorizontal = new HorizontalPanel();
-		middleHorizontal.setWidth("750px");
+		middleHorizontal.setWidth("730px");
 		middleHorizontal.add(locationVertical);
 		middleHorizontal.add(knowSubVertical);
 		middleHorizontal.add(wantSubVertical);
-		middleHorizontal.setCellHorizontalAlignment(knowSubVertical, HasHorizontalAlignment.ALIGN_RIGHT);
-		middleHorizontal.setCellHorizontalAlignment(wantSubVertical, HasHorizontalAlignment.ALIGN_RIGHT);
-		
-		HorizontalPanel buttonsHorizontal = new HorizontalPanel();
+		middleHorizontal.setCellHorizontalAlignment(knowSubVertical,
+				HasHorizontalAlignment.ALIGN_RIGHT);
+		middleHorizontal.setCellHorizontalAlignment(wantSubVertical,
+				HasHorizontalAlignment.ALIGN_RIGHT);
 
-		btnClear = new Button("Clear");
-		btnClear.addClickHandler(this);
-		buttonsHorizontal.add(btnClear);
+		HorizontalPanel buttonsHorizontal = new HorizontalPanel();
 
 		btnSave = new Button("Save");
 		btnSave.addClickHandler(this);
 		buttonsHorizontal.add(btnSave);
 
+		TabPanel tabPanel = new TabPanel();
+		tabPanel.setWidth("725px");
 		VerticalPanel topVertical = new VerticalPanel();
 		topVertical.add(personalHorizontal);
 		topVertical.add(middleHorizontal);
 		topVertical.add(buttonsHorizontal);
-		topVertical.setCellHorizontalAlignment(buttonsHorizontal, HasHorizontalAlignment.ALIGN_RIGHT);
-		topVertical.setHeight("180px");
+		topVertical.setCellHorizontalAlignment(buttonsHorizontal,
+				HasHorizontalAlignment.ALIGN_RIGHT);
+		topVertical.setHeight("160px");
 
-		mainPanel.add(new HTML("<h3>Your Profile :</h3>"));
-		mainPanel.add(topVertical);
-		mapUI = new MapUI(true, tbLocation);	
+		tabPanel.add(topVertical, "Profile Details");
+		tabPanel.selectTab(0);
+
+		mainPanel.add(tabPanel);
+		mainPanel.add(new HTML("<br>"));
 		TabPanel map = new TabPanel();
-		map.add(mapUI,"Map View");
+		map.add(mapUI, "Map View");
 		map.selectTab(0);
 		mainPanel.add(map);
 
@@ -142,7 +146,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 
 	public void init() {
 		final UserDetails userDetails = this.mainPage.getUserDetails();
-		
+
 		service.getParticipantVOByEmailId(new AsyncCallback<ParticipantVO>() {
 
 			@Override
@@ -182,12 +186,13 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		if (event.getSource() == btnSave) {
 			lData = mapUI.getLocationDetails();
 			if (!(subWidgetHas.getSubjects().isEmpty() && subWidgetNeed
-					.getSubjects().isEmpty()) && (tbLocation.getText() != null)) {
+					.getSubjects().isEmpty())
+					&& (tbLocation.getText() != null)) {
 
 				ParticipantVO partVO = new ParticipantVO(id, tbName.getText(),
-						"M", tbEmailId.getText(), lData.getLatitude(),
-						lData.getLongitude(), tbLocation.getText(),
-						lData.getRadius(), subWidgetHas.getSubjects(),
+						"M", tbEmailId.getText(), lData.getLatitude(), lData
+								.getLongitude(), tbLocation.getText(), lData
+								.getRadius(), subWidgetHas.getSubjects(),
 						subWidgetNeed.getSubjects());
 				if (!status) {
 					service.create(partVO, new AsyncCallback<ParticipantVO>() {
@@ -222,12 +227,6 @@ public class ProfileWidget extends Composite implements ClickHandler {
 					});
 				}
 			}
-		}
-		if (event.getSource() == btnClear) {
-			tbName.setText(null);
-			tbEmailId.setText(null);
-			subWidgetHas.clearAll();
-			subWidgetNeed.clearAll();
 		}
 	}
 }
