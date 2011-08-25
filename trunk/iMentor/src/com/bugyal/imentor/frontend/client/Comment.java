@@ -19,7 +19,7 @@ public class Comment extends DialogBox {
 	MentorServiceAsync service;
 	TextBox subject;
 	TextArea comment;
-	public Comment(final String email) {
+	public Comment() {
 		setHTML("Feedback");
 		
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
@@ -56,7 +56,6 @@ public class Comment extends DialogBox {
 
 					@Override
 					public void onSuccess(Object result) {
-						Window.alert("feedback posted");
 						dialogHide();
 					}
 					

@@ -21,11 +21,9 @@ public class IMentor implements EntryPoint {
 
 			@Override
 			public void onClick(ClickEvent event) {
-				
-				Comment c = new Comment("test@kawanan.com");
+				Comment c = new Comment();
 				c.show();
 				c.center();
-				Window.alert("working..");
 			}
 			
 		});
