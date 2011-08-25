@@ -12,6 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 
 public class StatsServlet extends HttpServlet {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public static interface Stat {
 		public void inc();
 		public void inc(long amount);
@@ -60,7 +65,11 @@ public class StatsServlet extends HttpServlet {
 		}
 		
 		public String toString() {
-			return name + "\t\t" + (value/count) + " (" + count + ")";
+			if (count == 0) {
+			  return name + "\t\t" + value + " (" + count + ")";
+			} else {
+			  return name + "\t\t" + (value/count) + " (" + count + ")";
+			}
 		}
 	}
 
