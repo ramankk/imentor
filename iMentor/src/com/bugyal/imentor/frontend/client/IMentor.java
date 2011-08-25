@@ -2,7 +2,11 @@
 package com.bugyal.imentor.frontend.client;
 
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Anchor;
+
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class IMentor implements EntryPoint {
@@ -12,6 +16,22 @@ public class IMentor implements EntryPoint {
 	public void onModuleLoad() {
 		setShowTrigger(this);
 		setShowTrigger2(this);
+		Anchor feedback = new Anchor("Feedback");
+		feedback.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				
+				Comment c = new Comment("test@kawanan.com");
+				c.show();
+				c.center();
+				Window.alert("working..");
+			}
+			
+		});
+		RootPanel.get("feedback").add(feedback);
+		
+		loadApp("abc");
 	}
 	
 	public void loadApp(String fbId){

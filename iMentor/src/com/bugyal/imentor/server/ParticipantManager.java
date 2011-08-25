@@ -3,6 +3,7 @@ package com.bugyal.imentor.server;
 import java.util.List;
 
 import com.bugyal.imentor.MentorException;
+import com.bugyal.imentor.server.data.Feedback;
 import com.bugyal.imentor.server.data.Location;
 import com.bugyal.imentor.server.data.Participant;
 import com.google.appengine.api.datastore.Key;
@@ -73,6 +74,8 @@ public interface ParticipantManager {
 	long deleteParticipants();
 
 	boolean addMentorToMentee(Participant mentor, Participant mentee);
+
+	void createComment(Feedback... strings) throws MentorException;
 
 
 }

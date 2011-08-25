@@ -52,5 +52,7 @@ public interface MentorService extends RemoteService {
 
 	boolean addMentorAndMentee(Boolean isHas, String mentorMailId);
 
+	void commment(String subject, String comment);
+
 	List<MentorsResult> getMentorAndMentees(ParticipantVO participantVO);
 }
