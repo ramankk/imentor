@@ -170,7 +170,6 @@ public class SearchWidget extends Composite implements ClickHandler,
 		}
 	}
 
-	@SuppressWarnings("deprecation")
 	protected void showSearchResults(SearchResponse response) {
 		List<ParticipantVO> pList = new ArrayList<ParticipantVO>();
 		searchResultsWidget.setResults(response.getAllResults());

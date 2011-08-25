@@ -41,7 +41,7 @@
 					function(response) {
 						document.getElementById("name").innerHTML = response[0].name;
 						document.getElementById("email").innerHTML = response[0].email;
-					/*	showIMentorApp(userId);  */
+						showIMentorApp(response[0].email, response[0].name, userId);  
 					});
 				} else {
 					alert('not login');
