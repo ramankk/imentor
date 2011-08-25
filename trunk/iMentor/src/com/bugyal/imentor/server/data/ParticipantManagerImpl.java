@@ -386,4 +386,14 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		}
 		return true;
 	}
+	@Override
+	public void createComment(Feedback... strings) throws MentorException {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try{
+			pm.makePersistentAll(strings);
+		}catch(Exception e){
+			
+		}
+		
+	}
 }

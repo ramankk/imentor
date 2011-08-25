@@ -114,11 +114,17 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 	}
 
 	@Override
+	public void commment(String subject, String comment,
+			AsyncCallback<Void> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
 	public void getMentorAndMentees(ParticipantVO participantVO,
 			AsyncCallback<List<MentorsResult>> callback1) {
 		// TODO Auto-generated method stub
 		
 	}
-
 
 }

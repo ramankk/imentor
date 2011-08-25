@@ -49,6 +49,10 @@ public interface MentorServiceAsync {
 
 	void addMentorAndMentee(Boolean isHas, String mentorMailId, AsyncCallback<Boolean> callback);
 
+	void commment(String subject, String comment,
+			AsyncCallback<Void> callback);	
+	
+
 	void getMentorAndMentees(ParticipantVO participantVO,
 			AsyncCallback<List<MentorsResult>> callback1);	
 }
