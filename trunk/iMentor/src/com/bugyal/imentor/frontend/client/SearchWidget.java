@@ -1,6 +1,7 @@
 package com.bugyal.imentor.frontend.client;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
@@ -37,6 +38,7 @@ public class SearchWidget extends Composite implements ClickHandler,
 	SubjectsSuggestWidget subjectsSuggestWidget;
 	ListBox listBox;
 	SearchResponse sResponse;
+	TabPanel tabPanel_1 = new TabPanel();
 	TabPanel switchView = new TabPanel();
 
 	SearchResponseWidget searchResultsWidget = new SearchResponseWidget();
@@ -45,7 +47,7 @@ public class SearchWidget extends Composite implements ClickHandler,
 
 	public SearchWidget() {
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
-
+		location = new TextArea();
 		mapUI = new MapUI(true, location);		
 		subjectsSuggestWidget = new SubjectsSuggestWidget(new ArrayList<String>());
 		AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
@@ -71,7 +73,7 @@ public class SearchWidget extends Composite implements ClickHandler,
 		location = new TextArea();
 		location.setText("Please, Use the Map");
 		location.setEnabled(false);
-		location.setSize("243px", "43px");
+		location.setSize("223px", "43px");
 		
 		VerticalPanel locationVertical = new VerticalPanel();
 		locationVertical.setHeight("80px");
@@ -105,16 +107,19 @@ public class SearchWidget extends Composite implements ClickHandler,
 		topHorizontal.add(subjectsVertical);
 		topHorizontal.add(locationVertical);
 		topHorizontal.add(searchVertical);
-		topHorizontal.setWidth("750px");
-		
+		topHorizontal.setWidth("710px");
+		tabPanel_1.add(topHorizontal, "Search");
+		tabPanel_1.selectTab(0);
+		tabPanel_1.setSize("700px", "150px");
 		switchView.add(mapUI,"Map View");
 		switchView.add(searchResultsWidget,"List View");
-		switchView.setWidth("750px");
+		switchView.setWidth("730px");
 		switchView.selectTab(0);
 		
 		VerticalPanel mainPanel = new VerticalPanel();
-		mainPanel.add(new HTML("<h3>Search :</h3>"));
-		mainPanel.add(topHorizontal);
+		
+		mainPanel.add(tabPanel_1);
+		mainPanel.add(new HTML("<br>"));
 		mainPanel.add(switchView);
 
 		locationData = mapUI.getLocationDetails();
