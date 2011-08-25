@@ -14,6 +14,8 @@ import com.beoui.geocell.model.GeocellQuery;
 import com.beoui.geocell.model.Point;
 import com.bugyal.imentor.MentorException;
 import com.bugyal.imentor.frontend.server.LRUCache;
+import com.bugyal.imentor.frontend.server.StatsServlet;
+import com.bugyal.imentor.frontend.server.StatsServlet.AverageStat;
 import com.bugyal.imentor.server.ParticipantManager;
 import com.bugyal.imentor.server.util.MyGeocellManager;
 import com.google.appengine.api.datastore.Key;
@@ -21,8 +23,8 @@ import com.google.appengine.repackaged.com.google.common.base.Preconditions;
 
 public class ParticipantManagerImpl implements ParticipantManager {
 
-	private static final long LOCAL_STREAM_PERIOD = 20* 24 * (60 * 60 * 1000);
-	
+	private static final long LOCAL_STREAM_PERIOD = 20 * 24 * (60 * 60 * 1000);
+
 	private static final Logger LOG = Logger
 			.getLogger(ParticipantManagerImpl.class.getCanonicalName());
 	private LRUCache<String, Participant> cache = new LRUCache<String, Participant>(
@@ -31,17 +33,22 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	@Override
 	public void addCoParticipant(Participant i, Participant him) {
 		i.getCoParticipants().add(him.getKey());
-		save(i);
+		save(i);		
 	}
+
+	static AverageStat addHasKnowledgeTimeState = StatsServlet
+			.createAverageStat("addHasKnowledge_total_time");
 
 	@Override
 	public void addHasKnowledge(Participant i, List<String> hasSubjects, int l,
 			Participant suggestedBy) {
+		long t = System.currentTimeMillis();
 		for (String has : hasSubjects) {
 			i.addKnowledge(new Participant.Knowledge(has, l, suggestedBy
 					.getKey(), true));
 		}
 		save(i);
+		addHasKnowledgeTimeState.inc(System.currentTimeMillis() - t);
 	}
 
 	@Override
@@ -57,14 +64,20 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		save(i, mentor);
 	}
 
+	static AverageStat addNeedKnowledgeTimeState = StatsServlet
+			.createAverageStat("addNeedKnowledge_total_time");
+
 	@Override
 	public void addNeedKnowledge(Participant i, List<String> needSubjects,
 			int l, Participant suggestedBy) {
+		long t = System.currentTimeMillis();
+
 		for (String need : needSubjects) {
 			i.addKnowledge(new Participant.Knowledge(need, l, suggestedBy
 					.getKey(), false));
 		}
 		save(i);
+		addNeedKnowledgeTimeState.inc(System.currentTimeMillis() - t);
 	}
 
 	@Override
@@ -79,9 +92,13 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		i.setName(newName);
 	}
 
+	static AverageStat createParticipantByEmailTimeState = StatsServlet
+			.createAverageStat("createParticipant_ByEmail_total_time");
+
 	@Override
 	public Participant createParticipant(String name, String gender,
 			Location location, String email) throws MentorException {
+		long t = System.currentTimeMillis();
 		Participant e = findParticipantByEmail(email);
 		if (e != null) {
 			throw new MentorException("Participant with email " + email
@@ -89,22 +106,33 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		}
 		Participant i = new Participant(name, gender, location, email);
 		save(i);
+		createParticipantByEmailTimeState.inc(System.currentTimeMillis() - t);
 		return i;
 	}
+
+	static AverageStat createParticipantByParticipantTimeState = StatsServlet
+			.createAverageStat("createParticipant_ByParticipant_total_time");
 
 	@Override
 	public Participant createParticipant(String name, String gender,
 			Location location, Participant creator) {
+		long t = System.currentTimeMillis();
 		Participant i = new Participant(name, gender, location,
 				creator.getKey());
 		save(i);
+		createParticipantByParticipantTimeState.inc(System.currentTimeMillis()
+				- t);
 		return i;
 	}
+
+	static AverageStat findParticipantByEmailTimeState = StatsServlet
+			.createAverageStat("findParticipantByEmail_total_time");
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public Participant findParticipantByEmail(String email)
 			throws MentorException {
+		long t = System.currentTimeMillis();
 
 		Participant participant = cache.get(email);
 		if (participant != null) {
@@ -138,6 +166,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		}
 
 		cache.put(email, results.get(0));
+		findParticipantByEmailTimeState.inc(System.currentTimeMillis() - t);
 		return results.get(0);
 	}
 
@@ -151,7 +180,11 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		return keysToParticipants(i.getMentors());
 	}
 
+	static AverageStat keysToParticipantsTimeState = StatsServlet
+			.createAverageStat("keysToParticipants_total_time");
+
 	private List<Participant> keysToParticipants(List<Key> keys) {
+		long t = System.currentTimeMillis();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 
 		List<Participant> results = new ArrayList<Participant>();
@@ -163,7 +196,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		} finally {
 			pm.close();
 		}
-
+		keysToParticipantsTimeState.inc(System.currentTimeMillis() - t);
 		return results;
 	}
 
@@ -172,9 +205,12 @@ public class ParticipantManagerImpl implements ParticipantManager {
 			throws MentorException {
 		throw new MentorException("Not implemented");
 	}
-
+	
+	static AverageStat saveParticipantTimeState = StatsServlet
+	.createAverageStat("saveParticipant_total_time");
 	@Override
 	public void save(Participant... participants) {
+		long t = System.currentTimeMillis();
 		System.out.println("Trying to save :: " + participants);
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 
@@ -186,11 +222,16 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		} finally {
 			pm.close();
 		}
+		saveParticipantTimeState.inc(System.currentTimeMillis() - t);
 	}
+
+	static AverageStat searchParticipantsByInterestTimeState = StatsServlet
+			.createAverageStat("searchParticipantsByInterest_total_time");
 
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Participant> searchParticipantsByInterest(String interest) {
+		long t = System.currentTimeMillis();
 		Preconditions.checkNotNull(interest);
 
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -209,12 +250,16 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		} finally {
 			pm.close();
 		}
-
+		keysToParticipantsTimeState.inc(System.currentTimeMillis() - t);
 		return results;
 	}
 
+	static AverageStat deleteParticipantsTimeState = StatsServlet
+			.createAverageStat("deleteParticipants_total_time");
+
 	@Override
 	public long deleteParticipants() {
+		long t = System.currentTimeMillis();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		long n;
 		try {
@@ -225,12 +270,17 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		} finally {
 			pm.close();
 		}
+		deleteParticipantsTimeState.inc(System.currentTimeMillis() - t);
 		return n;
 	}
+
+	static AverageStat searchParticipantsBySubjectTimeState = StatsServlet
+			.createAverageStat("searchParticipantsBySubject_total_time");
 
 	@Override
 	public List<Participant> searchParticipantsBySubject(String subject,
 			Location l, boolean has) {
+		long t = System.currentTimeMillis();
 		Preconditions.checkNotNull(subject);
 		Preconditions.checkNotNull(l);
 
@@ -254,51 +304,54 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		} finally {
 			pm.close();
 		}
-
+		searchParticipantsBySubjectTimeState
+				.inc(System.currentTimeMillis() - t);
 		return results;
 	}
+
+	static AverageStat searchParticipantsByLocationTimeState = StatsServlet
+			.createAverageStat("searchParticipantsByLocation_total_time");
 
 	@Override
 	public List<Participant> searchParticipantsByLocation(Location l)
 			throws MentorException {
-		Preconditions.checkNotNull(l);
+		long t = System.currentTimeMillis();
 
+		Preconditions.checkNotNull(l);
 		long checkTime = System.currentTimeMillis() - LOCAL_STREAM_PERIOD;
 
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		List<Participant> results = null;
-
 		Point center = new Point(l.getLatitude(), l.getLongitude());
 		List<Object> params = new ArrayList<Object>();
 		params.add(checkTime);
 
 		String filter = "lastModifiedTime >= updateTimeP";
-
 		GeocellQuery query = new GeocellQuery(filter, "long updateTimeP",
 				params);
-
 		try {
-			long t = System.currentTimeMillis();
 			System.out.println(t);
-
 			results = GeocellManager
 					.proximityFetch(center, 50, l.getActiveRadius() * 1000,
 							Participant.class, query, pm, 9);
-			System.out.println(" participant "
-					+ (System.currentTimeMillis() - t));
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
 			pm.close();
 		}
+		searchParticipantsByLocationTimeState.inc(System.currentTimeMillis()
+				- t);
 		return results;
 	}
+
+	static AverageStat searchParticipantsBySubjectsTimeState = StatsServlet
+			.createAverageStat("searchParticipantsBySubjects_total_time");
 
 	@Override
 	public List<Participant> searchParticipantsBySubjects(
 			List<String> subjects, Location l, boolean has)
 			throws MentorException {
+		long t = System.currentTimeMillis();
 
 		Preconditions.checkNotNull(subjects);
 		Preconditions.checkNotNull(l);
@@ -310,8 +363,6 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		List<Object> params = new ArrayList<Object>();
 		params.add(subjects);
 
-		// String filter = has ? "hasSubjects == params" :
-		// "needSubjects == params";
 		String filter = has ? "hasSubjects" : "needSubjects";
 		filter += ".contains(subjectsP)";
 
@@ -319,13 +370,6 @@ public class ParticipantManagerImpl implements ParticipantManager {
 				params);
 
 		try {
-			long t = System.currentTimeMillis();
-			System.out.println(t);
-
-			/*
-			 * results = MyGeocellManager.proximityFetch(center, 30,
-			 * l.getActiveRadius() * 1000, Participant.class, query, pm, 8);
-			 */
 			results = GeocellManager
 					.proximityFetch(center, 30, l.getActiveRadius() * 1000,
 							Participant.class, query, pm, 8);
@@ -336,13 +380,19 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		} finally {
 			pm.close();
 		}
+		searchParticipantsBySubjectsTimeState.inc(System.currentTimeMillis()
+				- t);
 		return results;
 	}
 
+	static AverageStat findByIdKeyTimeState = StatsServlet
+			.createAverageStat("findById(Key_total_time");
+
 	@Override
 	public Participant findById(Key key) {
-		PersistenceManager pm = PMF.get().getPersistenceManager();
+		long t = System.currentTimeMillis();
 
+		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Participant p = null;
 		try {
 			p = pm.getObjectById(Participant.class, key);
@@ -350,40 +400,52 @@ public class ParticipantManagerImpl implements ParticipantManager {
 			// Magic to load knowledge and notes.
 			p.getHas();
 			p.getNotes();
-			
+
 		} finally {
 			pm.close();
 		}
 
+		findByIdKeyTimeState.inc(System.currentTimeMillis() - t);
 		return p;
 	}
 
+	static AverageStat addMentorToMenteeTimeState = StatsServlet
+			.createAverageStat("addMentorToMentee_total_time");
+
 	@Override
 	public boolean addMentorToMentee(Participant mentor, Participant mentee) {
+
+		long t = System.currentTimeMillis();
+
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
 		try {
-			tx.begin();			
-			Participant imentor = pm.getObjectById(Participant.class, mentor.getKey());
+			tx.begin();
+			Participant imentor = pm.getObjectById(Participant.class,
+					mentor.getKey());
 			imentor.addMentee(mentee.getKey());
 			tx.commit();
 		} catch (Exception e) {
 			if (tx.isActive()) {
 				tx.rollback();
 			}
+			addMentorToMenteeTimeState.inc(System.currentTimeMillis() - t);
 			return false;
 		}
 		try {
 			tx.begin();
-			Participant imentee = pm.getObjectById(Participant.class, mentee.getKey());
+			Participant imentee = pm.getObjectById(Participant.class,
+					mentee.getKey());
 			imentee.addMentor(mentor.getKey());
-			tx.commit();			
+			tx.commit();
 		} catch (Exception e) {
 			if (tx.isActive()) {
 				tx.rollback();
 			}
+			addMentorToMenteeTimeState.inc(System.currentTimeMillis() - t);
 			return false;
 		}
+		addMentorToMenteeTimeState.inc(System.currentTimeMillis() - t);
 		return true;
 	}
 	@Override

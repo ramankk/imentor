@@ -10,20 +10,30 @@ import javax.jdo.Transaction;
 import com.beoui.geocell.GeocellManager;
 import com.beoui.geocell.model.GeocellQuery;
 import com.beoui.geocell.model.Point;
+import com.bugyal.imentor.frontend.server.StatsServlet;
+import com.bugyal.imentor.frontend.server.StatsServlet.AverageStat;
 import com.bugyal.imentor.server.OpportunityManager;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.repackaged.com.google.common.base.Preconditions;
 
 public class OpportunityManagerImpl implements OpportunityManager {
 
+	static AverageStat allOpportunitiesByLocationAndSubjectsTimeState = StatsServlet.createAverageStat("allOpportunitiesByLocationAndSubjects_total_time");
 	@Override
 	public List<Opportunity> allOpportunities(Location location,
 			List<String> subjects) {
-		return search(location, subjects, false);
+		long t = System.currentTimeMillis();
+		List<Opportunity> result = search(location, subjects, false);
+		allOpportunitiesByLocationAndSubjectsTimeState.inc(System.currentTimeMillis() - t);
+		return result;		
 	}
+
+	static AverageStat deleteOpportunitiesTimeState = StatsServlet.createAverageStat("deleteOpportunities_total_time");
 
 	@Override
 	public long deleteOpportunities() {
+
+		long t = System.currentTimeMillis();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		long n;
 		try {
@@ -34,6 +44,8 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		} finally {
 			pm.close();
 		}
+
+		 deleteOpportunitiesTimeState.inc(System.currentTimeMillis() - t);
 		return n;
 	}
 
@@ -105,18 +117,22 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		return results;
 	}
 
+	
 	@Override
 	public Opportunity createOpportunity(Location location,
 			List<String> subjects, int requiredMentors,
 			List<Participant> contacts, int priority, String message, Participant savedBy) {
+
 		Opportunity o = new Opportunity(location, subjects, requiredMentors,
 				contacts, priority, message, savedBy);
-		save(o);
+		save(o);		
 		return o;
 	}
-
+	
+	static AverageStat saveOpportunityTimeState = StatsServlet.createAverageStat("saveOpportunity_total_time");
 	@Override
 	public void save(Opportunity... oppurtunities) {
+		long t = System.currentTimeMillis();
 		System.out.println("Trying to save :: " + oppurtunities);
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 
@@ -125,11 +141,14 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		} finally {
 			pm.close();
 		}
+		saveOpportunityTimeState.inc(System.currentTimeMillis() - t);
 	}
 	
+	static AverageStat updateOpportunitiesTimeState = StatsServlet.createAverageStat("updateOpportunities_total_time");
 	@Override
 	public void update(Opportunity opportunity, Participant savedBy){
-		
+
+		long t = System.currentTimeMillis();
 		System.out.println("Trying to save :: " + opportunity);
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
@@ -140,10 +159,6 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		    Opportunity vo = pm.getObjectById(Opportunity.class, opportunity.getKey());
 		    vo.setLocation(opportunity.getLoc());
 		    vo.resetSubjects(opportunity.getSubjects(), savedBy);
-		    /*
-		    for(String sub: opportunity.getSubjects()){
-		    	vo.addSubject(sub, savedBy);
-		    }*/
 		    tx.commit();
 		}
 		catch (Exception e)
@@ -153,24 +168,35 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		        tx.rollback();
 		    }
 		}
-		
-		
+		updateOpportunitiesTimeState.inc(System.currentTimeMillis() - t);		
 	}
 
+	static AverageStat searchOpportunitiesTimeState = StatsServlet.createAverageStat("searchOpportunities_total_time");
 	@Override
 	public List<Opportunity> searchOpportunities(Location location,
 			List<String> subjects) {
-		return search(location, subjects, true);
-	}
 
+		long t = System.currentTimeMillis();
+		List<Opportunity> result = search(location, subjects, true);
+
+		searchOpportunitiesTimeState.inc(System.currentTimeMillis() - t);
+		return result;
+	}
+	static AverageStat allOpportunitiesByLocationTimeState = StatsServlet.createAverageStat("allOpportunitiesByLocation_total_time");
 	@Override
 	public List<Opportunity> allOpportunites(Location location) {
-		return searchAll(location, true);
-	}
+		long t = System.currentTimeMillis();
+		List<Opportunity> result = searchAll(location, true);
 
+		allOpportunitiesByLocationTimeState.inc(System.currentTimeMillis() - t);
+		return result;
+	}
+	static AverageStat searchOpportunitiesByKeyTimeState = StatsServlet.createAverageStat("searchOpportunitiesByKey_total_time");
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<Opportunity> searchOpportunitiesByKey(Key key) {
+
+		long t = System.currentTimeMillis();
 		Preconditions.checkNotNull(key);
 
 		PersistenceManager pm = PMF.get().getPersistenceManager();
@@ -181,11 +207,15 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		q.declareParameters(Key.class.getName() + " keyP");
 
 		results = (List<Opportunity>) q.execute(key);
+		searchOpportunitiesByKeyTimeState.inc(System.currentTimeMillis() - t);
 		return results;
 	}
-
+	static AverageStat findByIdTimeState = StatsServlet.createAverageStat("findByIdOpportunity_total_time");
+	
 	@Override
 	public Opportunity findById(Key key) {
+
+		long t = System.currentTimeMillis();
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 
 		Opportunity o = null;
@@ -197,7 +227,7 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		} finally {
 			pm.close();
 		}
-
+		findByIdTimeState.inc(System.currentTimeMillis() - t);
 		return o;
 	}
 }

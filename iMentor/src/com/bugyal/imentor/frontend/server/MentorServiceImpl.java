@@ -528,7 +528,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			
 			Participant m = pm.findById(key);
 			List<Participant> participants = new ArrayList<Participant>();
-			if(m.getMentors().size() == 0){
+			if(m.getMentors().size() != 0){
 				participants = pm.getMentors(m);		
 				for(Participant p: participants) {
 					MentorsResult mentor= new MentorsResult(p.getName(),isMentor);
@@ -536,7 +536,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				}
 				participants.clear();
 			}
-			if(m.getMentees().size() == 0) {
+			if(m.getMentees().size() != 0) {
 				isMentor = false; // for mentees
 				participants = pm.getMentees(m);
 				for(Participant p: participants) {

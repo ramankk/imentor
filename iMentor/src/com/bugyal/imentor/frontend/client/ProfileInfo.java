@@ -61,7 +61,6 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 				@Override
 				public void onSuccess(List<MentorsResult> result) {
 					if(result.size() != 0) {
-						Window.alert("mentors and metees "+result.size());
 						StringBuilder mentorlist = new StringBuilder();
 						StringBuilder menteelist = new StringBuilder();
 						
@@ -104,13 +103,10 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 		}
 		
 		if (event.getSource() == persue) {
-			
-			Window.alert("Persue button clicked");
 			AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
-
 				@Override
 				public void onFailure(Throwable caught) {
-					Window.alert("Failed to add mentor to mentee");
+					Window.alert("Failed to add mentor to mentee");				
 				}
 
 				@Override
@@ -119,7 +115,7 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 						Window.alert("Successfully mentor added to mentee");
 					} else {
 						Window.alert("Failed to add mentor to mentee");
-					}
+					}				
 				}
 			};
 			if(result.isTypeParticipant()){
@@ -128,7 +124,8 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 			else{
 				Window.alert("Not a participant");
 			}
-		}
+			this.hide();
+		}		
 	}
 	
 	void setData(int index, String field, String value) {
