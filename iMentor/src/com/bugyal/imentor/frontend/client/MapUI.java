@@ -99,7 +99,7 @@ public class MapUI extends Composite {
 
 	public void initMapUI() {
 		map = new MapWidget();
-		map.setSize("735px","600px");
+		map.setSize("715px","600px");
 
 		map.setCenter(LatLng.newInstance(17.45, 78.39, true), 4);
 		marker = new Marker(LatLng.newInstance(17.45, 78.39, true));

@@ -22,7 +22,7 @@ public class SearchResultWidget extends Composite {
 	
 
 	public SearchResultWidget(boolean isEven) {
-		table.setSize("730px", "34px");
+		table.setSize("710px", "34px");
 
 		DOM.setStyleAttribute(table.getElement(), "backgroundColor",
 				isEven ? colors[0] : colors[1]);
@@ -66,6 +66,8 @@ public class SearchResultWidget extends Composite {
 		for (String str : result.getSubjects()) {
 			messageString.append(str).append(", ");
 		}
+		messageString.deleteCharAt(messageString.length()-1);
+		messageString.deleteCharAt(messageString.length()-1);
 		messageString.append("] ");
 		message.setText(messageString.toString());
 

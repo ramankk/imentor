@@ -11,6 +11,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TabPanel;
@@ -18,7 +19,8 @@ import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class OpportunityPanel extends Composite implements ClickHandler {
-	private final SubjectsSuggestWidget subWidget = new SubjectsSuggestWidget(new ArrayList<String>());
+	private final SubjectsSuggestWidget subWidget = new SubjectsSuggestWidget(
+			new ArrayList<String>());
 
 	private final TextArea txtMessage = new TextArea();;
 	private final TextArea tbLocation = new TextArea();
@@ -29,7 +31,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 	private static MapUI mapUI;
 	private MentorServiceAsync service;
 
-	private Button btnCreate, btnClear;
+	private Button btnCreate;
 	private LocationData lData = new LocationData();
 
 	private MyOpportunitiesWidget myOppWidget;
@@ -72,43 +74,39 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		// widget fetch its own list of subjects.
 		service.getSubjects(getSubjectsCallback);
 		service.getOpportunitiesById(getOpportuniesCallback);
-		
+
 		VerticalPanel subjectsVertical = new VerticalPanel();
 		subjectsVertical.add(new Label("Subjects"));
 		subjectsVertical.add(subWidget);
-	
+
 		VerticalPanel messageVertical = new VerticalPanel();
-		messageVertical.setSize("250px", "130px");
-		messageVertical.add(new Label("Message"));
+		messageVertical.add(new Label("Message:"));
 		messageVertical.add(txtMessage);
-		txtMessage.setSize("210px", "100px");
+
+		txtMessage.setSize("195px", "45px");
+
 		
 		VerticalPanel locationVertical = new VerticalPanel();
-		locationVertical.setSize("250px", "130px");
-		locationVertical.add(new Label("Location"));
+		
+		locationVertical.add(new Label("Location:"));
 		locationVertical.add(tbLocation);
-		tbLocation.setText(lData.getLocation());
-		tbLocation.setSize("215px", "50px");
+		tbLocation.setSize("195px", "45px");
 		tbLocation.setText("Please, Use the Map");
-		btnClear = new Button("Clear");
-		btnClear.addClickHandler(this);
+
 		btnCreate = new Button("Save");
 		btnCreate.addClickHandler(this);
-		HorizontalPanel hp = new HorizontalPanel();
-		hp.add(btnClear);
-		hp.add(btnCreate);
-		locationVertical.add(hp);
-		
+		locationVertical.add(btnCreate);
+		locationVertical.setCellHorizontalAlignment(btnCreate, HasHorizontalAlignment.ALIGN_RIGHT);
+
 		HorizontalPanel topHorizontal = new HorizontalPanel();
-		topHorizontal.setWidth("750px");
+		topHorizontal.setWidth("710px");
 		topHorizontal.add(subjectsVertical);
 		topHorizontal.add(messageVertical);
 		topHorizontal.add(locationVertical);
-		
-		tabPanel.setSize("750px", "200px");
-		
-		
-		tabPanel.add(topHorizontal,"Set Opportunity");
+
+		tabPanel.setSize("700px", "150px");
+
+		tabPanel.add(topHorizontal, "Set Opportunity");
 		tabPanel.selectTab(0);
 		mapUI = new MapUI(false, tbLocation);
 		TabPanel map = new TabPanel();
@@ -136,6 +134,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		// TODO(Sridhar, Ravi): Propagate message to the datastore and get it
 		// back, no more faking the message.
 		txtMessage.setText("");
+		txtMessage.setText(o.getMessage());
 		tbLocation.setText(o.getLocString());
 		mapUI.setMarkerLocation(o.getLatitude(), o.getLongitude());
 		subWidget.clearAll();
@@ -154,10 +153,10 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 					&& !(tbLocation.getText().contains("Please, Use the Map"))) {
 				Long id = showingOpportunity == null ? null
 						: showingOpportunity.getId();
-				OpportunityVO oppVO = new OpportunityVO(id,
-						subWidget.getSubjects(), 1, 0,
-						lData.getLatitude(), lData.getLongitude(), 1,
-						tbLocation.getText(), txtMessage.getText());
+				OpportunityVO oppVO = new OpportunityVO(id, subWidget
+						.getSubjects(), 1, 0, lData.getLatitude(), lData
+						.getLongitude(), 1, tbLocation.getText(), txtMessage
+						.getText());
 
 				if (id == null) {
 					// Create mode.
@@ -166,40 +165,41 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 
 								@Override
 								public void onFailure(Throwable caught) {
-									Window.alert("Sorry, Unble to Create the Opportunity "
-											+ caught.getMessage());
+									Window
+											.alert("Sorry, Unble to Create the Opportunity "
+													+ caught.getMessage());
 								}
 
 								@Override
 								public void onSuccess(OpportunityVO result) {
 									clearOpportunity();
-									service.getOpportunitiesById(getOpportuniesCallback);
+									service
+											.getOpportunitiesById(getOpportuniesCallback);
 								}
 
 							});
 				} else {
 					// edit mode.
-					service.updateOpportunity(oppVO, new AsyncCallback<OpportunityVO>() {
+					service.updateOpportunity(oppVO,
+							new AsyncCallback<OpportunityVO>() {
 
-						@Override
-						public void onFailure(Throwable caught) {
-							Window.alert("Sorry, Unble to Create the Opportunity "
-									+ caught.getMessage());
-						}
+								@Override
+								public void onFailure(Throwable caught) {
+									Window
+											.alert("Sorry, Unble to Create the Opportunity "
+													+ caught.getMessage());
+								}
 
-						@Override
-						public void onSuccess(OpportunityVO result) {
-							clearOpportunity();
-							service.getOpportunitiesById(getOpportuniesCallback);
-						}
-					});
+								@Override
+								public void onSuccess(OpportunityVO result) {
+									clearOpportunity();
+									service
+											.getOpportunitiesById(getOpportuniesCallback);
+								}
+							});
 				}
 
 			}
-		}
-
-		if (event.getSource() == btnClear) {
-			clearOpportunity();
 		}
 
 	}

@@ -52,7 +52,7 @@ public class ToMeWidget extends Composite {
 
 		tabPanel.selectTab(0);
 
-		tabPanel.setSize("500px", "250px");
+		tabPanel.setSize("480px", "250px");
 		tabPanel.addStyleName("table-center");
 
 		initWidget(tabPanel);
