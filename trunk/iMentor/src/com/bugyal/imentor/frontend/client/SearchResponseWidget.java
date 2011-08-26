@@ -24,6 +24,7 @@ public class SearchResponseWidget extends Composite {
 	private Button forwardButton = new Button(">");
 	private Button backwardButton = new Button("<");
 	
+	
 	private int currentPage;
 
 	public SearchResponseWidget() {
@@ -67,7 +68,8 @@ public class SearchResponseWidget extends Composite {
 				showPage(currentPage + 1);
 			}
 		});
-		
+		forwardButton.setTitle("next");
+		backwardButton.setTitle("prev");
 		initWidget(verticalPanel);
 	}
 	

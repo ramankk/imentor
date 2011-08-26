@@ -7,7 +7,6 @@ import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -22,10 +21,10 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 	private final SubjectsSuggestWidget subWidget = new SubjectsSuggestWidget(
 			new ArrayList<String>());
 
-	private final TextArea txtMessage = new TextArea();;
+	private final TextArea txtMessage = new TextArea();
 	private final TextArea tbLocation = new TextArea();
 	private final TabPanel tabPanel = new TabPanel();
-
+	
 	private OpportunityVO showingOpportunity = null;
 
 	private static MapUI mapUI;
@@ -41,7 +40,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Fail to get Subjects list");
+			// mainPage.setErrorMessage("Fail to get Subjects list");
 		}
 
 		@Override
@@ -54,7 +53,8 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			Window.alert("Unable to get opportunity" + caught.getMessage());
+			mainPage.setErrorMessage("Unable to get opportunity"
+					+ caught.getMessage());
 		}
 
 		@Override
@@ -62,7 +62,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 			addMyOpportunities(result);
 		}
 	};
-
+	
 	public OpportunityPanel(MainPageWidget mainPage) {
 		this.mainPage = mainPage;
 
@@ -85,9 +85,8 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 
 		txtMessage.setSize("195px", "45px");
 
-		
 		VerticalPanel locationVertical = new VerticalPanel();
-		
+
 		locationVertical.add(new Label("Location:"));
 		locationVertical.add(tbLocation);
 		tbLocation.setSize("195px", "45px");
@@ -96,7 +95,8 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		btnCreate = new Button("Save");
 		btnCreate.addClickHandler(this);
 		locationVertical.add(btnCreate);
-		locationVertical.setCellHorizontalAlignment(btnCreate, HasHorizontalAlignment.ALIGN_RIGHT);
+		locationVertical.setCellHorizontalAlignment(btnCreate,
+				HasHorizontalAlignment.ALIGN_RIGHT);
 
 		HorizontalPanel topHorizontal = new HorizontalPanel();
 		topHorizontal.setWidth("710px");
@@ -115,7 +115,10 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		VerticalPanel mainPanel = new VerticalPanel();
 		mainPanel.add(tabPanel);
 		mainPanel.add(map);
-
+		
+		txtMessage.setTitle("useful to know more about \n the Opportunity and contact Details");
+		tbLocation.setTitle("used to find members of this Location");
+		
 		initWidget(mainPanel);
 	}
 
@@ -165,8 +168,8 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 
 								@Override
 								public void onFailure(Throwable caught) {
-									Window
-											.alert("Sorry, Unble to Create the Opportunity "
+									mainPage
+											.setErrorMessage("Sorry, Unble to Create the Opportunity "
 													+ caught.getMessage());
 								}
 
@@ -175,6 +178,8 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 									clearOpportunity();
 									service
 											.getOpportunitiesById(getOpportuniesCallback);
+									mainPage
+											.setMessage("Opportunity created successfully");
 								}
 
 							});
@@ -185,8 +190,8 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 
 								@Override
 								public void onFailure(Throwable caught) {
-									Window
-											.alert("Sorry, Unble to Create the Opportunity "
+									mainPage
+											.setErrorMessage("Sorry, Unble to Create the Opportunity "
 													+ caught.getMessage());
 								}
 
@@ -195,10 +200,14 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 									clearOpportunity();
 									service
 											.getOpportunitiesById(getOpportuniesCallback);
+									mainPage
+											.setMessage("Opportunity updated successfully");
 								}
 							});
 				}
 
+			}else{
+				mainPage.setErrorMessage("Fields are empty");
 			}
 		}
 
