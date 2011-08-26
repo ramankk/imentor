@@ -27,9 +27,35 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		allOpportunitiesByLocationAndSubjectsTimeState.inc(System.currentTimeMillis() - t);
 		return result;		
 	}
-
+	
+	static AverageStat deleteOpportunityTimeState = StatsServlet.createAverageStat("deleteOpportunity_total_time");
+	@Override
+	public boolean deleteOpportunity(Key key) {
+		long t = System.currentTimeMillis();
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
+		boolean status;
+		try{
+			Opportunity o =  pm.getObjectById(Opportunity.class, key);
+			tx = pm.currentTransaction();
+			tx.begin();
+			pm.deletePersistent(o);
+			tx.commit();
+			status = true;
+		} 
+		catch (Exception e)
+		{
+		    if (tx.isActive())
+		    {
+		        tx.rollback();
+		    }
+		    status = false;
+		}
+		deleteOpportunityTimeState.inc(System.currentTimeMillis() - t);
+		return status;
+	}
+	
 	static AverageStat deleteOpportunitiesTimeState = StatsServlet.createAverageStat("deleteOpportunities_total_time");
-
 	@Override
 	public long deleteOpportunities() {
 
@@ -229,5 +255,28 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		}
 		findByIdTimeState.inc(System.currentTimeMillis() - t);
 		return o;
+	}
+	@Override
+	public boolean addMentorToOpportunity(Key oppKey, Key mentorKey){
+		boolean status;
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
+		try
+		{
+		    tx.begin();
+		    Opportunity vo = pm.getObjectById(Opportunity.class, oppKey);
+		    vo.addMentor(mentorKey);
+		    tx.commit();
+		    status = true;
+		}
+		catch (Exception e)
+		{
+		    if (tx.isActive())
+		    {
+		        tx.rollback();
+		    }
+		    status = false;
+		}		
+		return status;
 	}
 }

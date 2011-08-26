@@ -54,5 +54,9 @@ public interface MentorServiceAsync {
 	
 
 	void getMentorAndMentees(ParticipantVO participantVO,
-			AsyncCallback<List<MentorsResult>> callback1);	
+			AsyncCallback<List<MentorsResult>> callback1);
+
+	void deleteOpportunity(long id, AsyncCallback<Boolean> callback);
+
+	void addMentorToOpportunity(long id, AsyncCallback<Boolean> callback);	
 }
