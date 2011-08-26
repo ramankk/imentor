@@ -55,4 +55,8 @@ public interface MentorService extends RemoteService {
 	void commment(String subject, String comment);
 
 	List<MentorsResult> getMentorAndMentees(ParticipantVO participantVO);
+
+	boolean deleteOpportunity(long id);
+
+	boolean addMentorToOpportunity(long id);
 }

@@ -127,4 +127,16 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 		
 	}
 
+	@Override
+	public void deleteOpportunity(long id, AsyncCallback<Boolean> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void addMentorToOpportunity(long id, AsyncCallback<Boolean> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

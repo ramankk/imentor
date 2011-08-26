@@ -164,7 +164,6 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				contacts.add(participant);
 			}
 		} catch (MentorException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
@@ -174,6 +173,12 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				.getMessage(), participant);
 
 		if (oi != null) {
+			try {
+				participant.addCreatedOpportuny(oi.getKey());
+				pm.save(participant);
+			} catch (MentorException e) {
+				e.printStackTrace();
+			}
 			return ValueObjectGenerator.create(oi);
 		} else {
 			return null;
@@ -550,5 +555,24 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			e.printStackTrace();
 		}
 		return result;
+	}
+	
+	@Override
+	public boolean deleteOpportunity(long id) {
+		Key key = KeyFactory.createKey(Opportunity.class.getSimpleName(), id);
+		return om.deleteOpportunity(key);
+	}
+	
+
+	@Override
+	public boolean addMentorToOpportunity(long id) {
+		Key opportunityKey = KeyFactory.createKey(Opportunity.class.getSimpleName(), id);
+		Participant mentor = null;
+		try {
+			mentor = pm.findParticipantByEmail(getUserId());
+		} catch (MentorException e) {			
+			e.printStackTrace();
+		}
+		return om.addMentorToOpportunity(opportunityKey,mentor.getKey());
 	}
 }

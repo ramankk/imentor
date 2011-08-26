@@ -32,4 +32,8 @@ public interface OpportunityManager {
 	public Opportunity findById(Key key);
 
 	void update(Opportunity opportunity, Participant savedBy);
+
+	boolean deleteOpportunity(Key key);
+
+	boolean addMentorToOpportunity(Key oppKey, Key mentorKey);
 }
