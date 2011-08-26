@@ -45,6 +45,7 @@
 			});
 
 			FB.getLoginStatus(function(response) {
+			
 				if (response.status == 'connected') {
 					var userId = response.session.uid;
 					FB.api(
@@ -68,7 +69,7 @@
     	<div class="top">
 			<div id="head" class="menu"></div>
 		</div>
-		<div class="bar">
+		<div class="bar" id="bar" style="visibility:visible" >
 			<b id="name"></b>&nbsp;(<b id="email"></b>)&nbsp;<input id="fid" type="hidden"></b>
 			<fb:login-button perms='email' autologoutlink='true'></fb:login-button>
 		</div>
