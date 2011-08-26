@@ -37,6 +37,7 @@ public class SubjectsSuggestWidget extends Composite {
 		this.oracle.addAll(subjects);
 
 		flowpanel = new FlowPanel();
+		flowpanel.setTitle("Type and choose related Subjects");
 		flowpanel.addStyleName("flowPanelCSS");
 
 		flowpanel.addDomHandler(new ClickHandler() {

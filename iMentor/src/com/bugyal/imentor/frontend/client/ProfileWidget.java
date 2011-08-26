@@ -7,7 +7,6 @@ import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -39,7 +38,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 
 	MainPageWidget mainPage = null;
 
-	public ProfileWidget(MainPageWidget mainPage) {
+	public ProfileWidget(final MainPageWidget mainPage) {
 		this.mainPage = mainPage;
 
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
@@ -48,7 +47,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Fail to get Subjects list");
+				mainPage.setErrorMessage("Fail to get Subjects list");
 			}
 
 			@Override
@@ -65,6 +64,8 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		HorizontalPanel nameHorizontal = new HorizontalPanel();
 		nameHorizontal.add(new Label("Name:"));
 		tbName = new TextBox();
+		tbName.setTitle("To identify you by the name");
+
 		nameHorizontal.add(tbName);
 		HorizontalPanel genderHorizontal = new HorizontalPanel();
 		rbMale = new RadioButton("Gender", "M");
@@ -75,6 +76,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		genderHorizontal.add(rbFemale);
 		HorizontalPanel mailHorizontal = new HorizontalPanel();
 		tbEmailId = new TextBox();
+		tbEmailId.setTitle("To maintain uniqueness");
 		tbEmailId.setEnabled(false);
 		mailHorizontal.add(new Label("Mail Id:"));
 		mailHorizontal.add(tbEmailId);
@@ -91,6 +93,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		Label labelLocation = new Label("Location:");
 		locationVertical.add(labelLocation);
 		tbLocation = new TextArea();
+		tbLocation.setTitle("used to find members in your Location");
 		mapUI = new MapUI(true, tbLocation);
 		locationVertical.add(tbLocation);
 
@@ -199,13 +202,16 @@ public class ProfileWidget extends Composite implements ClickHandler {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							Window.alert("Unable to Create the Profile"
-									+ caught.getMessage());
+							mainPage
+									.setErrorMessage("Unable to Create the Profile"
+											+ caught.getMessage());
 						}
 
 						@Override
 						public void onSuccess(ParticipantVO result) {
 							mainPage.getHeaderWidget().setNewUser(false);
+							mainPage
+									.setMessage("Profile created successfully ");
 							mainPage.showHomeWidget();
 						}
 					});
@@ -214,13 +220,14 @@ public class ProfileWidget extends Composite implements ClickHandler {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							Window.alert("Sorry, No changes has been made"
-									+ caught.getMessage());
+							mainPage
+									.setErrorMessage("Sorry, No changes has been made"
+											+ caught.getMessage());
 						}
 
 						@Override
 						public void onSuccess(ParticipantVO result) {
-							Window.alert("Updated sucessfully");
+							mainPage.setMessage("Updated sucessfully");
 							mainPage.showHomeWidget();
 						}
 

@@ -48,6 +48,7 @@ public class SearchWidget extends Composite implements ClickHandler,
 	public SearchWidget() {
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 		location = new TextArea();
+		location.setTitle("finds results on this Location");
 		mapUI = new MapUI(true, location);		
 		subjectsSuggestWidget = new SubjectsSuggestWidget(new ArrayList<String>());
 		AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
@@ -78,7 +79,7 @@ public class SearchWidget extends Composite implements ClickHandler,
 		VerticalPanel locationVertical = new VerticalPanel();
 		locationVertical.setHeight("80px");
 		Label l = new Label("Select Location:");
-		l.setHeight("27px");
+		l.setHeight("20px");
 		locationVertical.add(l);
 		locationVertical.add(location);
 		
@@ -88,6 +89,7 @@ public class SearchWidget extends Composite implements ClickHandler,
 		VerticalPanel searchVertical = new VerticalPanel();
 		
 		listBox = new ListBox();
+		listBox.setTitle("Filters the results based on the option Selected");
 		listBox.addItem("All");
 		listBox.addItem("Mentors");
 		listBox.addItem("Mentee/opp");
