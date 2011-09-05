@@ -59,4 +59,8 @@ public interface MentorService extends RemoteService {
 	boolean deleteOpportunity(long id);
 
 	boolean addMentorToOpportunity(long id);
+
+	boolean deleteMentorAndMentee(Boolean isHas, String mentorMailId);
+
+	boolean removeMentorForOpportunity(long id);
 }

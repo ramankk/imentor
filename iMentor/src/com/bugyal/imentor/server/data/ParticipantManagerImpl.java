@@ -411,7 +411,6 @@ public class ParticipantManagerImpl implements ParticipantManager {
 
 	static AverageStat addMentorToMenteeTimeState = StatsServlet
 			.createAverageStat("addMentorToMentee_total_time");
-
 	@Override
 	public boolean addMentorToMentee(Participant mentor, Participant mentee) {
 
@@ -448,6 +447,45 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		addMentorToMenteeTimeState.inc(System.currentTimeMillis() - t);
 		return true;
 	}
+	
+	static AverageStat deleteMentorFromMenteeTimeState = StatsServlet
+	.createAverageStat("deleteMentorFromMentee_total_time");
+	@Override
+	public boolean deleteMentorFromMentee(Participant mentor, Participant mentee) {
+
+		long t = System.currentTimeMillis();
+
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
+		try {
+			tx.begin();
+			Participant imentor = pm.getObjectById(Participant.class, mentor.getKey());
+			imentor.removeMentee(mentee.getKey());
+			tx.commit();
+		} catch (Exception e) {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			deleteMentorFromMenteeTimeState.inc(System.currentTimeMillis() - t);
+			return false;
+		}
+		try {
+			tx.begin();
+			Participant imentee = pm.getObjectById(Participant.class,
+			mentee.getKey());
+			imentee.removeMentor(mentor.getKey());
+			tx.commit();
+		} catch (Exception e) {
+			if (tx.isActive()) {
+				tx.rollback();
+			}
+			deleteMentorFromMenteeTimeState.inc(System.currentTimeMillis() - t);
+			return false;
+		}
+		deleteMentorFromMenteeTimeState.inc(System.currentTimeMillis() - t);
+		return true;
+	}
+	
 	@Override
 	public void createComment(Feedback... strings) throws MentorException {
 		PersistenceManager pm = PMF.get().getPersistenceManager();

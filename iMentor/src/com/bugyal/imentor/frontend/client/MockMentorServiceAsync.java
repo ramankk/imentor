@@ -139,4 +139,18 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 		
 	}
 
+	@Override
+	public void deleteMentorAndMentee(Boolean isHas, String mentorMailId,
+			AsyncCallback<Boolean> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void removeMentorForOpportunity(long id,
+			AsyncCallback<Boolean> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
