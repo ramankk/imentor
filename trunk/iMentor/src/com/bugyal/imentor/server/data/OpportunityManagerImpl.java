@@ -172,7 +172,7 @@ public class OpportunityManagerImpl implements OpportunityManager {
 	
 	static AverageStat updateOpportunitiesTimeState = StatsServlet.createAverageStat("updateOpportunities_total_time");
 	@Override
-	public void update(Opportunity opportunity, Participant savedBy){
+	public Opportunity update(Opportunity opportunity, Participant savedBy){
 
 		long t = System.currentTimeMillis();
 		System.out.println("Trying to save :: " + opportunity);
@@ -186,6 +186,8 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		    vo.setLocation(opportunity.getLoc());
 		    vo.resetSubjects(opportunity.getSubjects(), savedBy);
 		    tx.commit();
+		    updateOpportunitiesTimeState.inc(System.currentTimeMillis() - t);
+			return vo;	
 		}
 		catch (Exception e)
 		{
@@ -194,7 +196,8 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		        tx.rollback();
 		    }
 		}
-		updateOpportunitiesTimeState.inc(System.currentTimeMillis() - t);		
+		updateOpportunitiesTimeState.inc(System.currentTimeMillis() - t);
+		return null;		
 	}
 
 	static AverageStat searchOpportunitiesTimeState = StatsServlet.createAverageStat("searchOpportunities_total_time");
@@ -236,8 +239,8 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		searchOpportunitiesByKeyTimeState.inc(System.currentTimeMillis() - t);
 		return results;
 	}
-	static AverageStat findByIdTimeState = StatsServlet.createAverageStat("findByIdOpportunity_total_time");
 	
+	static AverageStat findByIdTimeState = StatsServlet.createAverageStat("findByIdOpportunity_total_time");
 	@Override
 	public Opportunity findById(Key key) {
 
@@ -256,8 +259,11 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		findByIdTimeState.inc(System.currentTimeMillis() - t);
 		return o;
 	}
+	
+	static AverageStat addMentorToOpportunityState = StatsServlet.createAverageStat("addMentorToOpportunity_total_time");
 	@Override
 	public boolean addMentorToOpportunity(Key oppKey, Key mentorKey){
+		long t = System.currentTimeMillis();
 		boolean status;
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
@@ -277,6 +283,34 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		    }
 		    status = false;
 		}		
+		addMentorToOpportunityState.inc(System.currentTimeMillis() - t);
+		return status;
+	}
+	
+	static AverageStat removeMentorFromOpportunityState = StatsServlet.createAverageStat("removeMentorFromOpportunity_total_time");
+	@Override
+	public boolean removeMentorFromOpportunity(Key oppKey, Key mentorKey) {
+		long t = System.currentTimeMillis();
+		boolean status;
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
+		try
+		{
+		    tx.begin();
+		    Opportunity vo = pm.getObjectById(Opportunity.class, oppKey);
+		    vo.removeMentor(mentorKey);
+		    tx.commit();
+		    status = true;
+		}
+		catch (Exception e)
+		{
+		    if (tx.isActive())
+		    {
+		        tx.rollback();
+		    }
+		    status = false;
+		}		
+		removeMentorFromOpportunityState.inc(System.currentTimeMillis() - t);
 		return status;
 	}
 }

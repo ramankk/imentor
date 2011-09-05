@@ -511,6 +511,23 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean deleteMentorAndMentee(Boolean isHas, String mentorMailId) {
+		try {
+			Participant mentor = pm.findParticipantByEmail(mentorMailId);
+			Participant mentee = pm.findParticipantByEmail(getUserId());
+			if (isHas) {
+				return pm.deleteMentorFromMentee(mentor, mentee);
+			} else {
+				return pm.deleteMentorFromMentee(mentee, mentor);
+			}
+		} catch (MentorException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
 
 	@Override
 	public void commment(String subject, String comment) {
@@ -570,9 +587,31 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		Participant mentor = null;
 		try {
 			mentor = pm.findParticipantByEmail(getUserId());
+			if(om.addMentorToOpportunity(opportunityKey,mentor.getKey())){
+				mentor.addMentoringOpportunities(opportunityKey);
+				pm.save(mentor);
+				return true;
+			}
 		} catch (MentorException e) {			
 			e.printStackTrace();
-		}
-		return om.addMentorToOpportunity(opportunityKey,mentor.getKey());
+		}		
+		return false;
 	}
+	
+	@Override
+	public boolean removeMentorForOpportunity(long id) {
+		Key opportunityKey = KeyFactory.createKey(Opportunity.class.getSimpleName(), id);
+		Participant mentor = null;
+		try {
+			mentor = pm.findParticipantByEmail(getUserId());
+			if(om.removeMentorFromOpportunity(opportunityKey,mentor.getKey())){
+				mentor.removeMentoringOpportunity(opportunityKey);
+				pm.save(mentor);
+				return true;
+			}
+		} catch (MentorException e) {			
+			e.printStackTrace();
+		}		
+		return false;
+	}	
 }

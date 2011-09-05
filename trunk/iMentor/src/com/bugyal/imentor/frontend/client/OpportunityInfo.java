@@ -16,14 +16,16 @@ import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
-public class ProfileInfo extends DialogBox implements ClickHandler {
+public class OpportunityInfo extends DialogBox implements ClickHandler{
+
+
 	VerticalPanel vp = new VerticalPanel();	
 	Button cancel, persue;
 	MentorServiceAsync service;
 	SearchResult result = null;
 	FlexTable table=null;
-
-	public ProfileInfo(SearchResult results) {
+	
+	public OpportunityInfo(SearchResult results) {
 
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 		this.result = results;		
@@ -31,10 +33,10 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 		table = new FlexTable();
 		
 		if(results != null){
-			setData(0, "Name", results.getP().getName());
-			setData(1, "Gender", results.getP().getGender());
-			setData(2, "Email Id", results.getP().getEmail());
-			setData(3, "Location", results.getP().getLocationString());
+			setData(0, "Need Subject(s)", results.getO().getSubjectsAsString());
+			setData(1, "Message", results.getO().getMessage());
+			setData(2, "Location", results.getO().getLocString());
+		//	setData(3, "Owners", results.getO().getLocationString());
 			StringBuilder haslist = new StringBuilder();
 			for(String s: results.getP().getHasSubjects() ) {
 				haslist.append("  " + s);
@@ -90,7 +92,7 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 		setWidget(vp);
 
 		cancel.addClickHandler(this);
-		persue.addClickHandler(this);
+		persue.addClickHandler(this);	
 	}
 
 	@Override
@@ -130,5 +132,7 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 			table.setWidget(index, 0, new Label(field + " : "));
 			table.setWidget(index, 1, new Label(value));
 	}
+
+
 
 }

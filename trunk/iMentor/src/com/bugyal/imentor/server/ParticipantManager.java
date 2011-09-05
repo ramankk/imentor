@@ -77,5 +77,7 @@ public interface ParticipantManager {
 
 	void createComment(Feedback... strings) throws MentorException;
 
+	boolean deleteMentorFromMentee(Participant mentor, Participant mentee);
+
 
 }

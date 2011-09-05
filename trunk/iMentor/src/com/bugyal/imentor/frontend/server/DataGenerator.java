@@ -10,6 +10,7 @@ import com.bugyal.imentor.MentorException;
 import com.bugyal.imentor.server.MentorManager;
 import com.bugyal.imentor.server.ParticipantManager;
 import com.bugyal.imentor.server.data.Location;
+import com.bugyal.imentor.server.data.Opportunity;
 import com.bugyal.imentor.server.data.Participant;
 
 public class DataGenerator {
@@ -46,9 +47,14 @@ public class DataGenerator {
 			if (r.nextFloat() < 0.1) {
 				List<Participant> contacts = new ArrayList<Participant>();
 				contacts.add(participant);
-				MentorManager.INSTANCE.getOpportunityManager()
+				Opportunity o = MentorManager.INSTANCE.getOpportunityManager()
 						.createOpportunity(getRandomLocation(), getRandomList(),
 								r.nextInt(7), contacts, r.nextInt(4), rs.nextString(), participant);
+				for(int loc=0; loc< o.getContacts().size(); loc++){
+					Participant p = MentorManager.INSTANCE.getParticipantManager().findById(o.getContacts().get(loc));
+					p.addCreatedOpportuny(o.getKey());
+					MentorManager.INSTANCE.getParticipantManager().save(p);
+				}				
 			}
 
 		}
@@ -65,10 +71,12 @@ public class DataGenerator {
 	    //				nextDouble(72.95, 87.75, r), rs.nextString(), r.nextInt(100));
 		return location;
 	}
-
+	enum Gender {
+		M, F;
+	}
 	private String getRandomGender(){
-		String[] arr = {"male", "female"};
-		String gender = arr[r.nextInt(2)];
+		//String[] arr = {"male", "female"};		
+		String gender = Gender.values()[r.nextInt(2)].toString();
 		return gender;
 	}
 	

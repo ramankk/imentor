@@ -216,7 +216,7 @@ public class Opportunity implements LocationCapable {
 		this.active = active;
 	}
 
-	List<Key> getContacts() {
+	public List<Key> getContacts() {
 		return contacts;
 	}
 
