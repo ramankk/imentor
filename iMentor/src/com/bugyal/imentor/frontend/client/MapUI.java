@@ -28,7 +28,8 @@ import com.google.gwt.widgetideas.client.SliderBar;
 @SuppressWarnings("deprecation")
 public class MapUI extends Composite {
 
-	private static final String KEY = "ABQIAAAAq8kb0Ptd3vgPpd-4SQhLnRRY5aJ8tdjYBCC6RMf4i7rOl0XHvhRIR_EydegFWQTAB50wMnBjiq9mqw";
+	private static final String PROD_KEY = "ABQIAAAAhpT0_RDNg4IjP2kKZdK5txTxjsHT9BqImXAXxpnCBoIw1Gf1ABTtjzrO_SgLwT81eDjPz4SAsHkQFQ";
+	private static final String DEV_KEY = "ABQIAAAAq8kb0Ptd3vgPpd-4SQhLnRRY5aJ8tdjYBCC6RMf4i7rOl0XHvhRIR_EydegFWQTAB50wMnBjiq9mqw";
 	Marker marker;
 	MapWidget map;
 	private Polygon oldCircle;
@@ -42,7 +43,7 @@ public class MapUI extends Composite {
 	 
 
 	public MapUI(boolean needSlider, TextArea locationDisplay) {
-		Maps.loadMapsApi(KEY, "2", false, new Runnable() {
+		Maps.loadMapsApi(PROD_KEY, "2", false, new Runnable() {
 			public void run() {
 				initMapUI();
 			}
@@ -223,7 +224,11 @@ public class MapUI extends Composite {
 	}
 	
 	public void setMarkerLocation(double lat, double lng){
+		LocationData ldata = new LocationData();
+	//	ldata.
 		LatLng ll =  LatLng.newInstance(lat, lng);
+		map.setCenter(ll, 12);
 		marker.setLatLng(ll);
+		
 	}
 }
