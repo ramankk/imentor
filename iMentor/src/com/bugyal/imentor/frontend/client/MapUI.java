@@ -27,8 +27,8 @@ import com.google.gwt.widgetideas.client.SliderBar;
 
 @SuppressWarnings("deprecation")
 public class MapUI extends Composite {
-
-	private static final String PROD_KEY = "ABQIAAAAhpT0_RDNg4IjP2kKZdK5txTxjsHT9BqImXAXxpnCBoIw1Gf1ABTtjzrO_SgLwT81eDjPz4SAsHkQFQ";
+	
+	private static final String PROD_KEY = "ABQIAAAAwT0chPPVNt9m4ykQ56Lk_xS1P5v4n88zfZYJnTEZ_dPLix5TfBR1P8kUwcoPmL6pm-5RVHBIFC1-cA";
 	private static final String DEV_KEY = "ABQIAAAAq8kb0Ptd3vgPpd-4SQhLnRRY5aJ8tdjYBCC6RMf4i7rOl0XHvhRIR_EydegFWQTAB50wMnBjiq9mqw";
 	Marker marker;
 	MapWidget map;
