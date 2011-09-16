@@ -86,7 +86,7 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 		hp.add(persue);
 		vp.add(hp);
 
-		vp.setSize("280px", "250px");
+		vp.setSize("270px", "250px");
 		setWidget(vp);
 
 		cancel.addClickHandler(this);

@@ -103,7 +103,7 @@ element.style {
 
 .main {
 	padding: 10px;
-	width: 740px;
+	width: 730px;
 	border: 1px solid #ccc;
 	border-color: #2B547E;
 	border-width: 0 1px 1px 1px 1px;
@@ -112,14 +112,14 @@ element.style {
 
 .top {
 	background: url(images/head3.jpg);
-	width: 740px;
+	width: 730px;
 	height: 100px;
 }
 
 .menu {
 	border: 1px solid #ccc;
 	border-width: 0 1px 1px 1px 1px;
-	margin: 0 0 0 430px;
+	margin: 0 0 0 420px;
 }
 
 .tome {
@@ -127,7 +127,7 @@ element.style {
 }
 
 .middle {
-	width: 740px;
+	width: 730px;
 	border: 1px solid #ccc;
 	border-color: #FFFFFF;
 	border-width: 0 1px 1px 1px 1px;
@@ -135,22 +135,29 @@ element.style {
 }
 
 .main {
-	width: 740px;
+	width: 730px;
 	margin: 0 auto;
 }
 
 .empBar {
 	background-image: url(images/2.jpg);
-	width: 740px;
+	width: 730px;
 	height: 22px;
 }
 
 .bottom {
+	clear:both;
+	text-align:center;
+	padding: 2px;
 	background-image: url(images/tail3.jpg);
-	width: 740px;
+	width: 730px;
 	height: 100px;
 }
 
 .copyRight {
-	margin: 80px auto;
+	margin: 45px 0px auto;
+}
+
+.feedback {
+	margin: -28px 0px 0px 320px;
 }
