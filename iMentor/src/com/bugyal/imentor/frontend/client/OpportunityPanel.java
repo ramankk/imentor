@@ -7,6 +7,8 @@ import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.logical.shared.SelectionEvent;
+import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -24,13 +26,13 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 	private final TextArea txtMessage = new TextArea();
 	private final TextArea tbLocation = new TextArea();
 	private final TabPanel tabPanel = new TabPanel();
-	
+
 	private OpportunityVO showingOpportunity = null;
 
 	private static MapUI mapUI;
 	private MentorServiceAsync service;
 
-	private Button btnCreate;
+	private Button btnCreate, btnCancel;
 	private LocationData lData = new LocationData();
 
 	private MyOpportunitiesWidget myOppWidget;
@@ -62,18 +64,28 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 			addMyOpportunities(result);
 		}
 	};
-	
+
+	private final AsyncCallback<Boolean> deleteOpportunityCallback = new AsyncCallback<Boolean>() {
+
+		@Override
+		public void onFailure(Throwable caught) {
+			mainPage.setMessage("Sorry, Unable to delete the Opportunity"
+					+ caught.getMessage());
+		}
+
+		@Override
+		public void onSuccess(Boolean result) {
+			mainPage.setMessage("Opportunity has been deleted Successfully");
+		}
+	};
+
 	public OpportunityPanel(MainPageWidget mainPage) {
 		this.mainPage = mainPage;
 
 		myOppWidget = new MyOpportunitiesWidget(this);
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 
-		// TODO(raman,sridhar): Get Subjects only once per browser and resuse
-		// it.. dont let every
-		// widget fetch its own list of subjects.
 		service.getSubjects(getSubjectsCallback);
-//		service.getOpportunitiesById(getOpportuniesCallback);
 
 		VerticalPanel subjectsVertical = new VerticalPanel();
 		subjectsVertical.add(new Label("Subjects"));
@@ -92,10 +104,17 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		tbLocation.setSize("195px", "45px");
 		tbLocation.setText("Please, Use the Map");
 
+		HorizontalPanel buttonPanel = new HorizontalPanel();
+
+		btnCancel = new Button("Cancel");
+		btnCancel.addClickHandler(this);
 		btnCreate = new Button("Save");
 		btnCreate.addClickHandler(this);
-		locationVertical.add(btnCreate);
-		locationVertical.setCellHorizontalAlignment(btnCreate,
+		buttonPanel.add(btnCancel);
+		buttonPanel.add(btnCreate);
+		locationVertical.add(buttonPanel);
+
+		locationVertical.setCellHorizontalAlignment(buttonPanel,
 				HasHorizontalAlignment.ALIGN_RIGHT);
 
 		HorizontalPanel topHorizontal = new HorizontalPanel();
@@ -106,7 +125,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 
 		tabPanel.setSize("700px", "150px");
 
-		tabPanel.add(topHorizontal, "Set Opportunity");
+		tabPanel.add(topHorizontal, "Create Opportunity");
 		tabPanel.selectTab(0);
 		mapUI = new MapUI(false, tbLocation);
 		TabPanel map = new TabPanel();
@@ -115,45 +134,68 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		VerticalPanel mainPanel = new VerticalPanel();
 		mainPanel.add(tabPanel);
 		mainPanel.add(map);
-		
-		txtMessage.setTitle("useful to know more about \n the Opportunity and contact Details");
+
+		txtMessage
+				.setTitle("useful to know more about \n the Opportunity and contact Details");
 		tbLocation.setTitle("used to find members of this Location");
-		
 		initWidget(mainPanel);
+
+		tabPanel.getTabBar().addSelectionHandler(new SelectionHandler() {
+
+			@Override
+			public void onSelection(SelectionEvent event) {
+				if (event.getSelectedItem() == (Object) 1) {
+					tabPanel.getTabBar().setTabText(0, "Create Opportunity");
+					clearOpportunity();
+				}
+			}
+
+		});
+	}
+
+	public void deleteOpportunityById(long id) {
+		service.deleteOpportunity(id, deleteOpportunityCallback);
 	}
 
 	public void getOpportunitiesById() {
 		service.getOpportunitiesById(getOpportuniesCallback);
 	}
-	
+
 	private void addMyOpportunities(List<OpportunityVO> myOpportunities) {
 		if (myOpportunities.size() == 0) {
+			if (tabPanel.getWidgetCount() > 1) {
+				tabPanel.remove(1);
+			}
 			tabPanel.add(new Label("No opportunity is created by you.. "),
 					"My Opportunity");
 		} else {
 			myOppWidget.setOpportunities(myOpportunities);
+			if (tabPanel.getWidgetCount() > 1) {
+				tabPanel.remove(1);
+			}
 			tabPanel.add(myOppWidget, "My Opportunity");
+			tabPanel.selectTab(1);
 		}
 	}
 
 	public void showOpportunity(OpportunityVO o) {
-		subWidget.clearAll();
-		// TODO(Sridhar, Ravi): Propagate message to the datastore and get it
-		// back, no more faking the message.
-		txtMessage.setText("");
+		clearOpportunity();
 		txtMessage.setText(o.getMessage());
 		tbLocation.setText(o.getLocString());
-		mapUI.setMarkerLocation(o.getLatitude(), o.getLongitude());
-		subWidget.clearAll();
+		// mapUI.setMarkerLocation(o.getLatitude(), o.getLongitude());
+
 		for (String sub : o.getSubjects()) {
 			subWidget.add(sub);
 		}
+		tabPanel.getTabBar().setTabText(0, "Edit Opportunity");
 		tabPanel.selectTab(0);
+
 		showingOpportunity = o;
 	}
 
 	@Override
 	public void onClick(ClickEvent event) {
+
 		lData = mapUI.getLocationDetails();
 		if (event.getSource() == btnCreate) {
 			if (!(subWidget.getSubjects().isEmpty())
@@ -163,7 +205,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 				OpportunityVO oppVO = new OpportunityVO(id, subWidget
 						.getSubjects(), 1, 0, lData.getLatitude(), lData
 						.getLongitude(), 1, tbLocation.getText(), txtMessage
-						.getText());
+						.getText(), 0);
 
 				if (id == null) {
 					// Create mode.
@@ -183,7 +225,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 									service
 											.getOpportunitiesById(getOpportuniesCallback);
 									mainPage
-											.setMessage("Opportunity created successfully");
+											.setMessage("Opportunity has been created successfully");
 								}
 
 							});
@@ -206,13 +248,19 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 											.getOpportunitiesById(getOpportuniesCallback);
 									mainPage
 											.setMessage("Opportunity updated successfully");
+									tabPanel.getTabBar().setTabText(0,
+											"Create Opportunity ");
 								}
 							});
 				}
 
-			}else{
+			} else {
 				mainPage.setErrorMessage("Fields are empty");
 			}
+		} else if (event.getSource() == btnCancel) {
+			clearOpportunity();
+			tabPanel.getTabBar().setTabText(0, "Create Opportunity");
+			tabPanel.selectTab(1);
 		}
 
 	}
@@ -228,6 +276,4 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		mapUI.setMarkerLocation(o.getLatitude(), o.getLongitude());
 	}
 
-	// TODO(Sridhar, Ravi): How to go to creat-new-oppporutnity after checking
-	// my-list-of-opportunities.. ?!!
 }
