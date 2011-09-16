@@ -43,7 +43,7 @@ public class LocalActivity extends Composite {
 
 		initWidget(vp);
 		showWaitCursor();
-		getDataFeeds();
+		// getDataFeeds();
 	}
 
 	public void getDataFeeds() {

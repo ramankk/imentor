@@ -63,5 +63,10 @@ public interface MentorServiceAsync {
 	void deleteMentorAndMentee(Boolean isHas, String mentorMailId,
 			AsyncCallback<Boolean> callback);
 
-	void removeMentorForOpportunity(long id, AsyncCallback<Boolean> callback);	
+	void removeMentorForOpportunity(long id, AsyncCallback<Boolean> callback);
+
+	void searchOwnersById(Long id, AsyncCallback<List<MentorsResult>> callback);
+	
+	void getMentorsForOpportunity(Long id,
+			AsyncCallback<List<MentorsResult>> callback1);	
 }

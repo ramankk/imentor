@@ -24,6 +24,8 @@ import com.google.appengine.repackaged.com.google.common.base.Preconditions;
 public class ParticipantManagerImpl implements ParticipantManager {
 
 	private static final long LOCAL_STREAM_PERIOD = 20 * 24 * (60 * 60 * 1000);
+	
+	private static boolean isModified;
 
 	private static final Logger LOG = Logger
 			.getLogger(ParticipantManagerImpl.class.getCanonicalName());
@@ -135,7 +137,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		long t = System.currentTimeMillis();
 
 		Participant participant = cache.get(email);
-		if (participant != null) {
+		if (participant != null && isModified == false) {
 			return participant;
 		}
 
@@ -164,11 +166,12 @@ public class ParticipantManagerImpl implements ParticipantManager {
 					"Multiple participants found with same email, needs cleanup. Email:: "
 							+ email);
 		}
-
+		isModified = false; // For LRUCache
 		cache.put(email, results.get(0));
 		findParticipantByEmailTimeState.inc(System.currentTimeMillis() - t);
 		return results.get(0);
 	}
+		
 
 	@Override
 	public List<Participant> getMentees(Participant i) {
@@ -222,6 +225,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		} finally {
 			pm.close();
 		}
+		isModified = true; // to reload the record in LRUCache
 		saveParticipantTimeState.inc(System.currentTimeMillis() - t);
 	}
 
@@ -495,5 +499,35 @@ public class ParticipantManagerImpl implements ParticipantManager {
 			
 		}
 		
+	}
+
+	@Override
+	public List<Participant> findParticipantsByIds(List<Key> keys) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		List<Participant> participants = new ArrayList<Participant>();
+		for(Key key: keys) {
+			Participant p = pm.getObjectById(Participant.class, key);
+			participants.add(p);
+		}
+		return participants;
+	}
+
+	@Override
+	public boolean deleteOpportuniryFromParticipant(Key partcipantkey,
+			Key opportunitykey) {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
+		try{
+			tx.begin();
+			Participant p = pm.getObjectById(Participant.class, partcipantkey);
+			p.getCreatedOpportunities().remove(opportunitykey);
+			tx.commit();
+			return true;
+		}catch(Exception e){
+			if(tx.isActive()){
+				tx.rollback();
+			}
+		}		
+		return false;
 	}
 }

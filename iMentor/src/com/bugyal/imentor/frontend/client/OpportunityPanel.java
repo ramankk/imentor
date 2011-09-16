@@ -73,7 +73,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		// it.. dont let every
 		// widget fetch its own list of subjects.
 		service.getSubjects(getSubjectsCallback);
-		service.getOpportunitiesById(getOpportuniesCallback);
+//		service.getOpportunitiesById(getOpportuniesCallback);
 
 		VerticalPanel subjectsVertical = new VerticalPanel();
 		subjectsVertical.add(new Label("Subjects"));
@@ -122,6 +122,10 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		initWidget(mainPanel);
 	}
 
+	public void getOpportunitiesById() {
+		service.getOpportunitiesById(getOpportuniesCallback);
+	}
+	
 	private void addMyOpportunities(List<OpportunityVO> myOpportunities) {
 		if (myOpportunities.size() == 0) {
 			tabPanel.add(new Label("No opportunity is created by you.. "),

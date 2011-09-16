@@ -259,7 +259,7 @@ public class OpportunityManagerImpl implements OpportunityManager {
 		findByIdTimeState.inc(System.currentTimeMillis() - t);
 		return o;
 	}
-	
+		
 	static AverageStat addMentorToOpportunityState = StatsServlet.createAverageStat("addMentorToOpportunity_total_time");
 	@Override
 	public boolean addMentorToOpportunity(Key oppKey, Key mentorKey){

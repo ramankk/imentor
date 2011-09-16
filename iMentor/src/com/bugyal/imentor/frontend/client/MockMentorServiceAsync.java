@@ -153,4 +153,18 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 		
 	}
 
+	@Override
+	public void searchOwnersById(Long id,
+			AsyncCallback<List<MentorsResult>> callback) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	@Override
+	public void getMentorsForOpportunity(Long id,
+			AsyncCallback<List<MentorsResult>> callback1) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

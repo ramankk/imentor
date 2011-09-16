@@ -16,7 +16,7 @@ public class SearchResultWidget extends Composite {
 
 	Label message = new Label();
 	Label distance = new Label();
-	Anchor pursueLink = new Anchor("->");
+	Anchor pursueLink = new Anchor();
 	SearchResult searchResult = null;
 	FlexTable table = new FlexTable();
 	
@@ -34,12 +34,16 @@ public class SearchResultWidget extends Composite {
 		pursueLink.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				if(searchResult != null){
+				if(searchResult == null) {
+					Window.alert("Something Wrong with ur Action");
+				}
+				if(searchResult.isTypeParticipant()){					
 					ProfileInfo info = new ProfileInfo(searchResult);
 					info.center();
 				}
 				else{
-					Window.alert("Mentor not found");
+					OpportunityInfo info = new OpportunityInfo(searchResult);
+					info.center();
 				}
 			}
 		});
@@ -49,6 +53,7 @@ public class SearchResultWidget extends Composite {
 	public void setResult(SearchResult result) {
 		
 		searchResult = result;
+		pursueLink.setText("<>");
 		StringBuilder messageString = new StringBuilder();
 		if (result.isTypeParticipant()) {
 			table.setTitle(result.getP().getLocationString());

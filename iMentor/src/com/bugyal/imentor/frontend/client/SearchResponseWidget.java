@@ -93,7 +93,6 @@ public class SearchResponseWidget extends Composite {
 		}
 		backwardButton.setEnabled(currentPage != 0);
 
-		// Need to check it out by sridhar...!
 		int numPages = searchResults.size()/pageSize;
 		if(numPages == 0 || currentPage == numPages - 1) {
 			forwardButton.setEnabled(false);
