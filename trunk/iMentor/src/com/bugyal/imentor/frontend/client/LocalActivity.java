@@ -35,7 +35,7 @@ public class LocalActivity extends Composite {
 		tabPanel.add(flowpanel, "Local Stream");
 		tabPanel.selectTab(0);
 
-		tabPanel.setWidth("730px");
+		tabPanel.setWidth("700px");
 		tabPanel.addStyleName("table-center");
 
 		VerticalPanel vp = new VerticalPanel();

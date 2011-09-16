@@ -8,6 +8,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 
 public class SearchResultWidget extends Composite {
@@ -16,22 +17,41 @@ public class SearchResultWidget extends Composite {
 
 	Label message = new Label();
 	Label distance = new Label();
-	Anchor pursueLink = new Anchor();
+
+	Image pursueImage = new Image("images/magni.png");
 	SearchResult searchResult = null;
 	FlexTable table = new FlexTable();
 	
 
 	public SearchResultWidget(boolean isEven) {
-		table.setSize("710px", "34px");
-
+		table.setSize("700px", "34px");
+	
+		pursueImage.setSize("12px","12px");
 		DOM.setStyleAttribute(table.getElement(), "backgroundColor",
 				isEven ? colors[0] : colors[1]);
 
 		table.setWidget(0, 0, message);
 		table.getFlexCellFormatter().setColSpan(0, 0, 5);
 		table.setWidget(0, 6, distance);
-		table.setWidget(0, 7, pursueLink);
-		pursueLink.addClickHandler(new ClickHandler() {
+		table.setWidget(0, 7, pursueImage);
+		pursueImage.addClickHandler(new ClickHandler(){
+
+			@Override
+			public void onClick(ClickEvent event) {
+				if(searchResult != null){
+//					ProfileInfo info = new ProfileInfo(searchResult);
+//					info.center();
+					ProfileInformation proInfo = new ProfileInformation(searchResult);
+					proInfo.center();
+				}
+				else{
+					Window.alert("Mentor not found");
+				}
+				
+			}
+			
+		});
+		/*pursueLink.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				if(searchResult == null) {
@@ -46,14 +66,13 @@ public class SearchResultWidget extends Composite {
 					info.center();
 				}
 			}
-		});
+		});*/
 		initWidget(table);
 	}
 
 	public void setResult(SearchResult result) {
 		
 		searchResult = result;
-		pursueLink.setText("<>");
 		StringBuilder messageString = new StringBuilder();
 		if (result.isTypeParticipant()) {
 			table.setTitle(result.getP().getLocationString());
@@ -82,6 +101,6 @@ public class SearchResultWidget extends Composite {
 	public void clear() {
 		message.setText("");
 		distance.setText("");
-		pursueLink.setHref("#");
+//		pursueLink.setHref("#");
 	}
 }

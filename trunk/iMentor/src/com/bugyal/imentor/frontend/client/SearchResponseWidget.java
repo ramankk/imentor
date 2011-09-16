@@ -39,9 +39,9 @@ public class SearchResponseWidget extends Composite {
 			contentPanel.add(resultObjects.get(i));
 		}
 		
-		verticalPanel.setSize("720px", "235px");
+		verticalPanel.setSize("700px", "235px");
 
-		contentPanel.setSize("580px", "180px");
+		contentPanel.setSize("560px", "180px");
 		verticalPanel.add(contentPanel);
 		DOM.setStyleAttribute(contentPanel.getElement(), "border",
 				"1px solid #5CB3FF");

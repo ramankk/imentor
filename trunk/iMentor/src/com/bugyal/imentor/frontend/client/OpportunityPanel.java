@@ -95,13 +95,13 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		messageVertical.add(new Label("Message:"));
 		messageVertical.add(txtMessage);
 
-		txtMessage.setSize("195px", "45px");
+		txtMessage.setSize("185px", "45px");
 
 		VerticalPanel locationVertical = new VerticalPanel();
 
 		locationVertical.add(new Label("Location:"));
 		locationVertical.add(tbLocation);
-		tbLocation.setSize("195px", "45px");
+		tbLocation.setSize("185px", "45px");
 		tbLocation.setText("Please, Use the Map");
 
 		HorizontalPanel buttonPanel = new HorizontalPanel();
@@ -118,14 +118,15 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 				HasHorizontalAlignment.ALIGN_RIGHT);
 
 		HorizontalPanel topHorizontal = new HorizontalPanel();
-		topHorizontal.setWidth("710px");
+		topHorizontal.setWidth("700px");
 		topHorizontal.add(subjectsVertical);
 		topHorizontal.add(messageVertical);
 		topHorizontal.add(locationVertical);
 
-		tabPanel.setSize("700px", "150px");
+		tabPanel.setSize("690px", "150px");
 
 		tabPanel.add(topHorizontal, "Create Opportunity");
+		tabPanel.getTabBar().setTabText(1, "test");
 		tabPanel.selectTab(0);
 		mapUI = new MapUI(false, tbLocation);
 		TabPanel map = new TabPanel();

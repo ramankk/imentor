@@ -74,7 +74,7 @@ public class SearchWidget extends Composite implements ClickHandler,
 		location = new TextArea();
 		location.setText("Please, Use the Map");
 		location.setEnabled(false);
-		location.setSize("223px", "43px");
+		location.setSize("213px", "43px");
 		
 		VerticalPanel locationVertical = new VerticalPanel();
 		locationVertical.setHeight("80px");
@@ -109,13 +109,13 @@ public class SearchWidget extends Composite implements ClickHandler,
 		topHorizontal.add(subjectsVertical);
 		topHorizontal.add(locationVertical);
 		topHorizontal.add(searchVertical);
-		topHorizontal.setWidth("710px");
+		topHorizontal.setWidth("700px");
 		tabPanel_1.add(topHorizontal, "Search");
 		tabPanel_1.selectTab(0);
 		tabPanel_1.setSize("700px", "150px");
 		switchView.add(mapUI,"Map View");
 		switchView.add(searchResultsWidget,"List View");
-		switchView.setWidth("730px");
+		switchView.setWidth("710px");
 		switchView.selectTab(0);
 		
 		VerticalPanel mainPanel = new VerticalPanel();

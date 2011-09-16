@@ -82,7 +82,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		mailHorizontal.add(tbEmailId);
 
 		HorizontalPanel personalHorizontal = new HorizontalPanel();
-		personalHorizontal.setWidth("730px");
+		personalHorizontal.setWidth("700px");
 		personalHorizontal.add(nameHorizontal);
 		personalHorizontal.add(genderHorizontal);
 		personalHorizontal.add(mailHorizontal);
@@ -98,7 +98,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		locationVertical.add(tbLocation);
 
 		tbLocation.setText(lData.getLocation());
-		tbLocation.setSize("195px", "45px");
+		tbLocation.setSize("185px", "45px");
 
 		VerticalPanel knowSubVertical = new VerticalPanel();
 		knowSubVertical.add(new Label("Subjects know:"));
@@ -109,7 +109,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		wantSubVertical.add(subWidgetNeed);
 
 		HorizontalPanel middleHorizontal = new HorizontalPanel();
-		middleHorizontal.setWidth("730px");
+		middleHorizontal.setWidth("700px");
 		middleHorizontal.add(locationVertical);
 		middleHorizontal.add(knowSubVertical);
 		middleHorizontal.add(wantSubVertical);
@@ -125,7 +125,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		buttonsHorizontal.add(btnSave);
 
 		TabPanel tabPanel = new TabPanel();
-		tabPanel.setWidth("725px");
+		tabPanel.setWidth("700px");
 		VerticalPanel topVertical = new VerticalPanel();
 		topVertical.add(personalHorizontal);
 		topVertical.add(middleHorizontal);
