@@ -16,7 +16,7 @@ public class IMentor implements EntryPoint {
 	public static final boolean TEST_MODE_FLAG = true;
 	public static final String PATH = "Path";
 
-	public void onModuleLoad() {
+	public void onModuleLoad() {		
 		setShowTrigger(this);
 		setShowTrigger2(this);
 		Anchor feedback = new Anchor("Feedback");
