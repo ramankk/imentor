@@ -15,23 +15,25 @@ public class OpportunityVO implements Serializable {
 	private int radius;
 	private String locString;
 	private String message;
-	
+	private long lastModifiedTime;
+
 	// Required by GWT.
 	public OpportunityVO() {
-		
+
 	}
-	
+
 	public OpportunityVO(Long id, List<String> subjects, int requiredMentors,
 			int priority, double latitude, double longitude, int radius,
-			String locString, String message) {
+			String locString, String message, long lastModifiedTime) {
 		super();
 		this.id = id;
-		
-		// This is to convert org.datanucleus.sco.backend.ArrayList to simple java.util.ArrayList which
+
+		// This is to convert org.datanucleus.sco.backend.ArrayList to simple
+		// java.util.ArrayList which
 		// is serializable over wire to be used in the GWT world.
 		this.subjects = new ArrayList<String>();
 		this.subjects.addAll(subjects);
-		
+
 		this.requiredMentors = requiredMentors;
 		this.priority = priority;
 		this.latitude = latitude;
@@ -39,6 +41,7 @@ public class OpportunityVO implements Serializable {
 		this.radius = radius;
 		this.locString = locString;
 		this.message = message;
+		this.lastModifiedTime = lastModifiedTime;
 	}
 
 	public Long getId() {
@@ -60,8 +63,6 @@ public class OpportunityVO implements Serializable {
 	public int getRequiredMentors() {
 		return requiredMentors;
 	}
-
-	
 
 	public void setRequiredMentors(int requiredMentors) {
 		this.requiredMentors = requiredMentors;
@@ -106,15 +107,23 @@ public class OpportunityVO implements Serializable {
 	public void setLocString(String locString) {
 		this.locString = locString;
 	}
-	
 
-	// This method trims ParticipantVO object to bare minimum information required in SearchResult.
+	public long getLastModifiedTime() {
+		return lastModifiedTime;
+	}
+
+	public void setLastModifiedTime(long lastModifiedTime) {
+		this.lastModifiedTime = lastModifiedTime;
+	}
+
+	// This method trims ParticipantVO object to bare minimum information
+	// required in SearchResult.
 	// If you need the following cleared information, fix it !!
 	public void trim() {
-		//this.subjects.clear();
-		//this.locString = null;
+		// this.subjects.clear();
+		// this.locString = null;
 	}
-	
+
 	public String getSubjectsAsString() {
 		StringBuilder subs = new StringBuilder();
 		boolean first = true;

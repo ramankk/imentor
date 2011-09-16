@@ -33,7 +33,7 @@ public class ValueObjectGenerator {
 				o.getRequiredMentors(), o.getPriority(), o.getLoc()
 						.getLatitude(), o.getLoc().getLongitude(), o.getLoc()
 						.getActiveRadius(), o.getLoc().getLocationString(),
-				o.getMessage());
+				o.getMessage(),o.getLastModifiedTime());
 	}
 
 	public static List<ParticipantVO> createParticipantVOs(
