@@ -38,4 +38,5 @@ public interface OpportunityManager {
 	boolean addMentorToOpportunity(Key oppKey, Key mentorKey);
 
 	boolean removeMentorFromOpportunity(Key oppKey, Key mentorKey);
+
 }

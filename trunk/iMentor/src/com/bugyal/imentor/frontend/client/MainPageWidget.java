@@ -74,6 +74,7 @@ public class MainPageWidget extends Composite {
 	}
 
 	public void showOpportunityPanel() {
+		opportunityPanel.getOpportunitiesById();
 		ft.setWidget(1, 0, opportunityPanel);
 	}
 

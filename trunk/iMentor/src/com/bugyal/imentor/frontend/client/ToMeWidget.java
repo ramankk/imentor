@@ -58,7 +58,7 @@ public class ToMeWidget extends Composite {
 		initWidget(tabPanel);
 
 		showWaitCursor();
-		getDataFeeds();
+		// getDataFeeds();
 	}
 
 	// Method to Get data from DataStore

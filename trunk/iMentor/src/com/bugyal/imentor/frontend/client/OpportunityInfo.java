@@ -3,6 +3,7 @@ package com.bugyal.imentor.frontend.client;
 import java.util.List;
 
 import com.bugyal.imentor.frontend.shared.MentorsResult;
+import com.bugyal.imentor.frontend.shared.SearchResponse;
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -29,32 +30,40 @@ public class OpportunityInfo extends DialogBox implements ClickHandler{
 
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 		this.result = results;		
-		setHTML("Profile Info");
+		setHTML("Opportunity Info");
 		table = new FlexTable();
 		
 		if(results != null){
 			setData(0, "Need Subject(s)", results.getO().getSubjectsAsString());
 			setData(1, "Message", results.getO().getMessage());
 			setData(2, "Location", results.getO().getLocString());
-		//	setData(3, "Owners", results.getO().getLocationString());
-			StringBuilder haslist = new StringBuilder();
-			for(String s: results.getP().getHasSubjects() ) {
-				haslist.append("  " + s);
-			}
-			setData(4, "Has Subjects", haslist.toString());
 			
-			StringBuilder needlist = new StringBuilder();
-			for(String s: results.getP().getNeedSubjects() ) {
-				needlist.append("  " + s);
-			}
-			setData(5, "Need Subjects", needlist.toString());
+			AsyncCallback<List<MentorsResult>> callback = new AsyncCallback<List<MentorsResult>>() {
+				@Override
+				public void onFailure(Throwable caught) {
+					// TODO Auto-generated method stub					
+				}
+				
+				@Override
+				public void onSuccess(List<MentorsResult> result) {					
+					if(result.size() != 0) {
+						StringBuilder ownerslist = new StringBuilder();						
+						for(MentorsResult s: result) {
+							if(!s.isMentor()) {
+								ownerslist.append("   " + s.getName());
+							}
+						}
+						setData(3, "Owners", ownerslist.toString());						
+					}					
+				}
+			};				
+			service.searchOwnersById(results.getO().getId(), callback);	
 			
 			AsyncCallback<List<MentorsResult>> callback1 = new AsyncCallback<List<MentorsResult>>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
-					// TODO Auto-generated method stub
-					
+					// TODO Auto-generated method stub					
 				}
 
 				@Override
@@ -62,22 +71,17 @@ public class OpportunityInfo extends DialogBox implements ClickHandler{
 					
 					if(result.size() != 0) {
 						StringBuilder mentorlist = new StringBuilder();
-						StringBuilder menteelist = new StringBuilder();
 						
 						for(MentorsResult s: result) {
 							if(s.isMentor()){
-								mentorlist.append("  " + s.getName());
-							}
-							else{
-								menteelist.append(" " + s.getName());
+								mentorlist.append("   " + s.getName());
 							}
 						}
-						setData(6, "Mentors List ", mentorlist.toString());
-						setData(7, "Mentees List ", menteelist.toString());
+						setData(4, "Mentors List ", mentorlist.toString());
 					}					
 				}
 			};			
-			service.getMentorAndMentees(results.getP(), callback1);			
+			service.getMentorsForOpportunity(results.getO().getId(), callback1);					
 		}
 		
 		vp.add(table);
@@ -106,20 +110,20 @@ public class OpportunityInfo extends DialogBox implements ClickHandler{
 			AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
 				@Override
 				public void onFailure(Throwable caught) {
-					Window.alert("Failed to add mentor to mentee");				
+					Window.alert("Failed to add mentor to Opportunity");				
 				}
 
 				@Override
 				public void onSuccess(Boolean result) {
 					if (result) {
-						Window.alert("Successfully mentor added to mentee");
+						Window.alert("Successfully mentor added to Opportunity");
 					} else {
-						Window.alert("Failed to add mentor to mentee");
+						Window.alert("Failed to add mentor to Opportunity");
 					}				
 				}
 			};
-			if(result.isTypeParticipant()){
-				service.addMentorAndMentee(result.isHas(), result.getP().getEmail(), callback);
+			if(!result.isTypeParticipant()){
+				service.addMentorToOpportunity(result.getO().getId(), callback);
 			}
 			else{
 				Window.alert("Not a participant");
