@@ -82,4 +82,7 @@ public interface ParticipantManager {
 	List<Participant> findParticipantsByIds(List<Key> keys);
 	
 	boolean deleteOpportuniryFromParticipant(Key partcipantkey, Key opportunitykey );
+
+	boolean saveOpportunityToParticipant(Key participantkey,
+			Key opportunitykey, boolean isMentoring);
 }
