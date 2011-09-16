@@ -52,7 +52,7 @@ public class MentorServiceImplTest {
 		
 		msi.createOpportunity(new OpportunityVO(null, subjects, 2, 6, TestLocations.GACHIBOWLI.getLatitude(),
 				TestLocations.GACHIBOWLI.getLongitude(), 10,
-				TestLocations.GACHIBOWLI.getLocationString(), "message"));
+				TestLocations.GACHIBOWLI.getLocationString(), "message",0));
 		
 		List<OpportunityVO> opportunities = msi.find(subjects, pvo);
 		assertNotNull(opportunities);
