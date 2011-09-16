@@ -28,7 +28,9 @@ import com.google.gwt.widgetideas.client.SliderBar;
 @SuppressWarnings("deprecation")
 public class MapUI extends Composite {
 	
-	private static final String PROD_KEY = "ABQIAAAAwT0chPPVNt9m4ykQ56Lk_xS1P5v4n88zfZYJnTEZ_dPLix5TfBR1P8kUwcoPmL6pm-5RVHBIFC1-cA";
+	private static final String TEST_RAVI_KAWANAN_APPSPOT_KEY = 
+		"ABQIAAAAwT0chPPVNt9m4ykQ56Lk_xS1P5v4n88zfZYJnTEZ_dPLix5TfBR1P8kUwcoPmL6pm-5RVHBIFC1-cA";
+	private static final String KAWANAN_KEY = "ABQIAAAALzeF9m4Hkx6Z37BVvHWvxhTxjsHT9BqImXAXxpnCBoIw1Gf1ABTWIbbDusif-1jMhT5SvnYRpn42KQ";
 	private static final String DEV_KEY = "ABQIAAAAq8kb0Ptd3vgPpd-4SQhLnRRY5aJ8tdjYBCC6RMf4i7rOl0XHvhRIR_EydegFWQTAB50wMnBjiq9mqw";
 	Marker marker;
 	MapWidget map;
@@ -43,7 +45,7 @@ public class MapUI extends Composite {
 	 
 
 	public MapUI(boolean needSlider, TextArea locationDisplay) {
-		Maps.loadMapsApi(PROD_KEY, "2", false, new Runnable() {
+		Maps.loadMapsApi(DEV_KEY, "2", false, new Runnable() {
 			public void run() {
 				initMapUI();
 			}
