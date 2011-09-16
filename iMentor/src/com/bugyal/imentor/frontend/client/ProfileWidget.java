@@ -168,6 +168,11 @@ public class ProfileWidget extends Composite implements ClickHandler {
 					return;
 				} else {
 					tbName.setText(result.getName());
+					if ((result.getGender()).equals("M")) {
+						rbMale.setValue(true);
+					} else {
+						rbFemale.setValue(true);
+					}
 					tbEmailId.setText(result.getEmail());
 					tbLocation.setText(result.getLocationString());
 					for (String sub : result.getHasSubjects()) {
@@ -189,29 +194,26 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		if (event.getSource() == btnSave) {
 			lData = mapUI.getLocationDetails();
 			if (!(subWidgetHas.getSubjects().isEmpty() && subWidgetNeed
-					.getSubjects().isEmpty())
-					&& (tbLocation.getText() != null)) {
+					.getSubjects().isEmpty()) && (tbLocation.getText() != null)) {
 
 				ParticipantVO partVO = new ParticipantVO(id, tbName.getText(),
-						"M", tbEmailId.getText(), lData.getLatitude(), lData
-								.getLongitude(), tbLocation.getText(), lData
-								.getRadius(), subWidgetHas.getSubjects(),
+						"M", tbEmailId.getText(), lData.getLatitude(),
+						lData.getLongitude(), tbLocation.getText(),
+						lData.getRadius(), subWidgetHas.getSubjects(),
 						subWidgetNeed.getSubjects());
 				if (!status) {
 					service.create(partVO, new AsyncCallback<ParticipantVO>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							mainPage
-									.setErrorMessage("Unable to Create the Profile"
-											+ caught.getMessage());
+							mainPage.setErrorMessage("Unable to Create the Profile"
+									+ caught.getMessage());
 						}
 
 						@Override
 						public void onSuccess(ParticipantVO result) {
 							mainPage.getHeaderWidget().setNewUser(false);
-							mainPage
-									.setMessage("Profile created successfully ");
+							mainPage.setMessage("Profile created successfully ");
 							mainPage.showHomeWidget();
 						}
 					});
@@ -220,9 +222,8 @@ public class ProfileWidget extends Composite implements ClickHandler {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							mainPage
-									.setErrorMessage("Sorry, No changes has been made"
-											+ caught.getMessage());
+							mainPage.setErrorMessage("Sorry, No changes has been made"
+									+ caught.getMessage());
 						}
 
 						@Override

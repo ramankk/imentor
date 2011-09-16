@@ -513,13 +513,13 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	}
 
 	@Override
-	public boolean deleteOpportuniryFromParticipant(Key partcipantkey,
+	public boolean deleteOpportuniryFromParticipant(Key participantkey,
 			Key opportunitykey) {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		Transaction tx = pm.currentTransaction();
 		try{
 			tx.begin();
-			Participant p = pm.getObjectById(Participant.class, partcipantkey);
+			Participant p = pm.getObjectById(Participant.class, participantkey);
 			p.getCreatedOpportunities().remove(opportunitykey);
 			tx.commit();
 			return true;
@@ -529,5 +529,29 @@ public class ParticipantManagerImpl implements ParticipantManager {
 			}
 		}		
 		return false;
+	}
+	
+	@Override
+	public boolean saveOpportunityToParticipant(Key participantkey, Key opportunitykey, boolean isMentoring){
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		Transaction tx = pm.currentTransaction();
+		try{
+			tx.begin();
+			Participant p = pm.getObjectById(Participant.class, participantkey);
+			// identifying the opportunity whether it is CreatedOpportunity or MentoringOpportunity
+			if(isMentoring) {
+				p.addMentoringOpportunities(opportunitykey);
+			}
+			else {
+				p.addCreatedOpportuny(opportunitykey);
+			}
+			tx.commit();
+			return true;
+		}catch(Exception e){
+			if(tx.isActive()){
+				tx.rollback();
+			}
+		}		
+		return false;		
 	}
 }

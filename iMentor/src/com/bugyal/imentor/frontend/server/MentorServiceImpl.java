@@ -180,8 +180,8 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		if (oi != null) {
 			try {
 				participant.addCreatedOpportuny(oi.getKey());
-				pm.save(participant);
-			} catch (MentorException e) {
+				pm.saveOpportunityToParticipant(participant.getKey(), oi.getKey(), false); // here false is to indicate it is new opportunity
+			} catch (Exception e) {
 				e.printStackTrace();
 			}
 			return ValueObjectGenerator.create(oi);
@@ -658,7 +658,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		}
 		return ownersNames;
 	}
-
+	
 	@Override
 	public boolean addMentorToOpportunity(long id) {
 		Key opportunityKey = KeyFactory.createKey(Opportunity.class.getSimpleName(), id);
@@ -666,9 +666,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		try {
 			mentor = pm.findParticipantByEmail(getUserId());
 			if(om.addMentorToOpportunity(opportunityKey,mentor.getKey())){
-				mentor.addMentoringOpportunities(opportunityKey);
-				pm.save(mentor);
-				return true;
+				return pm.saveOpportunityToParticipant(mentor.getKey(), opportunityKey, true);				
 			}
 		} catch (MentorException e) {			
 			e.printStackTrace();

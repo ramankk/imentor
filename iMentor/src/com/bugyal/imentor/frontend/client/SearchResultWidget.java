@@ -18,7 +18,7 @@ public class SearchResultWidget extends Composite {
 	Label message = new Label();
 	Label distance = new Label();
 
-	Image pursueImage = new Image("images/magni.png");
+	Image pursueImage = new Image();
 	SearchResult searchResult = null;
 	FlexTable table = new FlexTable();
 	
@@ -26,7 +26,6 @@ public class SearchResultWidget extends Composite {
 	public SearchResultWidget(boolean isEven) {
 		table.setSize("700px", "34px");
 	
-		pursueImage.setSize("12px","12px");
 		DOM.setStyleAttribute(table.getElement(), "backgroundColor",
 				isEven ? colors[0] : colors[1]);
 
@@ -34,24 +33,8 @@ public class SearchResultWidget extends Composite {
 		table.getFlexCellFormatter().setColSpan(0, 0, 5);
 		table.setWidget(0, 6, distance);
 		table.setWidget(0, 7, pursueImage);
+		DOM.setStyleAttribute(pursueImage.getElement(), "cursor", "pointer");
 		pursueImage.addClickHandler(new ClickHandler(){
-
-			@Override
-			public void onClick(ClickEvent event) {
-				if(searchResult != null){
-//					ProfileInfo info = new ProfileInfo(searchResult);
-//					info.center();
-					ProfileInformation proInfo = new ProfileInformation(searchResult);
-					proInfo.center();
-				}
-				else{
-					Window.alert("Mentor not found");
-				}
-				
-			}
-			
-		});
-		/*pursueLink.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
 				if(searchResult == null) {
@@ -66,13 +49,16 @@ public class SearchResultWidget extends Composite {
 					info.center();
 				}
 			}
-		});*/
+		});		
 		initWidget(table);
 	}
 
 	public void setResult(SearchResult result) {
 		
 		searchResult = result;
+
+		pursueImage.setSize("15px","15px");
+		pursueImage.setUrl("images/arrow.jpg");
 		StringBuilder messageString = new StringBuilder();
 		if (result.isTypeParticipant()) {
 			table.setTitle(result.getP().getLocationString());

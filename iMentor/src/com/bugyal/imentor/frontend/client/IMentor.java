@@ -17,9 +17,8 @@ public class IMentor implements EntryPoint {
 	public static final String PATH = "Path";
 
 	public void onModuleLoad() {		
-		loadApp("teja.netapps@gmail.com", "Ravi Teja Karri","102365465975");
-	//	setShowTrigger(this);
-	//	setShowTrigger2(this);
+		setShowTrigger(this);
+		setShowTrigger2(this);
 		Anchor feedback = new Anchor("Feedback");
 		feedback.addClickHandler(new ClickHandler() {
 
