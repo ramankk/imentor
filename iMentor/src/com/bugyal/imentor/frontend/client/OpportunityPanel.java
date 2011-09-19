@@ -88,7 +88,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		service.getSubjects(getSubjectsCallback);
 
 		VerticalPanel subjectsVertical = new VerticalPanel();
-		subjectsVertical.add(new Label("Subjects"));
+		subjectsVertical.add(new Label("Subjects:"));
 		subjectsVertical.add(subWidget);
 
 		VerticalPanel messageVertical = new VerticalPanel();
@@ -103,6 +103,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 		locationVertical.add(tbLocation);
 		tbLocation.setSize("185px", "45px");
 		tbLocation.setText("Please, Use the Map");
+		tbLocation.setEnabled(false);
 
 		HorizontalPanel buttonPanel = new HorizontalPanel();
 

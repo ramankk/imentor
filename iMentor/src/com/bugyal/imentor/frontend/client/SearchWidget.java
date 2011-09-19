@@ -31,7 +31,7 @@ import com.google.gwt.user.client.ui.VerticalPanel;
 public class SearchWidget extends Composite implements ClickHandler,
 		ChangeHandler {
 	MapUI mapUI;
-	Button searchBtn;
+	Button searchBtn, clearBtn;
 	MentorServiceAsync service;
 	LocationData locationData;
 	TextArea location;
@@ -71,7 +71,7 @@ public class SearchWidget extends Composite implements ClickHandler,
 		subjectsVertical.add(new Label("Select Subjects"));
 		subjectsVertical.add(subjectsSuggestWidget);
 		
-		location = new TextArea();
+	
 		location.setText("Please, Use the Map");
 		location.setEnabled(false);
 		location.setSize("213px", "43px");
@@ -97,12 +97,18 @@ public class SearchWidget extends Composite implements ClickHandler,
 		dropdownHorizontal.add(new Label("Search By:"));
 		dropdownHorizontal.add(listBox);
 		
+		HorizontalPanel btnHP = new HorizontalPanel();
 		searchBtn = new Button("Search");
 		searchBtn.addClickHandler(this);
+		clearBtn = new Button("Clear");
+		clearBtn.addClickHandler(this);
+		
+		btnHP.add(clearBtn);
+		btnHP.add(searchBtn);
 		
 		searchVertical.add(dropdownHorizontal);
-		searchVertical.add(searchBtn);
-		searchVertical.setCellHorizontalAlignment(searchBtn, HasHorizontalAlignment.ALIGN_RIGHT);
+		searchVertical.add(btnHP);
+		searchVertical.setCellHorizontalAlignment(btnHP, HasHorizontalAlignment.ALIGN_RIGHT);
 		searchVertical.setHeight("80px");
 		
 		HorizontalPanel topHorizontal = new HorizontalPanel();
