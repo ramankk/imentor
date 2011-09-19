@@ -21,7 +21,7 @@ public class OpportunityInfo extends DialogBox implements ClickHandler{
 
 
 	VerticalPanel vp = new VerticalPanel();	
-	Button cancel, persue;
+	Button cancel, pursue;
 	MentorServiceAsync service;
 	SearchResult result = null;
 	FlexTable table=null;
@@ -86,17 +86,17 @@ public class OpportunityInfo extends DialogBox implements ClickHandler{
 		
 		vp.add(table);
 		cancel = new Button("Cancel");
-		persue = new Button("Persue");
+		pursue = new Button("Pursue");
 		HorizontalPanel hp = new HorizontalPanel();
 		hp.add(cancel);
-		hp.add(persue);
+		hp.add(pursue);
 		vp.add(hp);
 
 		vp.setSize("270px", "250px");
 		setWidget(vp);
 
 		cancel.addClickHandler(this);
-		persue.addClickHandler(this);	
+		pursue.addClickHandler(this);	
 	}
 
 	@Override
@@ -106,7 +106,7 @@ public class OpportunityInfo extends DialogBox implements ClickHandler{
 			this.hide();
 		}
 		
-		if (event.getSource() == persue) {
+		if (event.getSource() == pursue) {
 			AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
 				@Override
 				public void onFailure(Throwable caught) {

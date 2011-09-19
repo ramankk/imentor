@@ -13,7 +13,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 
 public class IMentor implements EntryPoint {
 
-	public static final boolean TEST_MODE_FLAG = true;
+	public static final boolean TEST_MODE_FLAG = false;
 	public static final String PATH = "Path";
 
 	public void onModuleLoad() {		

@@ -12,13 +12,14 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.FlexTable;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
 
 public class ProfileInfo extends DialogBox implements ClickHandler {
 	VerticalPanel vp = new VerticalPanel();	
-	Button cancel, persue;
+	Button cancel, pursue;
 	MentorServiceAsync service;
 	SearchResult result = null;
 	FlexTable table=null;
@@ -80,17 +81,17 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 		
 		vp.add(table);
 		cancel = new Button("Cancel");
-		persue = new Button("Persue");
+		pursue = new Button("Pursue");
 		HorizontalPanel hp = new HorizontalPanel();
 		hp.add(cancel);
-		hp.add(persue);
+		hp.add(pursue);
 		vp.add(hp);
 
-		vp.setSize("270px", "250px");
+		vp.setSize("300px", "250px");
 		setWidget(vp);
 
 		cancel.addClickHandler(this);
-		persue.addClickHandler(this);
+		pursue.addClickHandler(this);
 	}
 
 	@Override
@@ -100,7 +101,7 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 			this.hide();
 		}
 		
-		if (event.getSource() == persue) {
+		if (event.getSource() == pursue) {
 			AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
 				@Override
 				public void onFailure(Throwable caught) {
@@ -127,8 +128,10 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 	}
 	
 	void setData(int index, String field, String value) {
-			table.setWidget(index, 0, new Label(field + " : "));
-			table.setWidget(index, 1, new Label(value));
+			table.setWidget(index, 0, new HTML("<b>"+field+" </b>"));
+			table.getCellFormatter().setWidth(index, 0, "100px");
+		//	table.setWidget(index, 0, new Label(field + " : "));
+			table.setWidget(index, 1, new Label(": "+value));
 	}
 
 }

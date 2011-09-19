@@ -161,3 +161,11 @@ element.style {
 .feedback {
 	margin: -28px 0px 0px 320px;
 }
+
+.FlexTable-OddRow {
+  background-color: #F0FAFA;
+}
+
+.FlexTable-EvenRow {
+  background-color:  #FFFFFF;
+}
