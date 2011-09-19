@@ -33,6 +33,8 @@ public class SearchResultWidget extends Composite {
 		table.getFlexCellFormatter().setColSpan(0, 0, 5);
 		table.setWidget(0, 6, distance);
 		table.setWidget(0, 7, pursueImage);
+		table.getCellFormatter().setWidth(0, 6, "50px");
+		table.getCellFormatter().setWidth(0, 7, "15px");
 		DOM.setStyleAttribute(pursueImage.getElement(), "cursor", "pointer");
 		pursueImage.addClickHandler(new ClickHandler(){
 			@Override
@@ -41,7 +43,7 @@ public class SearchResultWidget extends Composite {
 					Window.alert("Something Wrong with ur Action");
 				}
 				if(searchResult.isTypeParticipant()){					
-					ProfileInformation info = new ProfileInformation(searchResult);
+					ProfileInfo info = new ProfileInfo(searchResult);
 					info.center();
 				}
 				else{

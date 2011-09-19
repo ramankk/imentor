@@ -176,6 +176,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 					}
 					tbEmailId.setText(result.getEmail());
 					tbLocation.setText(result.getLocationString());
+					mapUI.setMarkerLocation(result.getLatitude(), result.getLongitude());
 					for (String sub : result.getHasSubjects()) {
 						subWidgetHas.add(sub);
 					}

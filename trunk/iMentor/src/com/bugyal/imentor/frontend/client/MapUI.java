@@ -228,7 +228,7 @@ public class MapUI extends Composite {
 		LocationData ldata = new LocationData();
 	//	ldata.
 		LatLng ll =  LatLng.newInstance(lat, lng);
-		map.setCenter(ll, 12);
+		map.setCenter(ll, 9);
 		marker.setLatLng(ll);
 		
 	}
