@@ -41,7 +41,7 @@ public class SearchResultWidget extends Composite {
 					Window.alert("Something Wrong with ur Action");
 				}
 				if(searchResult.isTypeParticipant()){					
-					ProfileInfo info = new ProfileInfo(searchResult);
+					ProfileInformation info = new ProfileInformation(searchResult);
 					info.center();
 				}
 				else{
@@ -58,7 +58,7 @@ public class SearchResultWidget extends Composite {
 		searchResult = result;
 
 		pursueImage.setSize("15px","15px");
-		pursueImage.setUrl("images/arrow.jpg");
+		pursueImage.setUrl("images/magni.png");
 		StringBuilder messageString = new StringBuilder();
 		if (result.isTypeParticipant()) {
 			table.setTitle(result.getP().getLocationString());
