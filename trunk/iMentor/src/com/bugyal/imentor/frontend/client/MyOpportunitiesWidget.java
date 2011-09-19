@@ -12,7 +12,6 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
-import com.ibm.icu.text.DateFormat;
 
 public class MyOpportunitiesWidget extends Composite {
 	OpportunityPanel parent;
@@ -62,8 +61,10 @@ public class MyOpportunitiesWidget extends Composite {
 			remove.setStyleName("removeSubjectCSS");
 
 			scroller.setWidget(i, 0, getOpportunityVP(oppList.get(i), parent));
+			scroller.getCellFormatter().setWidth(i, 0, "700px");
 			scroller.setWidget(i, 1, edit);
 			scroller.setWidget(i, 2, remove);
+			
 		}
 	}
 
