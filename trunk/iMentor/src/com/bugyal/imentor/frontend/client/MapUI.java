@@ -67,11 +67,11 @@ public class MapUI extends Composite {
 			if(partType==0){
 				partSubjects="Subjects: ";
 				getPartSubjects(p.getNeedSubjects());
-				partMarker.setImage("http://cycling-team.info/GreenDotMedia/2008/Pics/GreenDot.png");
+				partMarker.setImage("images/marker1.png");
 			}else if(partType==1){
 				partSubjects="Subjects: ";
 				getPartSubjects(p.getHasSubjects());
-				partMarker.setImage("http://designblog.rietveldacademie.nl//wp-content/uploads/2009/11/gul_cirkel.png");
+				partMarker.setImage("images/marker.png");
 			}
 			else{
 				partSubjects="Need Subjects: ";
