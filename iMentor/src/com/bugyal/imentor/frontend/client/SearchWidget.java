@@ -90,7 +90,7 @@ public class SearchWidget extends Composite implements ClickHandler,
 		listBox.setTitle("Filters the results based on the option Selected");
 		listBox.addItem("All");
 		listBox.addItem("Mentors");
-		listBox.addItem("Mentee/opp");
+		listBox.addItem("Mentees");
 		HorizontalPanel dropdownHorizontal = new HorizontalPanel();
 		dropdownHorizontal.add(new Label("Search By:"));
 		dropdownHorizontal.add(listBox);

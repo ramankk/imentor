@@ -57,13 +57,13 @@ public class ToMeWidget extends Composite {
 
 		initWidget(tabPanel);
 
-		showWaitCursor();
+		
 		// getDataFeeds();
 	}
 
 	// Method to Get data from DataStore
 	public void getDataFeeds() {
-
+		showWaitCursor();
 		service.feedToMe(new AsyncCallback<SearchResponse>() {
 			@Override
 			public void onFailure(Throwable caught) {

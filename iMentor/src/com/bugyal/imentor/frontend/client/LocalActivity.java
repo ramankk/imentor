@@ -42,11 +42,12 @@ public class LocalActivity extends Composite {
 		vp.add(tabPanel);
 
 		initWidget(vp);
-		showWaitCursor();
+		
 		// getDataFeeds();
 	}
 
 	public void getDataFeeds() {
+		showWaitCursor();
 		service.localActivity(new AsyncCallback<SearchResponse>() {
 
 			@Override
