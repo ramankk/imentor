@@ -182,15 +182,26 @@ public class SearchWidget extends Composite implements ClickHandler,
 	}
 
 	protected void showSearchResults(SearchResponse response) {
-		List<ParticipantVO> pList = new ArrayList<ParticipantVO>();
-		searchResultsWidget.setResults(response.getAllResults());
-
-		for (SearchResult p : response.getHas()) {
-			pList.add(p.getP());
-		}
+		int type = listBox.getSelectedIndex();
 		showDefaultCursor();
-		listBox.setSelectedIndex(0);
-		mapUI.addPartMarkers(1, pList);
+		
+		switch(type){
+		case 0:
+			searchResultsWidget.setResults(response.getAllResults());
+			mapUI.addPartMarkers(type, response.getAllResults());
+			break;
+		case 1:
+			searchResultsWidget.setResults(response.getHas());
+			mapUI.addPartMarkers(type, response.getHas());
+			break;
+		case 2:
+			searchResultsWidget.setResults(response.getNeed());
+			mapUI.addPartMarkers(type, response.getNeed());
+			break;
+		default:
+			break;
+		}
+				
 	}
 
 	private void showDefaultCursor() {

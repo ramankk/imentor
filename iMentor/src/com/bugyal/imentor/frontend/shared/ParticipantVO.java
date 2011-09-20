@@ -142,4 +142,32 @@ public class ParticipantVO implements Serializable {
 	public String getGender() {
 		return gender;
 	}	
+	
+	public String getHasSubjectsAsString() {
+		StringBuilder subs = new StringBuilder();
+		boolean first = true;
+		for (String subject : getHasSubjects()) {
+			if (first) {
+				first = false;
+			} else {
+				subs.append(", ");
+			}
+			subs.append(subject);
+		}
+		return subs.toString();
+	}
+	
+	public String getNeedSubjectsAsString() {
+		StringBuilder subs = new StringBuilder();
+		boolean first = true;
+		for (String subject : getNeedSubjects()) {
+			if (first) {
+				first = false;
+			} else {
+				subs.append(", ");
+			}
+			subs.append(subject);
+		}
+		return subs.toString();
+	}
 }

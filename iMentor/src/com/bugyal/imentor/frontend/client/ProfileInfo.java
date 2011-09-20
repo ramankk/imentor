@@ -36,17 +36,8 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 			setData(1, "Gender", results.getP().getGender());
 			setData(2, "Email Id", results.getP().getEmail());
 			setData(3, "Location", results.getP().getLocationString());
-			StringBuilder haslist = new StringBuilder();
-			for(String s: results.getP().getHasSubjects() ) {
-				haslist.append("  " + s);
-			}
-			setData(4, "Has Subjects", haslist.toString());
-			
-			StringBuilder needlist = new StringBuilder();
-			for(String s: results.getP().getNeedSubjects() ) {
-				needlist.append("  " + s);
-			}
-			setData(5, "Need Subjects", needlist.toString());
+			setData(4, "Has Subjects", results.getP().getHasSubjectsAsString());
+			setData(5, "Need Subjects", results.getP().getNeedSubjectsAsString());
 			
 			AsyncCallback<List<MentorsResult>> callback1 = new AsyncCallback<List<MentorsResult>>() {
 
@@ -62,13 +53,24 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 					if(result.size() != 0) {
 						StringBuilder mentorlist = new StringBuilder();
 						StringBuilder menteelist = new StringBuilder();
-						
+						boolean firstMentor = true;
+						boolean firstMentee = true;
 						for(MentorsResult s: result) {
 							if(s.isMentor()){
-								mentorlist.append("  " + s.getName());
+								if (firstMentor) {
+									firstMentor = false;
+								} else {
+									mentorlist.append(", ");
+								}
+								mentorlist.append(s.getName());
 							}
 							else{
-								menteelist.append(" " + s.getName());
+								if (firstMentee) {
+									firstMentee = false;
+								} else {
+									menteelist.append(", ");
+								}
+								menteelist.append( s.getName());
 							}
 						}
 						setData(6, "Mentors List ", mentorlist.toString());
