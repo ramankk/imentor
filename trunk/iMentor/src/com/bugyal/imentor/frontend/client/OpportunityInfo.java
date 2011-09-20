@@ -47,10 +47,16 @@ public class OpportunityInfo extends DialogBox implements ClickHandler{
 				@Override
 				public void onSuccess(List<MentorsResult> result) {					
 					if(result.size() != 0) {
-						StringBuilder ownerslist = new StringBuilder();						
+						StringBuilder ownerslist = new StringBuilder();	
+						boolean first = true;
 						for(MentorsResult s: result) {
 							if(!s.isMentor()) {
-								ownerslist.append("   " + s.getName());
+								if (first) {
+									first = false;
+								} else {
+									ownerslist.append(", ");
+								}
+								ownerslist.append(s.getName());
 							}
 						}
 						setData(3, "Owners", ownerslist.toString());						

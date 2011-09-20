@@ -2,7 +2,7 @@ package com.bugyal.imentor.frontend.client;
 
 import java.util.List;
 
-import com.bugyal.imentor.frontend.shared.ParticipantVO;
+import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.maps.client.InfoWindow;
 import com.google.gwt.maps.client.InfoWindowContent;
@@ -18,6 +18,7 @@ import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.geom.LatLngBounds;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.Polygon;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.TextArea;
@@ -27,7 +28,7 @@ import com.google.gwt.widgetideas.client.SliderBar;
 
 @SuppressWarnings("deprecation")
 public class MapUI extends Composite {
-	
+
 	private static final String TEST_RAVI_KAWANAN_APPSPOT_KEY = "ABQIAAAALzeF9m4Hkx6Z37BVvHWvxhShoPpDNRXYgkj2XkGsfA3OCpQSpBR6ojdq8bueS3AunWouo4SxLrUkkQ";
 	private static final String KAWANAN_KEY = "ABQIAAAALzeF9m4Hkx6Z37BVvHWvxhTxjsHT9BqImXAXxpnCBoIw1Gf1ABTWIbbDusif-1jMhT5SvnYRpn42KQ";
 	private static final String DEV_KEY = "ABQIAAAAq8kb0Ptd3vgPpd-4SQhLnRRY5aJ8tdjYBCC6RMf4i7rOl0XHvhRIR_EydegFWQTAB50wMnBjiq9mqw";
@@ -36,55 +37,82 @@ public class MapUI extends Composite {
 	private Polygon oldCircle;
 	private SliderBar slider = new SliderBar(0.0, 200.0);
 	private VerticalPanel panel = new VerticalPanel();
-	private String partSubjects="";
+//	private String partSubjects = "";
 	LocationData lData = new LocationData();
 
-	 private boolean needSlider;
-	 private final TextArea locationDisplay;
-	 
+	private boolean needSlider;
+	private final TextArea locationDisplay;
 
 	public MapUI(boolean needSlider, TextArea locationDisplay) {
-		Maps.loadMapsApi(TEST_RAVI_KAWANAN_APPSPOT_KEY, "2", false, new Runnable() {
-			public void run() {
-				initMapUI();
-			}
-		});
+		Maps.loadMapsApi(TEST_RAVI_KAWANAN_APPSPOT_KEY, "2", false,
+				new Runnable() {
+					public void run() {
+						initMapUI();
+					}
+				});
 		this.needSlider = needSlider;
 		this.locationDisplay = locationDisplay;
 		initWidget(panel);
 	}
 
-	public void addPartMarkers(int partType, List<ParticipantVO> participants) {
+	public void addPartMarkers(int index, List<SearchResult> response) {
 		LatLng searchLL = marker.getLatLng();
 		map.clearOverlays();
-		for(final ParticipantVO p : participants){
-			LatLng ll = LatLng.newInstance(p.getLatitude(), p.getLongitude());
+		for (final SearchResult record : response) {
+			
+			LatLng ll = LatLng.newInstance(record.getLatitude(),
+					record.getLongitude());
 			Marker partMarker = new Marker(ll);
 			map.addOverlay(partMarker);
 			partMarker.setDraggingEnabled(false);
-			//TODO(ravi): change image before submiting
-			partSubjects="";
-			if(partType==0){
-				partSubjects="Subjects: ";
-				getPartSubjects(p.getNeedSubjects());
-				partMarker.setImage("images/marker1.png");
-			}else if(partType==1){
-				partSubjects="Subjects: ";
-				getPartSubjects(p.getHasSubjects());
+			
+			StringBuilder partSubjects = new StringBuilder();
+			
+			switch (index) {
+			case 0:
+				if (record.isTypeParticipant()) {
+					partSubjects.append(record.getP().getName());
+					partSubjects.append("<br /> Needs : ");
+					partSubjects.append(record.getP().getNeedSubjectsAsString());
+					partSubjects.append("<br /> And He has : ");
+					partSubjects.append(record.getP().getHasSubjectsAsString());
+				} else {
+					partSubjects.append(record.getO().getLocString());
+					partSubjects.append("<br /> Opportunity Needs : ");
+					partSubjects.append(record.getO().getSubjectsAsString());
+				}
 				partMarker.setImage("images/marker.png");
+				break;
+
+			case 1:
+				partSubjects.append(record.getP().getName());
+				partSubjects.append("<br /> Has : ");
+				partSubjects.append(record.getP().getHasSubjectsAsString());
+				partMarker.setImage("images/marker1.png");
+				break;
+				
+			case 2:
+				if (record.isTypeParticipant()) {
+					partSubjects.append(record.getP().getName());
+					partSubjects.append(" Needs : ");
+					partSubjects.append(record.getP().getNeedSubjectsAsString());
+				} else {
+					partSubjects.append(record.getO().getLocString());
+					partSubjects.append(" Opportunity Needs : ");
+					partSubjects.append(record.getO().getSubjectsAsString());
+				}
+				partMarker.setImage("images/marker.png");
+				break;
+				
+			default:
+				Window.alert("Somethig Wrong with you selection");
 			}
-			else{
-				partSubjects="Need Subjects: ";
-				getPartSubjects(p.getNeedSubjects());
-				partSubjects+=" HasSubjects: ";
-				getPartSubjects(p.getHasSubjects());
-			}
-			partMarker.addMarkerMouseOverHandler(new MarkerMouseOverHandler()
-			{
+			final String temp= partSubjects.toString();
+			partMarker.addMarkerMouseOverHandler(new MarkerMouseOverHandler() {
 
 				@Override
 				public void onMouseOver(MarkerMouseOverEvent event) {
-					InfoWindowContent iwc = new InfoWindowContent("Name : "+p.getName()+"\n"+partSubjects);			
+					InfoWindowContent iwc = new InfoWindowContent(temp);
 					InfoWindow info = map.getInfoWindow();
 					info.open(event.getSender(), iwc);
 				}
@@ -94,14 +122,9 @@ public class MapUI extends Composite {
 		map.addOverlay(searchMarker);
 	}
 
-	private void getPartSubjects(List<String> hasSubjects) {
-		// TODO Auto-generated method stub
-		
-	}
-
 	public void initMapUI() {
 		map = new MapWidget();
-		map.setSize("700px","600px");
+		map.setSize("700px", "600px");
 
 		map.setCenter(LatLng.newInstance(17.45, 78.39, true), 4);
 		marker = new Marker(LatLng.newInstance(17.45, 78.39, true));
@@ -113,7 +136,7 @@ public class MapUI extends Composite {
 		marker.setDraggingEnabled(true);
 
 		if (needSlider) {
-		  addMouseOverHandler();
+			addMouseOverHandler();
 		}
 		map.addMapClickHandler(new MapClickHandler() {
 
@@ -142,8 +165,8 @@ public class MapUI extends Composite {
 				slider.setNumTicks(20);
 				slider.setNumLabels(5);
 				slider.setSize("300px", "50px");
-				drawCircleFromRadius(marker.getLatLng(), slider
-						.getCurrentValue() * 1000, 30);
+				drawCircleFromRadius(marker.getLatLng(),
+						slider.getCurrentValue() * 1000, 30);
 
 				slider.addChangeListener(new ChangeListener() {
 
@@ -153,8 +176,8 @@ public class MapUI extends Composite {
 						if (oldCircle != null) {
 							map.removeOverlay(oldCircle);
 						}
-						drawCircleFromRadius(marker.getLatLng(), sb
-								.getCurrentValue() * 1000, 30);
+						drawCircleFromRadius(marker.getLatLng(),
+								sb.getCurrentValue() * 1000, 30);
 						map.addOverlay(oldCircle);
 
 						lData.setRadius((int) slider.getCurrentValue() * 1000);
@@ -189,8 +212,8 @@ public class MapUI extends Composite {
 			double lng2 = lng1
 					+ Math.atan2(Math.sin(tc) * Math.sin(d) * Math.cos(lat1),
 							Math.cos(d) - Math.sin(lat1) * Math.sin(lat2));
-			LatLng point = LatLng.newInstance(Math.toDegrees(lat2), Math
-					.toDegrees(lng2));
+			LatLng point = LatLng.newInstance(Math.toDegrees(lat2),
+					Math.toDegrees(lng2));
 			circlePoints[i] = point;
 			bounds.extend(point);
 			a += step;
@@ -219,17 +242,17 @@ public class MapUI extends Composite {
 
 		});
 	}
-	
-	public LocationData getLocationDetails(){
+
+	public LocationData getLocationDetails() {
 		return lData;
 	}
-	
-	public void setMarkerLocation(double lat, double lng){
+
+	public void setMarkerLocation(double lat, double lng) {
 		LocationData ldata = new LocationData();
-	//	ldata.
-		LatLng ll =  LatLng.newInstance(lat, lng);
+		// ldata.
+		LatLng ll = LatLng.newInstance(lat, lng);
 		map.setCenter(ll, 9);
 		marker.setLatLng(ll);
-		
+
 	}
 }
