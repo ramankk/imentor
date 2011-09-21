@@ -37,7 +37,7 @@ public class MapUI extends Composite {
 	private Polygon oldCircle;
 	private SliderBar slider = new SliderBar(0.0, 200.0);
 	private VerticalPanel panel = new VerticalPanel();
-//	private String partSubjects = "";
+	// private String partSubjects = "";
 	LocationData lData = new LocationData();
 
 	private boolean needSlider;
@@ -59,21 +59,22 @@ public class MapUI extends Composite {
 		LatLng searchLL = marker.getLatLng();
 		map.clearOverlays();
 		for (final SearchResult record : response) {
-			
+
 			LatLng ll = LatLng.newInstance(record.getLatitude(),
 					record.getLongitude());
 			Marker partMarker = new Marker(ll);
 			map.addOverlay(partMarker);
 			partMarker.setDraggingEnabled(false);
-			
+
 			StringBuilder partSubjects = new StringBuilder();
-			
+
 			switch (index) {
 			case 0:
 				if (record.isTypeParticipant()) {
 					partSubjects.append(record.getP().getName());
 					partSubjects.append("<br /> Needs : ");
-					partSubjects.append(record.getP().getNeedSubjectsAsString());
+					partSubjects
+							.append(record.getP().getNeedSubjectsAsString());
 					partSubjects.append("<br /> And He has : ");
 					partSubjects.append(record.getP().getHasSubjectsAsString());
 				} else {
@@ -90,12 +91,13 @@ public class MapUI extends Composite {
 				partSubjects.append(record.getP().getHasSubjectsAsString());
 				partMarker.setImage("images/marker1.png");
 				break;
-				
+
 			case 2:
 				if (record.isTypeParticipant()) {
 					partSubjects.append(record.getP().getName());
 					partSubjects.append(" Needs : ");
-					partSubjects.append(record.getP().getNeedSubjectsAsString());
+					partSubjects
+							.append(record.getP().getNeedSubjectsAsString());
 				} else {
 					partSubjects.append(record.getO().getLocString());
 					partSubjects.append(" Opportunity Needs : ");
@@ -103,11 +105,11 @@ public class MapUI extends Composite {
 				}
 				partMarker.setImage("images/marker.png");
 				break;
-				
+
 			default:
 				Window.alert("Somethig Wrong with you selection");
 			}
-			final String temp= partSubjects.toString();
+			final String temp = partSubjects.toString();
 			partMarker.addMarkerMouseOverHandler(new MarkerMouseOverHandler() {
 
 				@Override
@@ -254,5 +256,17 @@ public class MapUI extends Composite {
 		map.setCenter(ll, 9);
 		marker.setLatLng(ll);
 
+	}
+
+	public int getZoomLevel() {
+		return map.getZoomLevel();
+	}
+
+	public void setZoomLevel(int level) {
+		map.setZoomLevel(level);
+	}
+
+	public void clear() {
+		map.clearOverlays();
 	}
 }
