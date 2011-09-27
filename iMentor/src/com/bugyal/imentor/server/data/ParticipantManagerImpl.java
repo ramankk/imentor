@@ -135,11 +135,14 @@ public class ParticipantManagerImpl implements ParticipantManager {
 	public Participant findParticipantByEmail(String email)
 			throws MentorException {
 		long t = System.currentTimeMillis();
-
-		Participant participant = cache.get(email);
+/*		From Sundeep:  Am not sure whether Cache is working as we need.
+		I am removing this code to load updated results when user edits his/her profile info
+		and to reload the home page's data with new profile values*/
+		
+/*		Participant participant = cache.get(email);
 		if (participant != null && isModified == false) {
 			return participant;
-		}
+		}*/
 
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 
@@ -153,6 +156,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 			for (Participant p : results) {
 				System.out.println("Returning .. " + p.getName());
 				System.out.println("Location : " + p.getLocation());
+				
 			}
 			q.closeAll();
 		} finally {
@@ -167,7 +171,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 							+ email);
 		}
 		isModified = false; // For LRUCache
-		cache.put(email, results.get(0));
+//		cache.put(email, results.get(0));
 		findParticipantByEmailTimeState.inc(System.currentTimeMillis() - t);
 		return results.get(0);
 	}
@@ -223,9 +227,10 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		try {
 			pm.makePersistentAll(participants);
 		} finally {
+			isModified = true;
 			pm.close();
 		}
-		isModified = true; // to reload the record in LRUCache
+		 // to reload the record in LRUCache
 		saveParticipantTimeState.inc(System.currentTimeMillis() - t);
 	}
 

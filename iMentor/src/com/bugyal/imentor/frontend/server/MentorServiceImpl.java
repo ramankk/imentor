@@ -30,7 +30,6 @@ import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
 import com.google.appengine.api.quota.QuotaService;
 import com.google.appengine.api.quota.QuotaServiceFactory;
-import com.google.appengine.repackaged.org.apache.commons.logging.Log;
 import com.google.gwt.user.server.rpc.RemoteServiceServlet;
 
 /**
@@ -132,7 +131,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	private void clearSubjects(Participant pi) throws MentorException {
 		// TODO(sridhar,raman): resolve it.
 		pi.clearSubjects();
-		pm.save(pi);
+		//pm.save(pi);
 	}
 
 	private void save(Opportunity oi, OpportunityVO o) throws MentorException {
