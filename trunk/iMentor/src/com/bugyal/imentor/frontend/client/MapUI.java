@@ -10,6 +10,7 @@ import com.google.gwt.maps.client.MapUIOptions;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.event.MapClickHandler;
+import com.google.gwt.maps.client.event.MapZoomEndHandler;
 import com.google.gwt.maps.client.event.MarkerMouseOverHandler;
 import com.google.gwt.maps.client.geocode.Geocoder;
 import com.google.gwt.maps.client.geocode.LocationCallback;
@@ -144,10 +145,8 @@ public class MapUI extends Composite {
 
 			@Override
 			public void onClick(MapClickEvent event) {
-				if (event != null && event.getLatLng() != null
-						&& marker != null) {
-					marker.setLatLng(event.getLatLng());
-				}
+
+				marker.setLatLng(event.getLatLng());
 				getAddress(event.getLatLng());
 				lData.setLatitude(marker.getLatLng().getLatitude());
 				lData.setLongitude(marker.getLatLng().getLongitude());
@@ -248,34 +247,61 @@ public class MapUI extends Composite {
 	public LocationData getLocationDetails() {
 		return lData;
 	}
-
 	public void setMarkerLocation(double lat, double lng, int radius) {
-		
-		lData.setLatitude(lat);
-		lData.setLongitude(lng);
-		lData.setRadius(radius);
-		// ldata.
 		LatLng ll = LatLng.newInstance(lat, lng);
-	//	drawCircleFromRadius(ll, radius, 30);
-	//	map.addOverlay(oldCircle);
 		map.setCenter(ll, 9);
 		marker.setLatLng(ll);
-
 	}
 
-	public int getZoomLevel() {
-		return map.getZoomLevel();
-	}
-
-	public void setZoomLevel(int level) {
-		map.setZoomLevel(level);
+	public void setZoomLevel(int km) {
+		Window.alert(getZoomLevelByKM(km)+"");
+		map.setZoomLevel(getZoomLevelByKM(km));
 	}
 
 	public void clear() {
 		map.clearOverlays();
+		marker = new Marker(LatLng.newInstance(lData.getLatitude(), lData.getLongitude(), true));
+		map.addOverlay(marker);
 	}
 	
 	public void setLocationDetails(LocationData lData){
 		this.lData = lData;
+	}
+	
+	public int getZoomLevelByKM(int km){
+		if(km < 0.3)
+			return 17;
+		if(km < 0.8)
+			return 16;
+		if(km < 1.6)
+			return 15;
+		if(km < 3.2)
+			return 14;
+		if(km < 4.8)
+			return 13;
+		if(km < 11)
+			return 12;
+		if(km < 24)
+			return 11;
+		if(km < 48)
+			return 10;
+		if(km < 96)
+			return 9;
+		if(km < 192)
+			return 8;
+		if(km < 384)
+			return 7;
+		if(km < 768)
+			return 6;
+		if(km < 1536)
+			return 5;
+		if(km < 3072)
+			return 4;
+		if(km < 6144)
+			return 3;
+		if(km < 12288)
+			return 2;
+		else return 9;
+		
 	}
 }
