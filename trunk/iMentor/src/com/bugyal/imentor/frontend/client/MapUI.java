@@ -22,6 +22,7 @@ import com.google.gwt.maps.client.overlay.Polygon;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
@@ -61,8 +62,8 @@ public class MapUI extends Composite {
 		map.clearOverlays();
 		for (final SearchResult record : response) {
 
-			LatLng ll = LatLng.newInstance(record.getLatitude(),
-					record.getLongitude());
+			LatLng ll = LatLng.newInstance(record.getLatitude(), record
+					.getLongitude());
 			Marker partMarker = new Marker(ll);
 			map.addOverlay(partMarker);
 			partMarker.setDraggingEnabled(false);
@@ -78,6 +79,10 @@ public class MapUI extends Composite {
 							.append(record.getP().getNeedSubjectsAsString());
 					partSubjects.append("<br /> And He has : ");
 					partSubjects.append(record.getP().getHasSubjectsAsString());
+					partSubjects.append("<br /> more...");
+					Image image = new Image("images/magni.png");
+					image.setPixelSize(15, 15);
+					partSubjects.append(image);
 				} else {
 					partSubjects.append(record.getO().getLocString());
 					partSubjects.append("<br /> Opportunity Needs : ");
@@ -166,8 +171,8 @@ public class MapUI extends Composite {
 				slider.setNumTicks(20);
 				slider.setNumLabels(5);
 				slider.setSize("300px", "50px");
-				drawCircleFromRadius(marker.getLatLng(),
-						slider.getCurrentValue() * 1000, 30);
+				drawCircleFromRadius(marker.getLatLng(), slider
+						.getCurrentValue() * 1000, 30);
 
 				slider.addChangeListener(new ChangeListener() {
 
@@ -177,8 +182,8 @@ public class MapUI extends Composite {
 						if (oldCircle != null) {
 							map.removeOverlay(oldCircle);
 						}
-						drawCircleFromRadius(marker.getLatLng(),
-								sb.getCurrentValue() * 1000, 30);
+						drawCircleFromRadius(marker.getLatLng(), sb
+								.getCurrentValue() * 1000, 30);
 						map.addOverlay(oldCircle);
 
 						lData.setRadius((int) slider.getCurrentValue() * 1000);
@@ -213,8 +218,8 @@ public class MapUI extends Composite {
 			double lng2 = lng1
 					+ Math.atan2(Math.sin(tc) * Math.sin(d) * Math.cos(lat1),
 							Math.cos(d) - Math.sin(lat1) * Math.sin(lat2));
-			LatLng point = LatLng.newInstance(Math.toDegrees(lat2),
-					Math.toDegrees(lng2));
+			LatLng point = LatLng.newInstance(Math.toDegrees(lat2), Math
+					.toDegrees(lng2));
 			circlePoints[i] = point;
 			bounds.extend(point);
 			a += step;
@@ -248,13 +253,16 @@ public class MapUI extends Composite {
 		return lData;
 	}
 	public void setMarkerLocation(double lat, double lng, int radius) {
+		lData.setLatitude(lat);
+		lData.setLongitude(lng);
+		lData.setRadius(radius);
+
 		LatLng ll = LatLng.newInstance(lat, lng);
 		map.setCenter(ll, 9);
 		marker.setLatLng(ll);
 	}
 
-	public void setZoomLevel(int km) {
-		Window.alert(getZoomLevelByKM(km)+"");
+	public void setZoomLevelToKm(int km) {
 		map.setZoomLevel(getZoomLevelByKM(km));
 	}
 
@@ -263,8 +271,8 @@ public class MapUI extends Composite {
 		marker = new Marker(LatLng.newInstance(lData.getLatitude(), lData.getLongitude(), true));
 		map.addOverlay(marker);
 	}
-	
-	public void setLocationDetails(LocationData lData){
+
+	public void setLocationDetails(LocationData lData) {
 		this.lData = lData;
 	}
 	

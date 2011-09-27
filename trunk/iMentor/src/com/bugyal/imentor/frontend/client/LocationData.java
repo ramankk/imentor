@@ -51,7 +51,4 @@ public class LocationData {
 		this.longitude = longitude;
 	}
 
-	public LocationData getLocationData() {
-		return new LocationData(location, latitude, longitude, radius);
-	}
 }

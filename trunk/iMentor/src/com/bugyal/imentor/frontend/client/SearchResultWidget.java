@@ -83,7 +83,7 @@ public class SearchResultWidget extends Composite {
 		messageString.append("] ");
 		message.setText(messageString.toString());
 
-		distance.setText(result.getDistance());
+		distance.setText(result.getDistanceString());
 	}
 
 	public void clear() {

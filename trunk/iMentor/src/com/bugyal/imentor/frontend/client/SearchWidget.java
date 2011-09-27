@@ -1,7 +1,6 @@
 package com.bugyal.imentor.frontend.client;
 
 import java.util.ArrayList;
-
 import java.util.List;
 
 import com.bugyal.imentor.frontend.shared.SearchResponse;
@@ -157,9 +156,9 @@ public class SearchWidget extends Composite implements ClickHandler,
 				location.setText("");// get from logged in user TODO Sundeep
 			}
 
-			service.filterList(locationData.getLatitude(),
-					locationData.getLongitude(), location.getText(),
-					locationData.getRadius(), hasSubs, needSubs,
+			service.filterList(locationData.getLatitude(), locationData
+					.getLongitude(), location.getText(), locationData
+					.getRadius(), hasSubs, needSubs,
 					new AsyncCallback<SearchResponse>() {
 
 						@Override
@@ -172,7 +171,9 @@ public class SearchWidget extends Composite implements ClickHandler,
 						public void onSuccess(SearchResponse result) {
 							sResponse = result;
 							showSearchResults(sResponse);
-							mapUI.setZoomLevel(mapUI.getZoomLevel());
+							int size = sResponse.getAllResults().size();
+							int km = sResponse.getAllResults().get(size-1).getDistanceInKm();
+							mapUI.setZoomLevelToKm(km);
 						}
 
 					});
@@ -223,8 +224,8 @@ public class SearchWidget extends Composite implements ClickHandler,
 		location.setText("Please, Use the Map");
 		listBox.setSelectedIndex(0);
 		mapUI.clear();
-		mapUI = new MapUI(false, location); 
-		
+		mapUI = new MapUI(false, location);
+
 	}
 
 }

@@ -10,8 +10,7 @@ public class SearchResult implements IsSerializable, Comparable<SearchResult> {
 	private boolean has;
 	private ParticipantVO p;
 	private OpportunityVO o;
-
-	private String distance;
+	private double distance;
 	private List<String> subjects;
 	
 	// TODO(Raman, Sridhar): This is temporary, should Ideally use an Enum.
@@ -26,7 +25,7 @@ public class SearchResult implements IsSerializable, Comparable<SearchResult> {
 		isTypeParticipant = true;
 		this.p = p;
 		this.has = has;
-		this.distance = getDistanceString(distance);
+		this.distance = distance;
 		// AppEngine array list = normal array list..
 		this.subjects = appEngineListToSimpleList(subjects);
 	}
@@ -44,7 +43,7 @@ public class SearchResult implements IsSerializable, Comparable<SearchResult> {
 		this.isTypeParticipant = false;
 		// AppEngine array list = normal array list..
 		this.subjects = appEngineListToSimpleList(subjects);
-		this.distance = getDistanceString(distance);
+		this.distance = distance;
 	}
 
 	public boolean isHas() {
@@ -83,12 +82,12 @@ public class SearchResult implements IsSerializable, Comparable<SearchResult> {
 		}
 	}
 	
-	public String getDistance() {
+	public double getDistance() {
 		return distance;
 	}
 	
-	public String getDistanceString(double distanceInMtrs) {
-		int dist = (int) distanceInMtrs;
+	public String getDistanceString() {
+		int dist = (int) distance;
 		if (dist < 1000) {
 			return dist + " meters";
 		} else {
@@ -115,5 +114,9 @@ public class SearchResult implements IsSerializable, Comparable<SearchResult> {
 		} else {
 			return 0;
 		}
+	}
+
+	public int getDistanceInKm() {
+		return (int) distance / 1000;
 	}
 }
