@@ -168,6 +168,11 @@ public class ProfileWidget extends Composite implements ClickHandler {
 					status = false;
 					return;
 				} else {
+					lData.setLatitude(result.getLatitude());
+					lData.setLongitude(result.getLongitude());
+					lData.setLocation(result.getLocationString());
+					lData.setRadius(result.getRadius());
+					mapUI.setLocationDetails(lData);
 					tbName.setText(result.getName());
 					if ((result.getGender()).equals("M")) {
 						rbMale.setValue(true);
@@ -176,7 +181,8 @@ public class ProfileWidget extends Composite implements ClickHandler {
 					}
 					tbEmailId.setText(result.getEmail());
 					tbLocation.setText(result.getLocationString());
-					mapUI.setMarkerLocation(result.getLatitude(), result.getLongitude());
+					mapUI.setMarkerLocation(result.getLatitude(), result.getLongitude(), result.getRadius());
+					
 					for (String sub : result.getHasSubjects()) {
 						subWidgetHas.add(sub);
 					}

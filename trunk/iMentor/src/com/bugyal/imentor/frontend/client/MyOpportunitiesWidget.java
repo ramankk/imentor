@@ -8,6 +8,7 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.i18n.client.DateTimeFormat;
 import com.google.gwt.user.client.DOM;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.HTML;
@@ -17,26 +18,27 @@ import com.google.gwt.user.client.ui.Label;
 
 public class MyOpportunitiesWidget extends Composite {
 	OpportunityPanel parent;
-	FlexTable scroller;
+	FlexTable flexTable;
 	List<OpportunityVO> oppList;
 	HTML edit, remove;
 
 	public MyOpportunitiesWidget(OpportunityPanel opportunityDialogBox) {
 		parent = opportunityDialogBox;
-		scroller = new FlexTable();
+		flexTable = new FlexTable();
 
 		HorizontalPanel hp = new HorizontalPanel();
-		hp.add(scroller);
+		hp.add(flexTable);
 		initWidget(hp);
 
-		scroller.addClickHandler(new ClickHandler() {
+		flexTable.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {
-				final int cellIndex = scroller.getCellForEvent(event)
+				final int cellIndex = flexTable.getCellForEvent(event)
 						.getCellIndex();
-				final int rowIndex = scroller.getCellForEvent(event)
+				final int rowIndex = flexTable.getCellForEvent(event)
 						.getRowIndex();
-
+				parent.showOnMap(oppList.get(rowIndex));
+				
 				if (cellIndex == 1) {
 					parent.showOpportunity(oppList.get(rowIndex));
 				} else if (cellIndex == 2) {
@@ -52,7 +54,7 @@ public class MyOpportunitiesWidget extends Composite {
 	public void setOpportunities(List<OpportunityVO> myOppsList) {
 		oppList = myOppsList;
 		String[] colors = { "#F0FAFA", "#FFFFFF" };
-		scroller.clear();
+		flexTable.clear();
 		for (int i = 0; i < myOppsList.size(); i++) {
 			edit = new HTML("<a>Edit</a>");
 			remove = new HTML("<a>X</a>");
@@ -62,10 +64,10 @@ public class MyOpportunitiesWidget extends Composite {
 			remove.setTitle("Click to delete the Opportunity");
 			remove.setStyleName("removeSubjectCSS");
 		
-			scroller.setWidget(i, 0, getOpportunityVP(oppList.get(i), parent, (i % 2 == 0) ? colors[0] : colors[1]));
-			scroller.getCellFormatter().setWidth(i, 0, "700px");
-			scroller.setWidget(i, 1, edit);
-			scroller.setWidget(i, 2, remove);					
+			flexTable.setWidget(i, 0, getOpportunityVP(oppList.get(i), parent, (i % 2 == 0) ? colors[0] : colors[1]));
+			flexTable.getCellFormatter().setWidth(i, 0, "700px");
+			flexTable.setWidget(i, 1, edit);
+			flexTable.setWidget(i, 2, remove);					
 		}
 		applyDataRowStyles();	
 	}
@@ -102,9 +104,9 @@ public class MyOpportunitiesWidget extends Composite {
 	}
 	
 	private void applyDataRowStyles() {
-	    HTMLTable.RowFormatter rf = scroller.getRowFormatter();
+	    HTMLTable.RowFormatter rf = flexTable.getRowFormatter();
 	    
-	    for (int row = 0; row < scroller.getRowCount(); ++row) {
+	    for (int row = 0; row < flexTable.getRowCount(); ++row) {
 	      if ((row % 2) != 0) {
 	        rf.addStyleName(row, "FlexTable-OddRow");
 	      }
