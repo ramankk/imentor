@@ -249,10 +249,15 @@ public class MapUI extends Composite {
 		return lData;
 	}
 
-	public void setMarkerLocation(double lat, double lng) {
-		LocationData ldata = new LocationData();
+	public void setMarkerLocation(double lat, double lng, int radius) {
+		
+		lData.setLatitude(lat);
+		lData.setLongitude(lng);
+		lData.setRadius(radius);
 		// ldata.
 		LatLng ll = LatLng.newInstance(lat, lng);
+	//	drawCircleFromRadius(ll, radius, 30);
+	//	map.addOverlay(oldCircle);
 		map.setCenter(ll, 9);
 		marker.setLatLng(ll);
 
@@ -268,5 +273,9 @@ public class MapUI extends Composite {
 
 	public void clear() {
 		map.clearOverlays();
+	}
+	
+	public void setLocationDetails(LocationData lData){
+		this.lData = lData;
 	}
 }
