@@ -126,6 +126,7 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 				Window.alert("Not a participant");
 			}
 			this.hide();
+			
 		}		
 	}
 	

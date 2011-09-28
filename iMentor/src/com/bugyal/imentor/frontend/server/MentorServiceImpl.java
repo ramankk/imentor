@@ -695,5 +695,52 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			e.printStackTrace();
 		}
 		return result;
-	}	
+	}
+
+	@Override
+	public List<SearchResult> getMyMentors() {
+		try {
+			Participant p = pm.findParticipantByEmail(getUserId());
+			List<SearchResult> result = new ArrayList<SearchResult>();
+			List<Participant> participants = new ArrayList<Participant>();
+			if(p.getMentors().size() != 0) {
+				participants = pm.getMentors(p);		
+				for(Participant pi: participants) {
+					result.add(new SearchResult(ValueObjectGenerator.create(pi), true, pi.getHasSubjects(), 0));
+				}				
+			}
+			return result;
+		} catch (MentorException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	@Override
+	public List<SearchResult> getMyMentees() {
+		try {
+			Participant p = pm.findParticipantByEmail(getUserId());
+			List<SearchResult> result = new ArrayList<SearchResult>();
+			List<Participant> participants = new ArrayList<Participant>();
+			
+			if(p.getMentees().size() != 0) {
+				participants = pm.getMentees(p);		
+				for(Participant pi: participants) {
+					result.add(new SearchResult(ValueObjectGenerator.create(pi), false, pi.getNeedSubjects(), 0));
+				}				
+			}
+			if(p.getMentoringOpportunities().size() != 0) {
+				for(Key key: p.getMentoringOpportunities()) {
+					Opportunity o = om.findById(key);
+					result.add(new SearchResult(ValueObjectGenerator.create(o), o.getSubjects(), 0));
+				}
+			}
+			return result;
+		} catch (MentorException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	
 }

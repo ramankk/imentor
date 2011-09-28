@@ -1,5 +1,6 @@
 package com.bugyal.imentor.frontend.client;
 
+import com.bugyal.imentor.frontend.client.SearchResultFactory.SearchResultWidgetInterface;
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -10,36 +11,35 @@ import com.google.gwt.user.client.ui.FlexTable;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 
-public class SearchResultWidget extends Composite implements SearchResultFactory.SearchResultWidgetInterface {
-
+public class SearchResultWidgetForProfile extends Composite implements
+		SearchResultWidgetInterface {
+	
 	String[] colors = { "#F0FAFA", "#FFFFFF" };
-
-	Label message = new Label();
-	Label distance = new Label();
-
+	Label name = new Label();
+	Label location = new Label();
+	Label subjects = new Label();
 	Image pursueImage = new Image();
+	
 	SearchResult searchResult = null;
 	FlexTable table = new FlexTable();
-	
 
-	public SearchResultWidget(boolean isEven) {
+	public SearchResultWidgetForProfile(boolean isEven) {
 		setEvenRow(isEven);
 	}
-	
 	@Override
 	public void setEvenRow(boolean isEven) {
-
-		table.setSize("700px", "34px");
-	
+		table.setSize("700px", "34px");	
 		DOM.setStyleAttribute(table.getElement(), "backgroundColor",
 				isEven ? colors[0] : colors[1]);
-
-		table.setWidget(0, 0, message);
-		table.getFlexCellFormatter().setColSpan(0, 0, 5);
-		table.setWidget(0, 6, distance);
-		table.setWidget(0, 7, pursueImage);
-		table.getCellFormatter().setWidth(0, 6, "50px");
-		table.getCellFormatter().setWidth(0, 7, "15px");
+		table.setWidget(0, 0, name);
+		table.getCellFormatter().setWidth(0, 3, "130px");
+		table.setWidget(0, 1, location);
+		table.getCellFormatter().setWidth(0, 3, "250px");
+		table.setWidget(0, 2, subjects);
+		table.getCellFormatter().setWidth(0, 3, "300px");
+		table.setWidget(0, 3, pursueImage);
+		table.getCellFormatter().setWidth(0, 3, "20px");
+		
 		DOM.setStyleAttribute(pursueImage.getElement(), "cursor", "pointer");
 		pursueImage.addClickHandler(new ClickHandler(){
 			@Override
@@ -49,8 +49,7 @@ public class SearchResultWidget extends Composite implements SearchResultFactory
 				}
 				if(searchResult.isTypeParticipant()){					
 					ProfileInfo info = new ProfileInfo(searchResult);
-					info.center();
-					
+					info.center();					
 				}
 				else{
 					OpportunityInfo info = new OpportunityInfo(searchResult);
@@ -58,44 +57,41 @@ public class SearchResultWidget extends Composite implements SearchResultFactory
 				}
 			}
 		});		
-		initWidget(table);	
+		initWidget(table);		
 	}
-	
+
 	@Override
 	public void setResult(SearchResult result) {
 		
 		searchResult = result;
-
 		pursueImage.setSize("15px","15px");
 		pursueImage.setUrl("images/magni.png");
-		StringBuilder messageString = new StringBuilder();
-		if (result.isTypeParticipant()) {
-			table.setTitle(result.getP().getLocationString());
-			messageString.append(result.getP().getName());
-			if (result.isHas()) {
-				messageString.append(" can help you in ");
-			} else {
-				messageString.append(" is looking for your help in ");
-			}
-		} else {
-			table.setTitle(result.getO().getLocString());
-			messageString.append("Opportunity in ");
-		}
-		messageString.append(" [");
-		for (String str : result.getSubjects()) {
-			messageString.append(str).append(", ");
-		}
-		messageString.deleteCharAt(messageString.length()-1);
-		messageString.deleteCharAt(messageString.length()-1);
-		messageString.append("] ");
-		message.setText(messageString.toString());
 
-		distance.setText(result.getDistanceString());
+		if(result.isTypeParticipant()) {
+			name.setText(result.getP().getName());
+			location.setText(result.getP().getLocationString());
+		} else {
+			name.setText("Opportunity at");
+			location.setText(result.getO().getLocString());
+		}
+		StringBuilder subject = new StringBuilder();
+		boolean first = true;
+		for(String str: result.getSubjects()) {
+			if (first) {
+				first = false;
+			} else {
+				subject.append(", ");
+			}
+			subject.append(str);
+		}
+		subjects.setText(subject.toString());	
 	}
-	
 	@Override
 	public void clear() {
-		message.setText("");
-		distance.setText("");
-	}	
+		name.setText("");
+		location.setText("");
+		subjects.setText("");
+		pursueImage.setUrl(null);
+	}
+
 }
