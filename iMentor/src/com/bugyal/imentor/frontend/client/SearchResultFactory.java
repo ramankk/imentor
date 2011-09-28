@@ -15,12 +15,18 @@ public class SearchResultFactory {
 		this.type = type;
 	}
 	
+	private MapUI mapUI = null;
+	
+	public void setMapUI(MapUI mapUI) {
+		this.mapUI = mapUI;
+	}
+	
 	public SearchResultWidgetInterface create(boolean isEven) {
 		if (type == Type.ForHomeWidget) {
 			return new SearchResultWidget(isEven);
 		}
 		else if(type == Type.ForProfileWidget) {
-			return new SearchResultWidgetForProfile(isEven);
+			return new SearchResultWidgetForProfile(isEven, this.mapUI);
 		}
 		return null;
 	}

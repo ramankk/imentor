@@ -22,10 +22,23 @@ public class SearchResultWidgetForProfile extends Composite implements
 	
 	SearchResult searchResult = null;
 	FlexTable table = new FlexTable();
+	MapUI mapUI = null; 
 
-	public SearchResultWidgetForProfile(boolean isEven) {
+	public SearchResultWidgetForProfile(boolean isEven, final MapUI mapUI) {
 		setEvenRow(isEven);
+		this.mapUI = mapUI;
+		
+		table.addClickHandler(new ClickHandler() {
+			@Override
+			public void onClick(ClickEvent event) {
+				if (mapUI != null && searchResult != null) {
+				  mapUI.showResult(searchResult);
+				}
+			}});
 	}
+	
+	
+	
 	@Override
 	public void setEvenRow(boolean isEven) {
 		table.setSize("700px", "34px");	

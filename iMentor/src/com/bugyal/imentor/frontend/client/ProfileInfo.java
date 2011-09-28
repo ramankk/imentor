@@ -1,7 +1,6 @@
 package com.bugyal.imentor.frontend.client;
 
-import java.util.List;
-
+import com.bugyal.imentor.frontend.shared.MentorDataStatus;
 import com.bugyal.imentor.frontend.shared.MentorsResult;
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.core.client.GWT;
@@ -23,15 +22,19 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 	MentorServiceAsync service;
 	SearchResult result = null;
 	FlexTable table=null;
+	boolean isPersue;
+	long participantId;
 
 	public ProfileInfo(SearchResult results) {
-
+			
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 		this.result = results;		
 		setHTML("Profile Info");
 		table = new FlexTable();
 		
 		if(results != null){
+			participantId = results.getP().getId();
+			
 			setData(0, "Name", results.getP().getName());
 			setData(1, "Gender", results.getP().getGender());
 			setData(2, "Email Id", results.getP().getEmail());
@@ -39,23 +42,26 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 			setData(4, "Has Subjects", results.getP().getHasSubjectsAsString());
 			setData(5, "Need Subjects", results.getP().getNeedSubjectsAsString());
 			
-			AsyncCallback<List<MentorsResult>> callback1 = new AsyncCallback<List<MentorsResult>>() {
-
+			AsyncCallback<MentorDataStatus> callback1 = new AsyncCallback<MentorDataStatus>() {
 				@Override
 				public void onFailure(Throwable caught) {
-					// TODO Auto-generated method stub
-					
+					// TODO Auto-generated method stub					
 				}
 
 				@Override
-				public void onSuccess(List<MentorsResult> result) {
-					
-					if(result.size() != 0) {
+				public void onSuccess(MentorDataStatus data) {
+					if(data.isExisted()) {						
+						pursue.setText("Delete");
+						isPersue = data.isExisted();
+					} else {
+						isPersue = data.isExisted();
+					}
+					if(data.getMentorslist().size() != 0) {
 						StringBuilder mentorlist = new StringBuilder();
 						StringBuilder menteelist = new StringBuilder();
 						boolean firstMentor = true;
 						boolean firstMentee = true;
-						for(MentorsResult s: result) {
+						for(MentorsResult s: data.getMentorslist()) {
 							if(s.isMentor()){
 								if (firstMentor) {
 									firstMentor = false;
@@ -104,28 +110,52 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 		}
 		
 		if (event.getSource() == pursue) {
-			AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
-				@Override
-				public void onFailure(Throwable caught) {
-					Window.alert("Failed to add mentor to mentee");				
-				}
+			if(!isPersue) {		// To add mentor or mentee to users profile
+				AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to add mentor to mentee");				
+					}
 
-				@Override
-				public void onSuccess(Boolean result) {
-					if (result) {
-						Window.alert("Successfully mentor added to mentee");
-					} else {
-						Window.alert("Failed to add mentor to mentee");
-					}				
+					@Override
+					public void onSuccess(Boolean result) {
+						if (result) {
+							Window.alert("Successfully mentor added to mentee");
+						} else {
+							Window.alert("Failed to add mentor to mentee");
+						}				
+					}
+				};
+				if(result.isTypeParticipant()){					
+					service.addMentorAndMentee(result.isHas(), result.getP().getEmail(), callback);
+				} else{
+					Window.alert("Not a participant");
 				}
-			};
-			if(result.isTypeParticipant()){
-				service.addMentorAndMentee(result.isHas(), result.getP().getEmail(), callback);
+				this.hide();
 			}
-			else{
-				Window.alert("Not a participant");
+			else {		// To remove mentor or mentee from users profile
+				AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to add mentor to mentee");				
+					}
+
+					@Override
+					public void onSuccess(Boolean result) {
+						if (result) {
+							Window.alert("Successfully mentor or mentee deleted");
+						} else {
+							Window.alert("Failed to delete mentor to mentee");
+						}				
+					}
+				};
+				if(result.isTypeParticipant()) {
+					service.deleteMentorOrMentee(result.isHas(), result.getP().getEmail(), callback);
+				} else {
+					Window.alert("Not a participant");
+				}
+				this.hide();
 			}
-			this.hide();
 			
 		}		
 	}

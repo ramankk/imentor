@@ -53,7 +53,6 @@ public class ProfileWidget extends Composite implements ClickHandler {
 			public void onFailure(Throwable caught) {
 				mainPage.setErrorMessage("Fail to get Subjects list");
 			}
-
 			@Override
 			public void onSuccess(List<String> result) {
 				subWidgetHas.clearAll();
@@ -135,16 +134,19 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		topVertical.add(personalHorizontal);
 		topVertical.add(middleHorizontal);
 		topVertical.add(buttonsHorizontal);
-		topVertical.setCellHorizontalAlignment(buttonsHorizontal, HasHorizontalAlignment.ALIGN_RIGHT);
+		topVertical.setCellHorizontalAlignment(buttonsHorizontal,
+				HasHorizontalAlignment.ALIGN_RIGHT);
 		topVertical.setHeight("160px");
-		
-		mentortab = new SearchResponseWidget(5, Type.ForProfileWidget);
-		menteetab = new SearchResponseWidget(5, Type.ForProfileWidget);
-				
+
+		SearchResultFactory factory = new SearchResultFactory(Type.ForProfileWidget);
+		factory.setMapUI(mapUI);
+		mentortab = new SearchResponseWidget(5, factory);
+		menteetab = new SearchResponseWidget(5, factory);
+
 		tabPanel.add(topVertical, "Profile Details");
 		tabPanel.add(mentortab, "Mentors");
 		tabPanel.add(menteetab, "Mentees");
-		
+
 		tabPanel.selectTab(0);
 
 		mainPanel.add(tabPanel);
@@ -193,8 +195,8 @@ public class ProfileWidget extends Composite implements ClickHandler {
 					tbEmailId.setText(result.getEmail());
 					tbLocation.setText(result.getLocationString());
 
-					mapUI.setMarkerLocation(result.getLatitude(), result
-							.getLongitude(), result.getRadius());
+					mapUI.setMarkerLocation(result.getLatitude(),
+							result.getLongitude(), result.getRadius());
 
 					for (String sub : result.getHasSubjects()) {
 						subWidgetHas.add(sub);
@@ -207,32 +209,34 @@ public class ProfileWidget extends Composite implements ClickHandler {
 				}
 			}
 		});
-		
+
 		service.getMyMentors(new AsyncCallback<List<SearchResult>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				//mentortab.setWidget(0, 0, new Label("There is no mentors for you..!"));			
+				// mentortab.setWidget(0, 0, new
+				// Label("There is no mentors for you..!"));
 			}
 
 			@Override
 			public void onSuccess(List<SearchResult> result) {
 				Window.alert("total mentors " + result.size());
-					mentortab.setResults(result);
+				mentortab.setResults(result);
 			}
-			
+
 		});
-		
+
 		service.getMyMentees(new AsyncCallback<List<SearchResult>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// menteetab.setWidget(0, 0, new Label("There is no mentee for you..!"));					
+				// menteetab.setWidget(0, 0, new
+				// Label("There is no mentee for you..!"));
 			}
 
 			@Override
 			public void onSuccess(java.util.List<SearchResult> result) {
-				Window.alert("total mentees " + result.size());				
+				Window.alert("total mentees " + result.size());
 				menteetab.setResults(result);
 			}
 		});
@@ -244,41 +248,37 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		if (event.getSource() == btnSave) {
 			lData = mapUI.getLocationDetails();
 			if (!(subWidgetHas.getSubjects().isEmpty() && subWidgetNeed
-					.getSubjects().isEmpty())
-					&& (tbLocation.getText() != null)) {
+					.getSubjects().isEmpty()) && (tbLocation.getText() != null)) {
 
 				ParticipantVO partVO = new ParticipantVO(id, tbName.getText(),
-						"M", tbEmailId.getText(), lData.getLatitude(), lData
-								.getLongitude(), tbLocation.getText(), lData
-								.getRadius(), subWidgetHas.getSubjects(),
+						"M", tbEmailId.getText(), lData.getLatitude(),
+						lData.getLongitude(), tbLocation.getText(),
+						lData.getRadius(), subWidgetHas.getSubjects(),
 						subWidgetNeed.getSubjects());
 				if (!status) {
 					service.create(partVO, new AsyncCallback<ParticipantVO>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							mainPage
-									.setErrorMessage("Unable to Create the Profile"
-											+ caught.getMessage());
+							mainPage.setErrorMessage("Unable to Create the Profile"
+									+ caught.getMessage());
 						}
 
 						@Override
 						public void onSuccess(ParticipantVO result) {
 							mainPage.getHeaderWidget().setNewUser(false);
-							mainPage
-									.setMessage("Profile created successfully ");
+							mainPage.setMessage("Profile created successfully ");
 							mainPage.showHomeWidget();
 							init();
 						}
 					});
 				} else {
 					service.update(partVO, new AsyncCallback<ParticipantVO>() {
-
 						@Override
 						public void onFailure(Throwable caught) {
-							mainPage.setErrorMessage("Sorry, No changes has been made" + caught.getMessage());
+							mainPage.setErrorMessage("Sorry, No changes has been made"
+									+ caught.getMessage());
 						}
-
 						@Override
 						public void onSuccess(ParticipantVO result) {
 							mainPage.setMessage("Updated sucessfully");
