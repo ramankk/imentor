@@ -2,8 +2,8 @@ package com.bugyal.imentor.frontend.client;
 
 import java.util.List;
 
+import com.bugyal.imentor.frontend.shared.MentorDataStatus;
 import com.bugyal.imentor.frontend.shared.MentorsResult;
-import com.bugyal.imentor.frontend.shared.SearchResponse;
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -25,6 +25,7 @@ public class OpportunityInfo extends DialogBox implements ClickHandler{
 	MentorServiceAsync service;
 	SearchResult result = null;
 	FlexTable table=null;
+	boolean isPersue;
 	
 	public OpportunityInfo(SearchResult results) {
 
@@ -65,7 +66,7 @@ public class OpportunityInfo extends DialogBox implements ClickHandler{
 			};				
 			service.searchOwnersById(results.getO().getId(), callback);	
 			
-			AsyncCallback<List<MentorsResult>> callback1 = new AsyncCallback<List<MentorsResult>>() {
+			AsyncCallback<MentorDataStatus> callback1 = new AsyncCallback<MentorDataStatus>() {
 
 				@Override
 				public void onFailure(Throwable caught) {
@@ -73,14 +74,24 @@ public class OpportunityInfo extends DialogBox implements ClickHandler{
 				}
 
 				@Override
-				public void onSuccess(List<MentorsResult> result) {
-					
-					if(result.size() != 0) {
+				public void onSuccess(MentorDataStatus data) {
+					if(data.isExisted()) {						
+						pursue.setText("Delete");
+						isPersue = data.isExisted();
+					} else {
+						isPersue = data.isExisted();
+					}
+					if(data.getMentorslist().size() != 0) {
 						StringBuilder mentorlist = new StringBuilder();
-						
-						for(MentorsResult s: result) {
+						boolean first = true;
+						for(MentorsResult s: data.getMentorslist()) {
 							if(s.isMentor()){
-								mentorlist.append("   " + s.getName());
+								if(first) {
+									first = false;
+								} else {
+									mentorlist.append(", ");
+								}
+								mentorlist.append(s.getName());
 							}
 						}
 						setData(4, "Mentors List ", mentorlist.toString());
@@ -88,8 +99,7 @@ public class OpportunityInfo extends DialogBox implements ClickHandler{
 				}
 			};			
 			service.getMentorsForOpportunity(results.getO().getId(), callback1);					
-		}
-		
+		}		
 		vp.add(table);
 		cancel = new Button("Cancel");
 		pursue = new Button("Pursue");
@@ -113,28 +123,53 @@ public class OpportunityInfo extends DialogBox implements ClickHandler{
 		}
 		
 		if (event.getSource() == pursue) {
-			AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
-				@Override
-				public void onFailure(Throwable caught) {
-					Window.alert("Failed to add mentor to Opportunity");				
-				}
+			if(!isPersue) { 	// To add opportunity to the user 
+				AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to add mentor to Opportunity");				
+					}
 
-				@Override
-				public void onSuccess(Boolean result) {
-					if (result) {
-						Window.alert("Successfully mentor added to Opportunity");
-					} else {
-						Window.alert("Failed to add mentor to Opportunity");
-					}				
+					@Override
+					public void onSuccess(Boolean result) {
+						if (result) {
+							Window.alert("Successfully mentor added to Opportunity");
+						} else {
+							Window.alert("Failed to add mentor to Opportunity");
+						}				
+					}
+				};
+				if(!result.isTypeParticipant()){
+					service.addMentorToOpportunity(result.getO().getId(), callback);
 				}
-			};
-			if(!result.isTypeParticipant()){
-				service.addMentorToOpportunity(result.getO().getId(), callback);
-			}
-			else{
-				Window.alert("Not a participant");
-			}
-			this.hide();
+				else{
+					Window.alert("Not a participant");
+				}
+				this.hide();
+			} else {		// To delete opportunity from the user 
+				AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
+					@Override
+					public void onFailure(Throwable caught) {
+						Window.alert("Failed to add mentor to Opportunity");				
+					}
+
+					@Override
+					public void onSuccess(Boolean result) {
+						if (result) {
+							Window.alert("Successfully mentor added to Opportunity");
+						} else {
+							Window.alert("Failed to add mentor to Opportunity");
+						}				
+					}
+				};
+				if(!result.isTypeParticipant()){
+					service.addMentorToOpportunity(result.getO().getId(), callback);
+				}
+				else{
+					Window.alert("Not a participant");
+				}
+				this.hide();
+			}		
 		}		
 	}
 	

@@ -2,6 +2,7 @@ package com.bugyal.imentor.frontend.client;
 
 import java.util.List;
 
+import com.bugyal.imentor.frontend.shared.MentorDataStatus;
 import com.bugyal.imentor.frontend.shared.MentorsResult;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
@@ -55,13 +56,13 @@ public interface MentorServiceAsync {
 	
 
 	void getMentorAndMentees(ParticipantVO participantVO,
-			AsyncCallback<List<MentorsResult>> callback1);
+			AsyncCallback<MentorDataStatus> callback1);
 
 	void deleteOpportunity(long id, AsyncCallback<Boolean> callback);
 
 	void addMentorToOpportunity(long id, AsyncCallback<Boolean> callback);
 
-	void deleteMentorAndMentee(Boolean isHas, String mentorMailId,
+	void deleteMentorOrMentee(Boolean isHas, String mentorMailId,
 			AsyncCallback<Boolean> callback);
 
 	void removeMentorForOpportunity(long id, AsyncCallback<Boolean> callback);
@@ -69,7 +70,7 @@ public interface MentorServiceAsync {
 	void searchOwnersById(Long id, AsyncCallback<List<MentorsResult>> callback);
 	
 	void getMentorsForOpportunity(Long id,
-			AsyncCallback<List<MentorsResult>> callback1);
+			AsyncCallback<MentorDataStatus> callback1);
 
 	void getMyMentors(AsyncCallback<List<SearchResult>> asyncCallback);
 

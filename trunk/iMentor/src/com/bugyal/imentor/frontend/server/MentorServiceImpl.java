@@ -13,6 +13,7 @@ import com.bugyal.imentor.MentorException;
 import com.bugyal.imentor.frontend.client.MentorService;
 import com.bugyal.imentor.frontend.server.StatsServlet.AverageStat;
 import com.bugyal.imentor.frontend.shared.MeException;
+import com.bugyal.imentor.frontend.shared.MentorDataStatus;
 import com.bugyal.imentor.frontend.shared.MentorsResult;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
@@ -547,7 +548,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	@Override
-	public boolean deleteMentorAndMentee(Boolean isHas, String mentorMailId) {
+	public boolean deleteMentorOrMentee(Boolean isHas, String mentorMailId) {
 		try {
 			Participant mentor = pm.findParticipantByEmail(mentorMailId);
 			Participant mentee = pm.findParticipantByEmail(getUserId());
@@ -576,13 +577,24 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	}
 
 	@Override
-	public List<MentorsResult> getMentorAndMentees(ParticipantVO pi) {
+	public MentorDataStatus getMentorAndMentees(ParticipantVO pi) {
+		
 		List<MentorsResult> result = new ArrayList<MentorsResult>();
+		boolean isExisted;
 		try {
 			boolean isMentor = true; // for mentors
 			Key key = KeyFactory.createKey(Participant.class.getSimpleName(), pi.getId());
+			Participant user = pm.findParticipantByEmail(getUserId());
 			
 			Participant m = pm.findById(key);
+			if(m.getMentors().contains(user.getKey())) {
+				isExisted = true;
+			} else if(m.getMentees().contains(user.getKey())) {
+				isExisted = true;
+			} else {
+				isExisted = false;
+			}
+			
 			List<Participant> participants = new ArrayList<Participant>();
 			if(m.getMentors().size() != 0){
 				participants = pm.getMentors(m);		
@@ -599,13 +611,13 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 					MentorsResult mentor= new MentorsResult(p.getName(),isMentor);
 					result.add(mentor);
 				}
-			}
-			return result;
+			}			
+			return new MentorDataStatus(result, isExisted);
 		} catch (MentorException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return result;
+		return null;
 	}
 	
 	@Override
@@ -674,14 +686,23 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	}
 	
 	@Override
-	public List<MentorsResult> getMentorsForOpportunity(Long id) {
+	public MentorDataStatus getMentorsForOpportunity(Long id) {
 		List<MentorsResult> result = new ArrayList<MentorsResult>();
+		boolean isExisted;
 		try {
 			boolean isMentor = true; // for mentors
 			Key key = KeyFactory.createKey(Opportunity.class.getSimpleName(), id);
 			MentorsResult mentor= new MentorsResult();
 			
+			Participant user = pm.findParticipantByEmail(getUserId());
 			Opportunity o = om.findById(key);
+						
+			if(o.getMentors().contains(user.getKey())) {
+				isExisted = true;
+			} else {
+				isExisted = false;
+			}
+			
 			List<Participant> participants = new ArrayList<Participant>();
 			if(o.getMentors().size() != 0) {
 				participants = pm.findParticipantsByIds(o.getMentors());						
@@ -690,11 +711,12 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 					mentor.setMentor(isMentor);
 					result.add(mentor);
 				}
-			}			
+			}		
+			return new MentorDataStatus(result, isExisted);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		return result;
+		return null;
 	}
 
 	@Override

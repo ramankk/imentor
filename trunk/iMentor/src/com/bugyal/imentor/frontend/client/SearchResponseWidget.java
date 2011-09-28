@@ -33,12 +33,12 @@ public class SearchResponseWidget extends Composite {
 	private int currentPage;
 
 	public SearchResponseWidget() {
-		this(7, Type.ForHomeWidget); // default size
+		this(7, new SearchResultFactory(Type.ForHomeWidget)); // default size
 	}
 	
-	public SearchResponseWidget(int size, Type type) {
+	public SearchResponseWidget(int size, SearchResultFactory factory) {
 		this.pageSize = size;
-		factory = new SearchResultFactory(type);
+		this.factory = factory;
 		
 		for (int i = 0; i < pageSize; i++) {
 			resultObjects.add(factory.create(i % 2 == 0));
@@ -100,7 +100,7 @@ public class SearchResponseWidget extends Composite {
 		backwardButton.setEnabled(currentPage != 0);
 
 		int numPages = searchResults.size()/pageSize;
-		if(numPages == 0 || currentPage == numPages - 1) {
+		if(numPages == 0 || currentPage == numPages ) {
 			forwardButton.setEnabled(false);
 		} else{
 			forwardButton.setEnabled(true);

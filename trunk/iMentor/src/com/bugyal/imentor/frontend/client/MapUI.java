@@ -252,6 +252,11 @@ public class MapUI extends Composite {
 	public LocationData getLocationDetails() {
 		return lData;
 	}
+	
+	public void showResult(SearchResult result) {
+		setMarkerLocation(result.getLatitude(), result.getLongitude(), 0);
+	}
+	
 	public void setMarkerLocation(double lat, double lng, int radius) {
 		lData.setLatitude(lat);
 		lData.setLongitude(lng);

@@ -480,8 +480,7 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		}
 		try {
 			tx.begin();
-			Participant imentee = pm.getObjectById(Participant.class,
-			mentee.getKey());
+			Participant imentee = pm.getObjectById(Participant.class, mentee.getKey());
 			imentee.removeMentor(mentor.getKey());
 			tx.commit();
 		} catch (Exception e) {
