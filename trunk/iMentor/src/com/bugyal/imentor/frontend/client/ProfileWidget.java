@@ -3,10 +3,13 @@ package com.bugyal.imentor.frontend.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bugyal.imentor.frontend.client.SearchResultFactory.Type;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
+import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -29,6 +32,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 	TextArea tbLocation = new TextArea();
 	Button btnSave;
 	TabPanel tabPanel;
+	SearchResponseWidget mentortab, menteetab;
 	TextBox tbName, tbEmailId;
 	LocationData lData = new LocationData();
 	boolean status = false;
@@ -131,11 +135,16 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		topVertical.add(personalHorizontal);
 		topVertical.add(middleHorizontal);
 		topVertical.add(buttonsHorizontal);
-		topVertical.setCellHorizontalAlignment(buttonsHorizontal,
-				HasHorizontalAlignment.ALIGN_RIGHT);
+		topVertical.setCellHorizontalAlignment(buttonsHorizontal, HasHorizontalAlignment.ALIGN_RIGHT);
 		topVertical.setHeight("160px");
-
+		
+		mentortab = new SearchResponseWidget(5, Type.ForProfileWidget);
+		menteetab = new SearchResponseWidget(5, Type.ForProfileWidget);
+				
 		tabPanel.add(topVertical, "Profile Details");
+		tabPanel.add(mentortab, "Mentors");
+		tabPanel.add(menteetab, "Mentees");
+		
 		tabPanel.selectTab(0);
 
 		mainPanel.add(tabPanel);
@@ -198,6 +207,35 @@ public class ProfileWidget extends Composite implements ClickHandler {
 				}
 			}
 		});
+		
+		service.getMyMentors(new AsyncCallback<List<SearchResult>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				//mentortab.setWidget(0, 0, new Label("There is no mentors for you..!"));			
+			}
+
+			@Override
+			public void onSuccess(List<SearchResult> result) {
+				Window.alert("total mentors " + result.size());
+					mentortab.setResults(result);
+			}
+			
+		});
+		
+		service.getMyMentees(new AsyncCallback<List<SearchResult>>() {
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// menteetab.setWidget(0, 0, new Label("There is no mentee for you..!"));					
+			}
+
+			@Override
+			public void onSuccess(java.util.List<SearchResult> result) {
+				Window.alert("total mentees " + result.size());				
+				menteetab.setResults(result);
+			}
+		});
 	}
 
 	@Override
@@ -230,6 +268,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 							mainPage
 									.setMessage("Profile created successfully ");
 							mainPage.showHomeWidget();
+							init();
 						}
 					});
 				} else {
@@ -237,18 +276,14 @@ public class ProfileWidget extends Composite implements ClickHandler {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							mainPage
-									.setErrorMessage("Sorry, No changes has been made"
-											+ caught.getMessage());
+							mainPage.setErrorMessage("Sorry, No changes has been made" + caught.getMessage());
 						}
 
 						@Override
 						public void onSuccess(ParticipantVO result) {
 							mainPage.setMessage("Updated sucessfully");
 							mainPage.showHomeWidget();
-
 						}
-
 					});
 				}
 			}

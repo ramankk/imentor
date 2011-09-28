@@ -6,6 +6,7 @@ import com.bugyal.imentor.frontend.shared.MentorsResult;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.bugyal.imentor.frontend.shared.SearchResponse;
+import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public interface MentorServiceAsync {
@@ -68,5 +69,9 @@ public interface MentorServiceAsync {
 	void searchOwnersById(Long id, AsyncCallback<List<MentorsResult>> callback);
 	
 	void getMentorsForOpportunity(Long id,
-			AsyncCallback<List<MentorsResult>> callback1);	
+			AsyncCallback<List<MentorsResult>> callback1);
+
+	void getMyMentors(AsyncCallback<List<SearchResult>> asyncCallback);
+
+	void getMyMentees(AsyncCallback<List<SearchResult>> asyncCallback);	
 }

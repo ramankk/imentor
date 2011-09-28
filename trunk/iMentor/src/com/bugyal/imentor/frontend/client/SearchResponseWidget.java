@@ -3,6 +3,8 @@ package com.bugyal.imentor.frontend.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bugyal.imentor.frontend.client.SearchResultFactory.SearchResultWidgetInterface;
+import com.bugyal.imentor.frontend.client.SearchResultFactory.Type;
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
@@ -11,13 +13,16 @@ import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
+import com.google.gwt.user.client.ui.IsWidget;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
 
 public class SearchResponseWidget extends Composite {
 
 	private int pageSize;
-	private List<SearchResultWidget> resultObjects = new ArrayList<SearchResultWidget>();
+	private List<SearchResultWidgetInterface> resultObjects = new ArrayList<SearchResultWidgetInterface>();
 	private List<SearchResult> searchResults = new ArrayList<SearchResult>();
+	private SearchResultFactory factory;
 	
 	private VerticalPanel verticalPanel = new VerticalPanel();
 	private VerticalPanel contentPanel = new VerticalPanel();
@@ -28,15 +33,16 @@ public class SearchResponseWidget extends Composite {
 	private int currentPage;
 
 	public SearchResponseWidget() {
-		this(7); // default size
+		this(7, Type.ForHomeWidget); // default size
 	}
 	
-	public SearchResponseWidget(int size) {
+	public SearchResponseWidget(int size, Type type) {
 		this.pageSize = size;
-
+		factory = new SearchResultFactory(type);
+		
 		for (int i = 0; i < pageSize; i++) {
-			resultObjects.add(new SearchResultWidget(i % 2 == 0));
-			contentPanel.add(resultObjects.get(i));
+			resultObjects.add(factory.create(i % 2 == 0));
+			contentPanel.add((Widget) resultObjects.get(i));
 		}
 		
 		verticalPanel.setSize("700px", "235px");

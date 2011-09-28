@@ -6,6 +6,7 @@ import com.bugyal.imentor.frontend.shared.MentorsResult;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.bugyal.imentor.frontend.shared.SearchResponse;
+import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 
 public class MockMentorServiceAsync implements MentorServiceAsync {
@@ -163,6 +164,18 @@ public class MockMentorServiceAsync implements MentorServiceAsync {
 	@Override
 	public void getMentorsForOpportunity(Long id,
 			AsyncCallback<List<MentorsResult>> callback1) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getMyMentors(AsyncCallback<List<SearchResult>> asyncCallback) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void getMyMentees(AsyncCallback<List<SearchResult>> asyncCallback) {
 		// TODO Auto-generated method stub
 		
 	}
