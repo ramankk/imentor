@@ -45,11 +45,11 @@ public class SearchResultWidgetForProfile extends Composite implements
 		DOM.setStyleAttribute(table.getElement(), "backgroundColor",
 				isEven ? colors[0] : colors[1]);
 		table.setWidget(0, 0, name);
-		table.getCellFormatter().setWidth(0, 3, "130px");
+		//table.getCellFormatter().setWidth(0, 3, "130px");
 		table.setWidget(0, 1, location);
-		table.getCellFormatter().setWidth(0, 3, "250px");
+		table.getCellFormatter().setWidth(0, 1, "400px");
 		table.setWidget(0, 2, subjects);
-		table.getCellFormatter().setWidth(0, 3, "300px");
+		table.getCellFormatter().setWidth(0, 2, "300px");
 		table.setWidget(0, 3, pursueImage);
 		table.getCellFormatter().setWidth(0, 3, "20px");
 		
