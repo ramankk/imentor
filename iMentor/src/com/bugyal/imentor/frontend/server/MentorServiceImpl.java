@@ -55,7 +55,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 
 	private static final Logger LOG = Logger.getLogger(MentorServiceImpl.class
 			.getName());
-		
+
 	static {
 		LOG.setLevel(Level.INFO);
 		SUBJECTS_LIST.add("Computers");
@@ -132,7 +132,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	private void clearSubjects(Participant pi) throws MentorException {
 		// TODO(sridhar,raman): resolve it.
 		pi.clearSubjects();
-		//pm.save(pi);
+		// pm.save(pi);
 	}
 
 	private void save(Opportunity oi, OpportunityVO o) throws MentorException {
@@ -180,7 +180,9 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		if (oi != null) {
 			try {
 				participant.addCreatedOpportuny(oi.getKey());
-				pm.saveOpportunityToParticipant(participant.getKey(), oi.getKey(), false); // here false is to indicate it is new opportunity
+				pm.saveOpportunityToParticipant(participant.getKey(), oi
+						.getKey(), false); // here false is to indicate it is
+				// new opportunity
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -239,12 +241,8 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	@Override
 	public List<String> getSubjects() throws MeException {
 		List<String> list = new ArrayList<String>();
-
-		Subject sub[] = Subject.values();
-
-		for (Subject s : sub) {
-			list.add(s.toString());
-		}
+		Subject s = new Subject();
+		list = s.getsubjects();
 		return list;
 	}
 
@@ -293,11 +291,13 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			Location location = new Location(latitude, longitude, strlocation,
 					radius);
 			long temp = System.currentTimeMillis();
-			List<Participant> participants = pm.searchParticipantsBySubjects(needSubs,
-					location, true);
-			LOG.info("For TOME searchParticipantsBySubjects(needSubs,location, true) " + (System.currentTimeMillis()-temp));
-			
-			for (Participant p : participants ) {
+			List<Participant> participants = pm.searchParticipantsBySubjects(
+					needSubs, location, true);
+			LOG
+					.info("For TOME searchParticipantsBySubjects(needSubs,location, true) "
+							+ (System.currentTimeMillis() - temp));
+
+			for (Participant p : participants) {
 				List<String> matchingSubs = new ArrayList<String>();
 				for (String s : p.getHasSubjects()) {
 					if (needSubjects.contains(s)) {
@@ -309,10 +309,13 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 								.distance(pt, p.getLocation())));
 			}
 			temp = System.currentTimeMillis();
-			participants = pm.searchParticipantsBySubjects(hasSubs, location, false);
-			LOG.info("For TOME searchParticipantsBySubjects(hasSubs, location, false) " + (System.currentTimeMillis()-temp));
+			participants = pm.searchParticipantsBySubjects(hasSubs, location,
+					false);
+			LOG
+					.info("For TOME searchParticipantsBySubjects(hasSubs, location, false) "
+							+ (System.currentTimeMillis() - temp));
 
-			for (Participant p : participants ) {
+			for (Participant p : participants) {
 				List<String> matchingSubs = new ArrayList<String>();
 				for (String s : p.getNeedSubjects()) {
 					if (hasSubjects.contains(s)) {
@@ -324,8 +327,10 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 								.getLocation())));
 			}
 			temp = System.currentTimeMillis();
-			List<Opportunity> opportunities = om.searchOpportunities(location, hasSubs); 
-			LOG.info("For TOME searchOpportunities(location, hasSubs) " + (System.currentTimeMillis()-temp));
+			List<Opportunity> opportunities = om.searchOpportunities(location,
+					hasSubs);
+			LOG.info("For TOME searchOpportunities(location, hasSubs) "
+					+ (System.currentTimeMillis() - temp));
 
 			for (Opportunity o : opportunities) {
 
@@ -348,19 +353,21 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		return response;
 	}
 
-	static AverageStat feedToMeTimeStat = StatsServlet.createAverageStat("feed_to_me_total_time");
-	
+	static AverageStat feedToMeTimeStat = StatsServlet
+			.createAverageStat("feed_to_me_total_time");
+
 	@Override
 	public SearchResponse feedToMe() throws MeException {
 		QuotaService qs = QuotaServiceFactory.getQuotaService();
-        long start = qs.getCpuTimeInMegaCycles();
+		long start = qs.getCpuTimeInMegaCycles();
 		long t = System.currentTimeMillis();
 		SearchResponse response = null;
 		try {
 			long temp = t;
 			Participant pi = pm.findParticipantByEmail(getUserId());
 			long endtime = System.currentTimeMillis();
-			LOG.info("For TOME findParticipantByEmail(getUserId()) " + (endtime-temp));
+			LOG.info("For TOME findParticipantByEmail(getUserId()) "
+					+ (endtime - temp));
 			if (pi == null) {
 				return new SearchResponse();
 			}
@@ -373,7 +380,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 
 			feedRanker.rank(response, pi);
 			long end = qs.getCpuTimeInMegaCycles();
-	        double cpuSeconds = qs.convertMegacyclesToCpuSeconds(end - start);
+			double cpuSeconds = qs.convertMegacyclesToCpuSeconds(end - start);
 			LOG.info("TOME CPU Usage : " + cpuSeconds);
 			return response;
 		} catch (MentorException e) {
@@ -395,33 +402,38 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		return null;
 	}
 
-	static AverageStat localActivityTimeStat = StatsServlet.createAverageStat("local_activity_total_time");
-	
+	static AverageStat localActivityTimeStat = StatsServlet
+			.createAverageStat("local_activity_total_time");
+
 	@Override
 	public SearchResponse localActivity() {
 		QuotaService qs = QuotaServiceFactory.getQuotaService();
-        long start = qs.getCpuTimeInMegaCycles();
-        long t = System.currentTimeMillis();
+		long start = qs.getCpuTimeInMegaCycles();
+		long t = System.currentTimeMillis();
 		SearchResponse response = new SearchResponse();
 		try {
 			List<SearchResult> has = new ArrayList<SearchResult>();
 			List<SearchResult> need = new ArrayList<SearchResult>();
-			
+
 			long temp = System.currentTimeMillis();
 			Participant pi = pm.findParticipantByEmail(getUserId());
-			LOG.info("For Local Activity findParticipantByEmail(getUserId()) " + (System.currentTimeMillis()-temp));
-			
+			LOG.info("For Local Activity findParticipantByEmail(getUserId()) "
+					+ (System.currentTimeMillis() - temp));
+
 			if (pi == null) {
 				return response;
 			}
 			Location location = new Location(pi.getLocation().getLat(), pi
 					.getLocation().getLon(), pi.getLoc().getLocationString(),
 					pi.getLoc().getActiveRadius());
-			
+
 			temp = System.currentTimeMillis();
-			List<Participant> participants = pm.searchParticipantsByLocation(location);
-			LOG.info("For Local Activity searchParticipantsByLocation(location) " + (System.currentTimeMillis()-temp));			
-			for (Participant p : participants ) {
+			List<Participant> participants = pm
+					.searchParticipantsByLocation(location);
+			LOG
+					.info("For Local Activity searchParticipantsByLocation(location) "
+							+ (System.currentTimeMillis() - temp));
+			for (Participant p : participants) {
 				double distance = GeocellUtils.distance(pi.getLocation(), p
 						.getLocation());
 				has.add(new SearchResult(ValueObjectGenerator.create(p), true,
@@ -432,8 +444,9 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 
 			temp = System.currentTimeMillis();
 			List<Opportunity> opportunities = om.allOpportunites(location);
-			LOG.info("For Local Activity allOpportunites(location) " + (System.currentTimeMillis()-temp));			
-			for (Opportunity o : opportunities ) {
+			LOG.info("For Local Activity allOpportunites(location) "
+					+ (System.currentTimeMillis() - temp));
+			for (Opportunity o : opportunities) {
 				need.add(new SearchResult(ValueObjectGenerator.create(o), o
 						.getSubjects(), GeocellUtils.distance(pi.getLocation(),
 						o.getLocation())));
@@ -441,10 +454,10 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			response.setHas(has);
 			response.setNeed(need);
 			response = filterMe(pi, response);
-	        long end = qs.getCpuTimeInMegaCycles();
-	        double cpuSeconds = qs.convertMegacyclesToCpuSeconds(end - start);
+			long end = qs.getCpuTimeInMegaCycles();
+			double cpuSeconds = qs.convertMegacyclesToCpuSeconds(end - start);
 			LOG.info("Local Activity CPU Usage : " + cpuSeconds);
-	        return response;
+			return response;
 		} catch (MentorException e) {
 			e.printStackTrace();
 		} finally {
@@ -511,7 +524,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			System.out.println("Session created for returning user.");
 			return true;
 		} else {
-	    	System.out.println("Session created for new user.");
+			System.out.println("Session created for new user.");
 			return false;
 		}
 	}
@@ -546,7 +559,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		}
 		return false;
 	}
-	
+
 	@Override
 	public boolean deleteMentorOrMentee(Boolean isHas, String mentorMailId) {
 		try {
@@ -562,7 +575,6 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		}
 		return false;
 	}
-	
 
 	@Override
 	public void commment(String subject, String comment) {
@@ -578,40 +590,43 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public MentorDataStatus getMentorAndMentees(ParticipantVO pi) {
-		
+
 		List<MentorsResult> result = new ArrayList<MentorsResult>();
 		boolean isExisted;
 		try {
 			boolean isMentor = true; // for mentors
-			Key key = KeyFactory.createKey(Participant.class.getSimpleName(), pi.getId());
+			Key key = KeyFactory.createKey(Participant.class.getSimpleName(),
+					pi.getId());
 			Participant user = pm.findParticipantByEmail(getUserId());
-			
+
 			Participant m = pm.findById(key);
-			if(m.getMentors().contains(user.getKey())) {
+			if (m.getMentors().contains(user.getKey())) {
 				isExisted = true;
-			} else if(m.getMentees().contains(user.getKey())) {
+			} else if (m.getMentees().contains(user.getKey())) {
 				isExisted = true;
 			} else {
 				isExisted = false;
 			}
-			
+
 			List<Participant> participants = new ArrayList<Participant>();
-			if(m.getMentors().size() != 0){
-				participants = pm.getMentors(m);		
-				for(Participant p: participants) {
-					MentorsResult mentor= new MentorsResult(p.getName(),isMentor);
+			if (m.getMentors().size() != 0) {
+				participants = pm.getMentors(m);
+				for (Participant p : participants) {
+					MentorsResult mentor = new MentorsResult(p.getName(),
+							isMentor);
 					result.add(mentor);
 				}
 				participants.clear();
 			}
-			if(m.getMentees().size() != 0) {
+			if (m.getMentees().size() != 0) {
 				isMentor = false; // for mentees
 				participants = pm.getMentees(m);
-				for(Participant p: participants) {
-					MentorsResult mentor= new MentorsResult(p.getName(),isMentor);
+				for (Participant p : participants) {
+					MentorsResult mentor = new MentorsResult(p.getName(),
+							isMentor);
 					result.add(mentor);
 				}
-			}			
+			}
 			return new MentorDataStatus(result, isExisted);
 		} catch (MentorException e) {
 			// TODO Auto-generated catch block
@@ -619,11 +634,11 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		}
 		return null;
 	}
-	
+
 	@Override
 	public boolean deleteOpportunity(long id) {
-		Key key = KeyFactory.createKey(Opportunity.class.getSimpleName(), id);		
-		if(om.deleteOpportunity(key)){
+		Key key = KeyFactory.createKey(Opportunity.class.getSimpleName(), id);
+		if (om.deleteOpportunity(key)) {
 			try {
 				Participant pi = pm.findParticipantByEmail(getUserId());
 				return pm.deleteOpportuniryFromParticipant(pi.getKey(), key);
@@ -633,89 +648,98 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		}
 		return false;
 	}
-		
+
 	@Override
 	public boolean removeMentorForOpportunity(long id) {
-		Key opportunityKey = KeyFactory.createKey(Opportunity.class.getSimpleName(), id);
+		Key opportunityKey = KeyFactory.createKey(Opportunity.class
+				.getSimpleName(), id);
 		Participant mentor = null;
 		try {
 			mentor = pm.findParticipantByEmail(getUserId());
-			if(om.removeMentorFromOpportunity(opportunityKey,mentor.getKey())){
+			if (om.removeMentorFromOpportunity(opportunityKey, mentor.getKey())) {
 				mentor.removeMentoringOpportunity(opportunityKey);
 				pm.save(mentor);
 				return true;
 			}
-		} catch (MentorException e) {			
+		} catch (MentorException e) {
 			e.printStackTrace();
-		}		
+		}
 		return false;
 	}
 
 	@Override
 	public List<MentorsResult> searchOwnersById(Long id) {
-		Key opportunityKey = KeyFactory.createKey(Opportunity.class.getSimpleName(), id);
+		Key opportunityKey = KeyFactory.createKey(Opportunity.class
+				.getSimpleName(), id);
 		List<MentorsResult> ownersNames = new ArrayList<MentorsResult>();
 		MentorsResult tempowner = new MentorsResult();
-		try{
+		try {
 			Opportunity opportunity = om.findById(opportunityKey);
-			List<Participant> owners = pm.findParticipantsByIds(opportunity.getContacts());
-			for(Participant p:owners) {
-				 tempowner.setName(p.getName());
-				 tempowner.setMentor(false); // No need to consider this value
-				 ownersNames.add(tempowner);
-			}			
-		} catch(Exception e) {
+			List<Participant> owners = pm.findParticipantsByIds(opportunity
+					.getContacts());
+			for (Participant p : owners) {
+				tempowner.setName(p.getName());
+				tempowner.setMentor(false); // No need to consider this value
+				ownersNames.add(tempowner);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return ownersNames;
 	}
-	
+
 	@Override
 	public boolean addMentorToOpportunity(long id) {
-		Key opportunityKey = KeyFactory.createKey(Opportunity.class.getSimpleName(), id);
+		Key opportunityKey = KeyFactory.createKey(Opportunity.class
+				.getSimpleName(), id);
 		Participant mentor = null;
 		try {
 			mentor = pm.findParticipantByEmail(getUserId());
-			if(om.addMentorToOpportunity(opportunityKey,mentor.getKey())){
-				return pm.saveOpportunityToParticipant(mentor.getKey(), opportunityKey, true);				
+			if (om.addMentorToOpportunity(opportunityKey, mentor.getKey())) {
+				return pm.saveOpportunityToParticipant(mentor.getKey(),
+						opportunityKey, true);
 			}
-		} catch (MentorException e) {			
+		} catch (MentorException e) {
 			e.printStackTrace();
-		}		
+		}
 		return false;
 	}
-	
+
 	@Override
 	public MentorDataStatus getMentorsForOpportunity(Long id) {
 		List<MentorsResult> result = new ArrayList<MentorsResult>();
 		boolean isExisted;
 		try {
 			boolean isMentor = true; // for mentors
-			Key key = KeyFactory.createKey(Opportunity.class.getSimpleName(), id);
-			MentorsResult mentor= new MentorsResult();
-			
+			Key key = KeyFactory.createKey(Opportunity.class.getSimpleName(),
+					id);
+			MentorsResult mentor = new MentorsResult();
+
 			Participant user = pm.findParticipantByEmail(getUserId());
 			Opportunity o = om.findById(key);
-						
-			if(o.getMentors().contains(user.getKey())) {
+
+			if (o.getMentors().contains(user.getKey())) {
 				isExisted = true;
 			} else {
 				isExisted = false;
 			}
-			
+
 			List<Participant> participants = new ArrayList<Participant>();
-			if(o.getMentors().size() != 0) {
-				participants = pm.findParticipantsByIds(o.getMentors());						
-				for(Participant p: participants) {
+			if (o.getMentors().size() != 0) {
+				participants = pm.findParticipantsByIds(o.getMentors());
+				for (Participant p : participants) {
 					mentor.setName(p.getName());
 					mentor.setMentor(isMentor);
 					result.add(mentor);
 				}
-			}		
+
+			}
 			return new MentorDataStatus(result, isExisted);
-		} catch(Exception e) {
+		} catch (Exception e) {
+
 			e.printStackTrace();
 		}
+
 		return null;
 	}
 
@@ -725,11 +749,13 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			Participant p = pm.findParticipantByEmail(getUserId());
 			List<SearchResult> result = new ArrayList<SearchResult>();
 			List<Participant> participants = new ArrayList<Participant>();
-			if(p.getMentors().size() != 0) {
-				participants = pm.getMentors(p);		
-				for(Participant pi: participants) {
-					result.add(new SearchResult(ValueObjectGenerator.create(pi), true, pi.getHasSubjects(), 0));
-				}				
+			if (p.getMentors().size() != 0) {
+				participants = pm.getMentors(p);
+				for (Participant pi : participants) {
+					result.add(new SearchResult(
+							ValueObjectGenerator.create(pi), true, pi
+									.getHasSubjects(), 0));
+				}
 			}
 			return result;
 		} catch (MentorException e) {
@@ -744,17 +770,20 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			Participant p = pm.findParticipantByEmail(getUserId());
 			List<SearchResult> result = new ArrayList<SearchResult>();
 			List<Participant> participants = new ArrayList<Participant>();
-			
-			if(p.getMentees().size() != 0) {
-				participants = pm.getMentees(p);		
-				for(Participant pi: participants) {
-					result.add(new SearchResult(ValueObjectGenerator.create(pi), false, pi.getNeedSubjects(), 0));
-				}				
+
+			if (p.getMentees().size() != 0) {
+				participants = pm.getMentees(p);
+				for (Participant pi : participants) {
+					result.add(new SearchResult(
+							ValueObjectGenerator.create(pi), false, pi
+									.getNeedSubjects(), 0));
+				}
 			}
-			if(p.getMentoringOpportunities().size() != 0) {
-				for(Key key: p.getMentoringOpportunities()) {
+			if (p.getMentoringOpportunities().size() != 0) {
+				for (Key key : p.getMentoringOpportunities()) {
 					Opportunity o = om.findById(key);
-					result.add(new SearchResult(ValueObjectGenerator.create(o), o.getSubjects(), 0));
+					result.add(new SearchResult(ValueObjectGenerator.create(o),
+							o.getSubjects(), 0));
 				}
 			}
 			return result;
@@ -764,5 +793,4 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		return null;
 	}
 
-	
 }
