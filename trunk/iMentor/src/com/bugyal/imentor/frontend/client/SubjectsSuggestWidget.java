@@ -66,7 +66,7 @@ public class SubjectsSuggestWidget extends Composite {
 	}
 
 	public boolean add(String item) {
-		HTML html = new HTML("<a>x</a>");
+		HTML html = new HTML("<a>X</a>");
 		html.setStyleName("removeSubjectCSS");
 
 		status = false;
