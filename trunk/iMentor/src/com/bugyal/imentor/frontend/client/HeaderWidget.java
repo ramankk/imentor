@@ -16,7 +16,7 @@ public class HeaderWidget extends Composite {
 	private UserDetails userDetails = null;
 	private MenuBar menuBar;
 	MentorServiceAsync service;
-	private boolean newUser = false;
+	private boolean newUser = false, initProfileWidget=false;
 	
 	private HeaderWidget me;
 	
@@ -40,16 +40,19 @@ public class HeaderWidget extends Composite {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			setViewForNewUser();
+			initProfileWidget=true;
+			setViewForNewUser(initProfileWidget);
 		}
 
 		@Override
 		public void onSuccess(Boolean result) {
 			
 			if (result) {
+				initProfileWidget = false;
 				setViewToReturningUser();
 			} else {
-				setViewForNewUser();
+				initProfileWidget=true;
+				setViewForNewUser(initProfileWidget);
 			}
 		}};
 	
@@ -58,7 +61,8 @@ public class HeaderWidget extends Composite {
 			service.createSession(userDetails.getEmail(), "facebook", 
 					userDetails.getFbId(), sessionCallback);
 		} else {
-			setViewForNewUser();
+			initProfileWidget=true;
+			setViewForNewUser(initProfileWidget);
 		}
 	}
 	
@@ -68,10 +72,10 @@ public class HeaderWidget extends Composite {
 		initMenuBar(menuBar);
 	}
 
-	private void setViewForNewUser() {
+	private void setViewForNewUser(boolean initProfileWidget) {
 		newUser = true;
 		initMenuBar(menuBar);
-		mainPage.showProfilePanel();
+		mainPage.showProfilePanel(initProfileWidget);
 	}
 	
 	private void initMenuBar(MenuBar menuBar) {
@@ -95,6 +99,7 @@ public class HeaderWidget extends Composite {
 		
 		MenuItem searchData = new MenuItem("Search", false, searchCommand());
 		menuBar.addItem(searchData);
+		menuBar.addStyleName("menuBar");
 	}
 	
 	public MainPageWidget getMainPage() {
@@ -127,7 +132,7 @@ public class HeaderWidget extends Composite {
 		return new Command() {
 			@Override
 			public void execute() {
-				mainPage.showProfilePanel();
+				mainPage.showProfilePanel(initProfileWidget);
 			}
 		};
 	}

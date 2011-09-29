@@ -44,7 +44,7 @@ public class MainPageWidget extends Composite {
 
 		searchPanel.setWidget(0, 0, searchWidget);
 
-		profilePanel = new ProfileWidget(this);
+	//	profilePanel = new ProfileWidget(this);
 		opportunityPanel = new OpportunityPanel(this);
 
 		ft.setWidget(0, 0, statusMessage);
@@ -68,7 +68,10 @@ public class MainPageWidget extends Composite {
 		ft.setWidget(1, 0, searchPanel);
 	}
 
-	public void showProfilePanel() {
+	public void showProfilePanel(boolean initProfileWidget) {
+		if(initProfileWidget || profilePanel == null){
+			profilePanel = new ProfileWidget(this);
+		}
 		profilePanel.init();
 		ft.setWidget(1, 0, profilePanel);
 	}
