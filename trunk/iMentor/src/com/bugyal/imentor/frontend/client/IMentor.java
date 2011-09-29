@@ -1,19 +1,17 @@
 package com.bugyal.imentor.frontend.client;
 
 import com.google.gwt.core.client.EntryPoint;
-import com.google.gwt.dom.client.Document;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Cookies;
 import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Anchor;
-
 import com.google.gwt.user.client.ui.RootPanel;
 
 public class IMentor implements EntryPoint {
 
-	public static final boolean TEST_MODE_FLAG = true;
+	public static final boolean TEST_MODE_FLAG = false;
 	public static final String PATH = "Path";
 
 	public void onModuleLoad() {		

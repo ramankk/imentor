@@ -214,13 +214,10 @@ public class ProfileWidget extends Composite implements ClickHandler {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// mentortab.setWidget(0, 0, new
-				// Label("There is no mentors for you..!"));
 			}
 
 			@Override
-			public void onSuccess(List<SearchResult> result) {
-				Window.alert("total mentors " + result.size());
+			public void onSuccess(List<SearchResult> result) {				
 				mentortab.setResults(result);
 			}
 
@@ -230,13 +227,10 @@ public class ProfileWidget extends Composite implements ClickHandler {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				// menteetab.setWidget(0, 0, new
-				// Label("There is no mentee for you..!"));
 			}
 
 			@Override
-			public void onSuccess(java.util.List<SearchResult> result) {
-				Window.alert("total mentees " + result.size());
+			public void onSuccess(java.util.List<SearchResult> result) {				
 				menteetab.setResults(result);
 			}
 		});
