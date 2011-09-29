@@ -150,20 +150,20 @@ public class OpportunityInfo extends DialogBox implements ClickHandler{
 				AsyncCallback<Boolean> callback = new AsyncCallback<Boolean>() {
 					@Override
 					public void onFailure(Throwable caught) {
-						Window.alert("Failed to add mentor to Opportunity");				
+						Window.alert("Failed to delete mentor of Opportunity");				
 					}
 
 					@Override
 					public void onSuccess(Boolean result) {
 						if (result) {
-							Window.alert("Successfully mentor added to Opportunity");
+							Window.alert("Successfully mentor deleted for Opportunity");
 						} else {
-							Window.alert("Failed to add mentor to Opportunity");
+							Window.alert("Failed to delete mentor of Opportunity");
 						}				
 					}
 				};
 				if(!result.isTypeParticipant()){
-					service.addMentorToOpportunity(result.getO().getId(), callback);
+					service.removeMentorForOpportunity(result.getO().getId(), callback);
 				}
 				else{
 					Window.alert("Not a participant");
