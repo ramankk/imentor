@@ -274,6 +274,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			String strlocation, int radius, List<String> hasSubs,
 			List<String> needSubs) {
 		SearchResponse response = new SearchResponse();
+		Participant pi;
 		Point pt = new Point(latitude, longitude);
 		try {
 			Set<String> hasSubjects = new HashSet<String>();
@@ -294,8 +295,8 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			long temp = System.currentTimeMillis();
 			List<Participant> participants = pm.searchParticipantsBySubjects(
 					needSubs, location, true);
-			LOG
-					.info("For TOME searchParticipantsBySubjects(needSubs,location, true) "
+			pi= pm.findParticipantByEmail(getUserId());
+			LOG.info("For TOME searchParticipantsBySubjects(needSubs,location, true) "
 							+ (System.currentTimeMillis() - temp));
 
 			for (Participant p : participants) {
@@ -312,8 +313,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			temp = System.currentTimeMillis();
 			participants = pm.searchParticipantsBySubjects(hasSubs, location,
 					false);
-			LOG
-					.info("For TOME searchParticipantsBySubjects(hasSubs, location, false) "
+			LOG.info("For TOME searchParticipantsBySubjects(hasSubs, location, false) "
 							+ (System.currentTimeMillis() - temp));
 
 			for (Participant p : participants) {
@@ -344,6 +344,19 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				need.add(new SearchResult(ValueObjectGenerator.create(o),
 						matchingSubs, GeocellUtils
 								.distance(pt, o.getLocation())));
+			}
+						
+			for(SearchResult s: need) {
+				if(s.isTypeParticipant()) {
+					if(s.getP().getEmail().equals(pi.getEmail())) {
+						need.remove(s);
+					}
+				}
+			}
+			for(SearchResult s: has) {
+				if(s.getP().getEmail().equals(pi.getEmail())) {
+					has.remove(s);					
+				}
 			}
 			response.setHas(has);
 			response.setNeed(need);
