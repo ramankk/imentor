@@ -168,7 +168,10 @@ public class MapUI extends Composite {
 
 			@Override
 			public void onClick(MapClickEvent event) {
-
+				if(marker == null){
+					marker = new Marker(LatLng.newInstance(event.getLatLng().getLatitude(), event.getLatLng().getLongitude(),true));
+					map.addOverlay(marker);
+				}
 				marker.setLatLng(event.getLatLng());
 				getAddress(event.getLatLng());
 				lData.setLatitude(marker.getLatLng().getLatitude());

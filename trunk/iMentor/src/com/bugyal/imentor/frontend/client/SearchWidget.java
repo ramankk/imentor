@@ -246,7 +246,7 @@ public class SearchWidget extends Composite implements ClickHandler,
 		location.setText(LOCATION_HELP);
 		listBox.setSelectedIndex(0);
 		mapUI.clear();
-		mapUI.map.addOverlay(mapUI.marker);
+	//	mapUI.map.addOverlay(mapUI.marker);
 		mapUI.setMarkerLocation(LatLng.newInstance(17.45, 78.39, true)
 				.getLatitude(), LatLng.newInstance(17.45, 78.39, true)
 				.getLongitude(), 0);
