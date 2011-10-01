@@ -124,7 +124,8 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		if (p.getNeedSubjects() != null) {
 			pm.addNeedKnowledge(pi, p.getNeedSubjects(), 5, pi);
 		}
-
+		pi.setName(p.getName());
+		pi.setGender(p.getGender());
 		pi.setLocation(location);
 		pm.save(pi);
 	}

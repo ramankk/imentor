@@ -4,13 +4,14 @@ import java.util.List;
 
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.core.client.JsArray;
+import com.google.gwt.event.dom.client.ClickEvent;
+import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.InfoWindow;
 import com.google.gwt.maps.client.InfoWindowContent;
 import com.google.gwt.maps.client.MapUIOptions;
 import com.google.gwt.maps.client.MapWidget;
 import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.event.MapClickHandler;
-import com.google.gwt.maps.client.event.MapZoomEndHandler;
 import com.google.gwt.maps.client.event.MarkerMouseOverHandler;
 import com.google.gwt.maps.client.geocode.Geocoder;
 import com.google.gwt.maps.client.geocode.LocationCallback;
@@ -19,9 +20,10 @@ import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.geom.LatLngBounds;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.Polygon;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Composite;
+import com.google.gwt.user.client.ui.FlowPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.VerticalPanel;
@@ -80,9 +82,7 @@ public class MapUI extends Composite {
 					partSubjects.append("<br /> And He has : ");
 					partSubjects.append(record.getP().getHasSubjectsAsString());
 					partSubjects.append("<br /> more...");
-					Image image = new Image("images/magni.png");
-					image.setPixelSize(15, 15);
-					partSubjects.append(image);
+
 				} else {
 					partSubjects.append(record.getO().getLocString());
 					partSubjects.append("<br /> Opportunity Needs : ");
@@ -113,21 +113,39 @@ public class MapUI extends Composite {
 				break;
 
 			default:
-				Window.alert("Somethig Wrong with you selection");
+				MainPageWidget.setErrorMessage("Unable to perform the Operation!");
 			}
 			final String temp = partSubjects.toString();
 			partMarker.addMarkerMouseOverHandler(new MarkerMouseOverHandler() {
 
 				@Override
 				public void onMouseOver(MarkerMouseOverEvent event) {
-					InfoWindowContent iwc = new InfoWindowContent(temp);
+					HTML html = new HTML(temp);
+					Image i = new Image("images/magni.png");
+					i.setPixelSize(15, 15);
+					i.addClickHandler(new ClickHandler() {
+
+						@Override
+						public void onClick(ClickEvent event) {
+							ProfileInfo pInfo = new ProfileInfo(null, record);
+							pInfo.show();
+							pInfo.center();
+						}
+
+					});
+					FlowPanel panel = new FlowPanel();
+					panel.add(html);
+					panel.add(i);
+					InfoWindowContent iwc = new InfoWindowContent(panel);
+
 					InfoWindow info = map.getInfoWindow();
+
 					info.open(event.getSender(), iwc);
 				}
 			});
 		}
-		Marker searchMarker = new Marker(searchLL);
-		map.addOverlay(searchMarker);
+		marker = new Marker(searchLL);
+		map.addOverlay(marker);
 	}
 
 	public void initMapUI() {
@@ -252,11 +270,11 @@ public class MapUI extends Composite {
 	public LocationData getLocationDetails() {
 		return lData;
 	}
-	
+
 	public void showResult(SearchResult result) {
 		setMarkerLocation(result.getLatitude(), result.getLongitude(), 0);
 	}
-	
+
 	public void setMarkerLocation(double lat, double lng, int radius) {
 		lData.setLatitude(lat);
 		lData.setLongitude(lng);
@@ -273,48 +291,50 @@ public class MapUI extends Composite {
 
 	public void clear() {
 		map.clearOverlays();
-		marker = new Marker(LatLng.newInstance(lData.getLatitude(), lData.getLongitude(), true));
+		marker = new Marker(LatLng.newInstance(lData.getLatitude(), lData
+				.getLongitude(), true));
 		map.addOverlay(marker);
 	}
 
 	public void setLocationDetails(LocationData lData) {
 		this.lData = lData;
 	}
-	
-	public int getZoomLevelByKM(int km){
-		if(km < 0.3)
+
+	public int getZoomLevelByKM(int km) {
+		if (km < 0.3)
 			return 17;
-		if(km < 0.8)
+		if (km < 0.8)
 			return 16;
-		if(km < 1.6)
+		if (km < 1.6)
 			return 15;
-		if(km < 3.2)
+		if (km < 3.2)
 			return 14;
-		if(km < 4.8)
+		if (km < 4.8)
 			return 13;
-		if(km < 11)
+		if (km < 11)
 			return 12;
-		if(km < 24)
+		if (km < 24)
 			return 11;
-		if(km < 48)
+		if (km < 48)
 			return 10;
-		if(km < 96)
+		if (km < 96)
 			return 9;
-		if(km < 192)
+		if (km < 192)
 			return 8;
-		if(km < 384)
+		if (km < 384)
 			return 7;
-		if(km < 768)
+		if (km < 768)
 			return 6;
-		if(km < 1536)
+		if (km < 1536)
 			return 5;
-		if(km < 3072)
+		if (km < 3072)
 			return 4;
-		if(km < 6144)
+		if (km < 6144)
 			return 3;
-		if(km < 12288)
+		if (km < 12288)
 			return 2;
-		else return 9;
-		
+		else
+			return 9;
+
 	}
 }

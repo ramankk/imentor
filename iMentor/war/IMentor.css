@@ -32,7 +32,7 @@ element.style {
 }
 
 .serverResponseLabelError {
-	color: red;
+	color: #F76541;
 }
 
 /** Set ids using widget.getElement().setId("idOfElement") */
@@ -103,7 +103,7 @@ element.style {
 }
 
 .statusErrorMsg {
-	background-color: #FF0000;
+	background-color: #F76541;
 }
 
 .statusMsg {

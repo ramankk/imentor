@@ -19,7 +19,6 @@ public class SearchResultWidgetForProfile extends Composite implements
 	Label location = new Label();
 	Label subjects = new Label();
 	Image pursueImage = new Image();
-	
 	SearchResult searchResult = null;
 	SearchResponseWidget widget= null;
 	FlexTable table = new FlexTable();
@@ -28,7 +27,6 @@ public class SearchResultWidgetForProfile extends Composite implements
 	public SearchResultWidgetForProfile(boolean isEven, final MapUI mapUI) {
 		setEvenRow(isEven);
 		this.mapUI = mapUI;
-		
 		table.addClickHandler(new ClickHandler() {
 			@Override
 			public void onClick(ClickEvent event) {

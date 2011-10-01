@@ -22,10 +22,10 @@ public class ToMeWidget extends Composite {
 	SearchResponseWidget needResults;
 
 	TabPanel tabPanel;
-	
+
 	String lastEmailId = null;
 	HeaderWidget header = null;
-	
+
 	// Constructor for ToMeWidget
 	public ToMeWidget(HeaderWidget header) {
 		this.header = header;
@@ -57,7 +57,6 @@ public class ToMeWidget extends Composite {
 
 		initWidget(tabPanel);
 
-		
 		// getDataFeeds();
 	}
 
@@ -67,7 +66,7 @@ public class ToMeWidget extends Composite {
 		service.feedToMe(new AsyncCallback<SearchResponse>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("unable to load" + caught.getMessage());
+				MainPageWidget.setErrorMessage("unable to load");
 				showDefaultCursor();
 			}
 
@@ -81,7 +80,7 @@ public class ToMeWidget extends Composite {
 				allResults.setResults(all);
 				hasResults.setResults(result.getHas());
 				needResults.setResults(result.getNeed());
-				
+
 				lastEmailId = header.getUserDetails().getEmail();
 			}
 		});

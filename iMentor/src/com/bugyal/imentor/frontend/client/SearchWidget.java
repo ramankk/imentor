@@ -3,6 +3,7 @@ package com.bugyal.imentor.frontend.client;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.bugyal.imentor.frontend.shared.SearchResponse;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ChangeEvent;
@@ -11,7 +12,6 @@ import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -38,8 +38,10 @@ public class SearchWidget extends Composite implements ClickHandler,
 	SearchResponse sResponse;
 	TabPanel tabPanel_1 = new TabPanel();
 	TabPanel switchView = new TabPanel();
+	ParticipantVO participant;
+	public static final String LOCATION_HELP = "Please Use the Map";
 
-	SearchResponseWidget searchResultsWidget = new SearchResponseWidget();
+	SearchResponseWidget searchResponseWidget = new SearchResponseWidget();
 
 	FlexTable resultsPanel = new FlexTable();
 
@@ -48,16 +50,17 @@ public class SearchWidget extends Composite implements ClickHandler,
 		location = new TextArea();
 		location.setEnabled(false);
 		location.setSize("213px", "43px");
-		location.setText("Please use map");
-		location.setTitle("Please use map");
+		location.setText(LOCATION_HELP);
+		location.setTitle(LOCATION_HELP);
 		mapUI = new MapUI(false, location);
+
 		subjectsSuggestWidget = new SubjectsSuggestWidget(
 				new ArrayList<String>());
 		AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
 
 			@Override
 			public void onFailure(Throwable caught) {
-				Window.alert("Fail to get Subjects list");
+				// Window.alert("Fail to get Subjects list");
 			}
 
 			@Override
@@ -67,6 +70,21 @@ public class SearchWidget extends Composite implements ClickHandler,
 
 		};
 		service.getSubjects(callback);
+
+		AsyncCallback<ParticipantVO> getParticipantCallback = new AsyncCallback<ParticipantVO>() {
+
+			@Override
+			public void onSuccess(ParticipantVO result) {
+				participant = result;
+			}
+
+			@Override
+			public void onFailure(Throwable caught) {
+				// TODO Auto-generated method stub
+
+			}
+		};
+		service.getParticipantVOByEmailId(getParticipantCallback);
 
 		VerticalPanel subjectsVertical = new VerticalPanel();
 		subjectsVertical.setHeight("80px");
@@ -115,7 +133,7 @@ public class SearchWidget extends Composite implements ClickHandler,
 		tabPanel_1.selectTab(0);
 		tabPanel_1.setSize("700px", "150px");
 		switchView.add(mapUI, "Map View");
-		switchView.add(searchResultsWidget, "List View");
+		switchView.add(searchResponseWidget, "List View");
 		switchView.setWidth("710px");
 		switchView.selectTab(0);
 
@@ -135,9 +153,6 @@ public class SearchWidget extends Composite implements ClickHandler,
 
 		List<String> hasSubs, needSubs;
 
-		// TODO(sundeep): Fix me, pick up the participant's has and need
-		// subjects
-		// when user doesn't supply them.
 		hasSubs = new ArrayList<String>();
 		needSubs = new ArrayList<String>();
 
@@ -145,16 +160,20 @@ public class SearchWidget extends Composite implements ClickHandler,
 			showWaitCursor();
 			locationData = mapUI.getLocationDetails();
 
-			if (subjectsSuggestWidget.getSelected().isEmpty()) {
-				// hasSubs = ;(get from logged in user TODO Sundeep)
-				// needSubs = ;
+			if (subjectsSuggestWidget.getSelected() == null) {
+				// hasSubs = participant.getHasSubjects();
+				// needSubs = participant.getNeedSubjects();
+				MainPageWidget.setErrorMessage("No subjects Selected");
+
 			} else {
 				hasSubs = subjectsSuggestWidget.getSelected();
 				needSubs = subjectsSuggestWidget.getSelected();
 			}
 
-			if (location.getText().contains("Please, Use the Map")) {
-				location.setText("");// get from logged in user TODO Sundeep
+			if (location.getText().contains(LOCATION_HELP)) {
+				// locationData.setLatitude(participant.getLatitude());
+				// locationData.setLongitude(participant.getLongitude());
+				MainPageWidget.setErrorMessage("No location has been selceted");
 			}
 
 			service.filterList(locationData.getLatitude(), locationData
@@ -164,7 +183,8 @@ public class SearchWidget extends Composite implements ClickHandler,
 
 						@Override
 						public void onFailure(Throwable caught) {
-							Window.alert("Unable to load");
+							MainPageWidget
+									.setErrorMessage("Zero results found!");
 							showDefaultCursor();
 						}
 
@@ -173,7 +193,8 @@ public class SearchWidget extends Composite implements ClickHandler,
 							sResponse = result;
 							showSearchResults(sResponse);
 							int size = sResponse.getAllResults().size();
-							int km = sResponse.getAllResults().get(size-1).getDistanceInKm();
+							int km = sResponse.getAllResults().get(size - 1)
+									.getDistanceInKm();
 							mapUI.setZoomLevelToKm(km);
 						}
 
@@ -190,15 +211,15 @@ public class SearchWidget extends Composite implements ClickHandler,
 
 		switch (type) {
 		case 0:
-			searchResultsWidget.setResults(response.getAllResults());
+			searchResponseWidget.setResults(response.getAllResults());
 			mapUI.addPartMarkers(type, response.getAllResults());
 			break;
 		case 1:
-			searchResultsWidget.setResults(response.getHas());
+			searchResponseWidget.setResults(response.getHas());
 			mapUI.addPartMarkers(type, response.getHas());
 			break;
 		case 2:
-			searchResultsWidget.setResults(response.getNeed());
+			searchResponseWidget.setResults(response.getNeed());
 			mapUI.addPartMarkers(type, response.getNeed());
 			break;
 		default:
@@ -222,13 +243,16 @@ public class SearchWidget extends Composite implements ClickHandler,
 
 	public void clearSearchWidget() {
 		subjectsSuggestWidget.clearAll();
-		location.setText("Please, Use the Map");
+		location.setText(LOCATION_HELP);
 		listBox.setSelectedIndex(0);
 		mapUI.clear();
 		mapUI.map.addOverlay(mapUI.marker);
-		mapUI.setMarkerLocation(LatLng.newInstance(17.45, 78.39, true).getLatitude(), LatLng.newInstance(17.45, 78.39, true).getLongitude(), 0);
+		mapUI.setMarkerLocation(LatLng.newInstance(17.45, 78.39, true)
+				.getLatitude(), LatLng.newInstance(17.45, 78.39, true)
+				.getLongitude(), 0);
 		mapUI.map.setZoomLevel(4);
-		
+		searchResponseWidget.clearAll();
+
 	}
 
 }

@@ -16,7 +16,6 @@ public class SearchResultWidget extends Composite implements SearchResultFactory
 
 	Label message = new Label();
 	Label distance = new Label();
-
 	Image pursueImage = new Image();
 	SearchResult searchResult = null;
 	SearchResponseWidget widget = null;
@@ -52,7 +51,7 @@ public class SearchResultWidget extends Composite implements SearchResultFactory
 					Window.alert("Something Wrong with ur Action");
 				}
 				if(searchResult.isTypeParticipant()){					
-					ProfileInfo info = new ProfileInfo(widget,searchResult);
+					ProfileInfo info = new ProfileInfo(widget, searchResult);
 					info.center();
 					
 				}
@@ -69,6 +68,7 @@ public class SearchResultWidget extends Composite implements SearchResultFactory
 	public void setResult(SearchResponseWidget widget,SearchResult result) {
 		this.widget = widget;
 		searchResult = result;
+		pursueImage.setVisible(true);
 		pursueImage.setVisible(true);
 		StringBuilder messageString = new StringBuilder();
 		if (result.isTypeParticipant()) {

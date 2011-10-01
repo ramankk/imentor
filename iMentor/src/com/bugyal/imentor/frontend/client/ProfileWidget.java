@@ -10,7 +10,6 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -53,8 +52,9 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		AsyncCallback<List<String>> callback = new AsyncCallback<List<String>>() {
 			@Override
 			public void onFailure(Throwable caught) {
-				mainPage.setErrorMessage("Fail to get Subjects list");
+				MainPageWidget.setErrorMessage("Fail to get Subjects list");
 			}
+
 			@Override
 			public void onSuccess(List<String> result) {
 				subWidgetHas.clearAll();
@@ -140,7 +140,8 @@ public class ProfileWidget extends Composite implements ClickHandler {
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		topVertical.setHeight("160px");
 
-		SearchResultFactory factory = new SearchResultFactory(Type.ForProfileWidget);
+		SearchResultFactory factory = new SearchResultFactory(
+				Type.ForProfileWidget);
 		factory.setMapUI(mapUI);
 		mentortab = new SearchResponseWidget(5, factory);
 		menteetab = new SearchResponseWidget(5, factory);
@@ -197,8 +198,8 @@ public class ProfileWidget extends Composite implements ClickHandler {
 					tbEmailId.setText(result.getEmail());
 					tbLocation.setText(result.getLocationString());
 
-					mapUI.setMarkerLocation(result.getLatitude(),
-							result.getLongitude(), result.getRadius());
+					mapUI.setMarkerLocation(result.getLatitude(), result
+							.getLongitude(), result.getRadius());
 
 					for (String sub : result.getHasSubjects()) {
 						subWidgetHas.add(sub);
@@ -219,7 +220,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 			}
 
 			@Override
-			public void onSuccess(List<SearchResult> result) {				
+			public void onSuccess(List<SearchResult> result) {
 				mentortab.setResults(result);
 			}
 
@@ -232,7 +233,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 			}
 
 			@Override
-			public void onSuccess(java.util.List<SearchResult> result) {				
+			public void onSuccess(java.util.List<SearchResult> result) {
 				menteetab.setResults(result);
 			}
 		});
@@ -244,26 +245,29 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		if (event.getSource() == btnSave) {
 			lData = mapUI.getLocationDetails();
 			if (!(subWidgetHas.getSubjects().isEmpty() && subWidgetNeed
-					.getSubjects().isEmpty()) && (tbLocation.getText() != null)) {
+					.getSubjects().isEmpty())
+					&& (tbLocation.getText() != null)) {
 
 				ParticipantVO partVO = new ParticipantVO(id, tbName.getText(),
-						"M", tbEmailId.getText(), lData.getLatitude(),
-						lData.getLongitude(), tbLocation.getText(),
-						lData.getRadius(), subWidgetHas.getSubjects(),
-						subWidgetNeed.getSubjects());
+						rbMale.isChecked() ? "M" : "F", tbEmailId.getText(),
+						lData.getLatitude(), lData.getLongitude(), tbLocation
+								.getText(), lData.getRadius(), subWidgetHas
+								.getSubjects(), subWidgetNeed.getSubjects());
 				if (!status) {
 					service.create(partVO, new AsyncCallback<ParticipantVO>() {
 
 						@Override
 						public void onFailure(Throwable caught) {
-							mainPage.setErrorMessage("Unable to Create the Profile"
-									+ caught.getMessage());
+							MainPageWidget
+									.setErrorMessage("Unable to Create the Profile"
+											+ caught.getMessage());
 						}
 
 						@Override
 						public void onSuccess(ParticipantVO result) {
 							mainPage.getHeaderWidget().setNewUser(false);
-							mainPage.setMessage("Profile created successfully ");
+							MainPageWidget
+									.setMessage("Profile created successfully ");
 							mainPage.showHomeWidget();
 							init();
 						}
@@ -272,12 +276,14 @@ public class ProfileWidget extends Composite implements ClickHandler {
 					service.update(partVO, new AsyncCallback<ParticipantVO>() {
 						@Override
 						public void onFailure(Throwable caught) {
-							mainPage.setErrorMessage("Sorry, No changes has been made"
-									+ caught.getMessage());
+							MainPageWidget
+									.setErrorMessage("Sorry, No changes has been made"
+											+ caught.getMessage());
 						}
+
 						@Override
 						public void onSuccess(ParticipantVO result) {
-							mainPage.setMessage("Updated sucessfully");
+							MainPageWidget.setMessage("Updated sucessfully");
 							mainPage.showHomeWidget();
 						}
 					});
@@ -285,10 +291,11 @@ public class ProfileWidget extends Composite implements ClickHandler {
 			}
 		}
 	}
-	
+
 	public static void showWaitCursor() {
 		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "wait");
 	}
+
 	public static void showDefaultCursor() {
 		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "default");
 	}
