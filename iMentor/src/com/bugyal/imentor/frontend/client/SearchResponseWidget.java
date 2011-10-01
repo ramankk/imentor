@@ -78,6 +78,10 @@ public class SearchResponseWidget extends Composite {
 		backwardButton.setTitle("prev");
 		initWidget(verticalPanel);
 	}
+	public void filsterList(SearchResult record) {
+		searchResults.remove(record);
+		showPage(0);
+	}
 	
 	public void setResults(List<SearchResult> participants) {
 		searchResults = participants;
@@ -92,7 +96,7 @@ public class SearchResponseWidget extends Composite {
 		int i;
 		for (i = 0; i < pageSize; i++) {
 			if (((page * pageSize) + i) < searchResults.size()) {
-				resultObjects.get(i).setResult(searchResults.get((page * pageSize) + i));
+				resultObjects.get(i).setResult(this, searchResults.get((page * pageSize) + i));
 			} else {
 				resultObjects.get(i).clear();
 			}

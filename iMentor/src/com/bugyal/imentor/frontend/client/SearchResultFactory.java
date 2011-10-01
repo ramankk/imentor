@@ -33,7 +33,7 @@ public class SearchResultFactory {
 	
 	public static interface SearchResultWidgetInterface {
 		public void setEvenRow(boolean even);
-		public void setResult(SearchResult result);
+		public void setResult(SearchResponseWidget widget, SearchResult result);
 		public void clear();
 	}
 }

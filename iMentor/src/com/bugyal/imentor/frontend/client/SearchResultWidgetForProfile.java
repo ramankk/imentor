@@ -21,6 +21,7 @@ public class SearchResultWidgetForProfile extends Composite implements
 	Image pursueImage = new Image();
 	
 	SearchResult searchResult = null;
+	SearchResponseWidget widget= null;
 	FlexTable table = new FlexTable();
 	MapUI mapUI = null; 
 
@@ -64,11 +65,11 @@ public class SearchResultWidgetForProfile extends Composite implements
 					Window.alert("Something Wrong with ur Action");
 				}
 				if(searchResult.isTypeParticipant()){					
-					ProfileInfo info = new ProfileInfo(searchResult);
+					ProfileInfo info = new ProfileInfo(widget, searchResult);
 					info.center();					
 				}
 				else{
-					OpportunityInfo info = new OpportunityInfo(searchResult);
+					OpportunityInfo info = new OpportunityInfo(widget, searchResult);
 					info.center();
 				}
 			}
@@ -77,10 +78,10 @@ public class SearchResultWidgetForProfile extends Composite implements
 	}
 
 	@Override
-	public void setResult(SearchResult result) {
+	public void setResult(SearchResponseWidget widget, SearchResult result) {
 		
 		searchResult = result;
-		
+		this.widget = widget; 
 		pursueImage.setVisible(true);
 		if(result.isTypeParticipant()) {
 			name.setText(result.getP().getName());

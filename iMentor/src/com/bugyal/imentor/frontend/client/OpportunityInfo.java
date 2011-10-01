@@ -24,11 +24,12 @@ public class OpportunityInfo extends DialogBox implements ClickHandler{
 	Button cancel, pursue;
 	MentorServiceAsync service;
 	SearchResult result = null;
+	SearchResponseWidget widget = null;
 	FlexTable table=null;
 	boolean isPersue;
 	
-	public OpportunityInfo(SearchResult results) {
-
+	public OpportunityInfo(SearchResponseWidget widget, SearchResult results) {
+		this.widget = widget;
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 		this.result = results;		
 		setHTML("Opportunity Info");
@@ -157,6 +158,7 @@ public class OpportunityInfo extends DialogBox implements ClickHandler{
 					public void onSuccess(Boolean result) {
 						if (result) {
 							Window.alert("Successfully mentor deleted for Opportunity");
+							reloadWidget();
 						} else {
 							Window.alert("Failed to delete mentor of Opportunity");
 						}				
@@ -171,6 +173,9 @@ public class OpportunityInfo extends DialogBox implements ClickHandler{
 				this.hide();
 			}		
 		}		
+	}
+	public void reloadWidget() {
+		widget.filsterList(result);
 	}
 	
 	void setData(int index, String field, String value) {
