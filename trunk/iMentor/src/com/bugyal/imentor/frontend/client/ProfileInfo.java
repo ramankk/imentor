@@ -21,12 +21,13 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 	Button cancel, pursue;
 	MentorServiceAsync service;
 	SearchResult result = null;
+	SearchResponseWidget widget;
 	FlexTable table=null;
 	boolean isPersue;
 	long participantId;
 
-	public ProfileInfo(SearchResult results) {
-			
+	public ProfileInfo(SearchResponseWidget widget, SearchResult results) {
+		this.widget = widget;
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 		this.result = results;		
 		setHTML("Profile Info");
@@ -150,6 +151,7 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 					public void onSuccess(Boolean result) {
 						if (result) {
 							Window.alert("Successfully mentor or mentee deleted");
+							reloadWidget();
 						} else {
 							Window.alert("Failed to delete mentor to mentee");
 						}				
@@ -165,7 +167,9 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 			
 		}		
 	}
-	
+	public void reloadWidget() {
+		widget.filsterList(result);
+	}
 	void setData(int index, String field, String value) {
 			table.setWidget(index, 0, new HTML("<b>"+field+" </b>"));
 			table.getCellFormatter().setWidth(index, 0, "100px");

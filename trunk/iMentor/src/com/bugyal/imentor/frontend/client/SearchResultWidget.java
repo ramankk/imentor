@@ -19,6 +19,7 @@ public class SearchResultWidget extends Composite implements SearchResultFactory
 
 	Image pursueImage = new Image();
 	SearchResult searchResult = null;
+	SearchResponseWidget widget = null;
 	FlexTable table = new FlexTable();
 	
 
@@ -51,12 +52,12 @@ public class SearchResultWidget extends Composite implements SearchResultFactory
 					Window.alert("Something Wrong with ur Action");
 				}
 				if(searchResult.isTypeParticipant()){					
-					ProfileInfo info = new ProfileInfo(searchResult);
+					ProfileInfo info = new ProfileInfo(widget,searchResult);
 					info.center();
 					
 				}
 				else{
-					OpportunityInfo info = new OpportunityInfo(searchResult);
+					OpportunityInfo info = new OpportunityInfo(widget, searchResult);
 					info.center();
 				}
 			}
@@ -65,8 +66,8 @@ public class SearchResultWidget extends Composite implements SearchResultFactory
 	}
 	
 	@Override
-	public void setResult(SearchResult result) {
-		
+	public void setResult(SearchResponseWidget widget,SearchResult result) {
+		this.widget = widget;
 		searchResult = result;
 		pursueImage.setVisible(true);
 		StringBuilder messageString = new StringBuilder();
