@@ -38,6 +38,9 @@ public class SearchResultWidget extends Composite implements SearchResultFactory
 		table.getFlexCellFormatter().setColSpan(0, 0, 5);
 		table.setWidget(0, 6, distance);
 		table.setWidget(0, 7, pursueImage);
+		pursueImage.setSize("15px","15px");
+		pursueImage.setUrl("images/magni.png");
+		pursueImage.setVisible(false);
 		table.getCellFormatter().setWidth(0, 6, "50px");
 		table.getCellFormatter().setWidth(0, 7, "15px");
 		DOM.setStyleAttribute(pursueImage.getElement(), "cursor", "pointer");
@@ -65,9 +68,7 @@ public class SearchResultWidget extends Composite implements SearchResultFactory
 	public void setResult(SearchResult result) {
 		
 		searchResult = result;
-
-		pursueImage.setSize("15px","15px");
-		pursueImage.setUrl("images/magni.png");
+		pursueImage.setVisible(true);
 		StringBuilder messageString = new StringBuilder();
 		if (result.isTypeParticipant()) {
 			table.setTitle(result.getP().getLocationString());
@@ -97,5 +98,6 @@ public class SearchResultWidget extends Composite implements SearchResultFactory
 	public void clear() {
 		message.setText("");
 		distance.setText("");
+		pursueImage.setVisible(false);
 	}	
 }

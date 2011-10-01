@@ -79,6 +79,12 @@ public class ProfileInfo extends DialogBox implements ClickHandler {
 								menteelist.append( s.getName());
 							}
 						}
+						if(mentorlist.length() == 0) {
+							mentorlist.append("  ----");
+						}						
+						if(menteelist.length() == 0) {
+							menteelist.append("  ----");
+						} 
 						setData(6, "Mentors List ", mentorlist.toString());
 						setData(7, "Mentees List ", menteelist.toString());
 					}					
