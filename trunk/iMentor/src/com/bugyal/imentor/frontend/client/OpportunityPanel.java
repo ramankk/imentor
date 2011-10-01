@@ -10,7 +10,6 @@ import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.logical.shared.SelectionEvent;
 import com.google.gwt.event.logical.shared.SelectionHandler;
 import com.google.gwt.maps.client.geom.LatLng;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.Composite;
@@ -38,7 +37,6 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 	private LocationData lData = new LocationData();
 
 	private MyOpportunitiesWidget myOppWidget;
-	private MainPageWidget mainPage;
 
 	private final AsyncCallback<List<String>> getSubjectsCallback = new AsyncCallback<List<String>>() {
 
@@ -57,7 +55,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			mainPage.setErrorMessage("Unable to get opportunity"
+			MainPageWidget.setErrorMessage("Unable to get opportunity"
 					+ caught.getMessage());
 		}
 
@@ -71,18 +69,18 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 
 		@Override
 		public void onFailure(Throwable caught) {
-			mainPage.setMessage("Sorry, Unable to delete the Opportunity"
+			MainPageWidget.setMessage("Sorry, Unable to delete the Opportunity"
 					+ caught.getMessage());
 		}
 
 		@Override
 		public void onSuccess(Boolean result) {
-			mainPage.setMessage("Opportunity has been deleted Successfully");
+			MainPageWidget
+					.setMessage("Opportunity has been deleted Successfully");
 		}
 	};
 
-	public OpportunityPanel(MainPageWidget mainPage) {
-		this.mainPage = mainPage;
+	public OpportunityPanel() {
 
 		myOppWidget = new MyOpportunitiesWidget(this);
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
@@ -217,7 +215,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 
 								@Override
 								public void onFailure(Throwable caught) {
-									mainPage
+									MainPageWidget
 											.setErrorMessage("Sorry, Unble to Create the Opportunity "
 													+ caught.getMessage());
 								}
@@ -227,7 +225,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 									clearOpportunity();
 									service
 											.getOpportunitiesById(getOpportuniesCallback);
-									mainPage
+									MainPageWidget
 											.setMessage("Opportunity has been created successfully");
 								}
 
@@ -239,7 +237,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 
 								@Override
 								public void onFailure(Throwable caught) {
-									mainPage
+									MainPageWidget
 											.setErrorMessage("Sorry, Unble to Create the Opportunity "
 													+ caught.getMessage());
 								}
@@ -249,7 +247,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 									clearOpportunity();
 									service
 											.getOpportunitiesById(getOpportuniesCallback);
-									mainPage
+									MainPageWidget
 											.setMessage("Opportunity updated successfully");
 									tabPanel.getTabBar().setTabText(0,
 											"Create Opportunity ");
@@ -258,7 +256,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 				}
 
 			} else {
-				mainPage.setErrorMessage("Fields are empty");
+				MainPageWidget.setErrorMessage("Fields are empty");
 			}
 		} else if (event.getSource() == btnCancel) {
 			clearOpportunity();
@@ -276,18 +274,20 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 	}
 
 	public void showOnMap(OpportunityVO o) {
-		mapUI.setMarkerLocation(o.getLatitude(), o.getLongitude(), o.getRadius());
-//		lData.setLatitude(o.getLatitude());
+		mapUI.setMarkerLocation(o.getLatitude(), o.getLongitude(), o
+				.getRadius());
+		// lData.setLatitude(o.getLatitude());
 		lData.setLocation(o.getLocString());
-//		lData.setLongitude(o.getLongitude());
-//		lData.setRadius(o.getRadius());
+		// lData.setLongitude(o.getLongitude());
+		// lData.setRadius(o.getRadius());
 		mapUI.setLocationDetails(lData);
 	}
 
 	public void setDefaultLocationOnMap() {
-		mapUI.setMarkerLocation(LatLng.newInstance(17.45, 78.39, true).getLatitude(), LatLng.newInstance(17.45, 78.39, true).getLongitude(), 0);
+		mapUI.setMarkerLocation(LatLng.newInstance(17.45, 78.39, true)
+				.getLatitude(), LatLng.newInstance(17.45, 78.39, true)
+				.getLongitude(), 0);
 		mapUI.map.setZoomLevel(4);
 	}
 
-	
 }

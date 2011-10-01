@@ -7,7 +7,6 @@ import com.bugyal.imentor.frontend.shared.SearchResponse;
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.DOM;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
@@ -53,8 +52,7 @@ public class LocalActivity extends Composite {
 			@Override
 			public void onFailure(Throwable caught) {
 				// TODO Auto-generated method stub
-				Window.alert("Failed to fetch for local activies"
-						+ caught.getMessage());
+				MainPageWidget.setErrorMessage("Unable to fetch for local activies, Please reload the Page");
 			}
 
 			@Override

@@ -22,8 +22,8 @@ public class MainPageWidget extends Composite {
 
 	private FlexTable ft = new FlexTable();
 
-	private Label statusMessage = new Label();
-	Timer msgTimer = new Timer() {
+	private static Label statusMessage = new Label();
+	static Timer msgTimer = new Timer() {
 
 		public void run() {
 			statusMessage.setText("");
@@ -44,8 +44,8 @@ public class MainPageWidget extends Composite {
 
 		searchPanel.setWidget(0, 0, searchWidget);
 
-	//	profilePanel = new ProfileWidget(this);
-		opportunityPanel = new OpportunityPanel(this);
+		// profilePanel = new ProfileWidget(this);
+		opportunityPanel = new OpportunityPanel();
 
 		ft.setWidget(0, 0, statusMessage);
 		ft.getCellFormatter().setAlignment(0, 0,
@@ -69,7 +69,7 @@ public class MainPageWidget extends Composite {
 	}
 
 	public void showProfilePanel(boolean initProfileWidget) {
-		if(initProfileWidget || profilePanel == null){
+		if (initProfileWidget || profilePanel == null) {
 			profilePanel = new ProfileWidget(this);
 		}
 		profilePanel.init();
@@ -85,14 +85,14 @@ public class MainPageWidget extends Composite {
 		return menuPanel;
 	}
 
-	public void setMessage(String message) {
+	public static void setMessage(String message) {
 		statusMessage.setText(message);
 		statusMessage.setStyleName("statusMsg");
 		msgTimer.schedule(5000);
 
 	}
 
-	public void setErrorMessage(String errorMessage) {
+	public static void setErrorMessage(String errorMessage) {
 		statusMessage.setText(errorMessage);
 		statusMessage.setStyleName("statusErrorMsg");
 		msgTimer.schedule(5000);

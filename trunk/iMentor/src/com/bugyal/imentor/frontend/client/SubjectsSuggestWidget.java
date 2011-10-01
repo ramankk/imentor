@@ -1,7 +1,6 @@
 package com.bugyal.imentor.frontend.client;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import com.google.gwt.event.dom.client.ClickEvent;
@@ -125,7 +124,7 @@ public class SubjectsSuggestWidget extends Composite {
 		this.oracle.add(subject);
 	}
 
-	public void addMoreSubjects(Collection<String> subjects) {
+	public void addMoreSubjects(List<String> subjects) {
 		this.oracle.addAll(subjects);
 	}
 

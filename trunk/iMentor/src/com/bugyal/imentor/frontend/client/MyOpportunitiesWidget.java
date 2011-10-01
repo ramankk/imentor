@@ -36,7 +36,7 @@ public class MyOpportunitiesWidget extends Composite {
 				final int rowIndex = flexTable.getCellForEvent(event)
 						.getRowIndex();
 				parent.showOnMap(oppList.get(rowIndex));
-				
+
 				if (cellIndex == 1) {
 					parent.showOpportunity(oppList.get(rowIndex));
 				} else if (cellIndex == 2) {
@@ -62,13 +62,14 @@ public class MyOpportunitiesWidget extends Composite {
 			edit.setStyleName("removeSubjectCSS");
 			remove.setTitle("Click to delete the Opportunity");
 			remove.setStyleName("removeSubjectCSS");
-		
-			flexTable.setWidget(i, 0, getOpportunityVP(oppList.get(i), parent, (i % 2 == 0) ? colors[0] : colors[1]));
+
+			flexTable.setWidget(i, 0, getOpportunityVP(oppList.get(i), parent,
+					(i % 2 == 0) ? colors[0] : colors[1]));
 			flexTable.getCellFormatter().setWidth(i, 0, "700px");
 			flexTable.setWidget(i, 1, edit);
-			flexTable.setWidget(i, 2, remove);					
+			flexTable.setWidget(i, 2, remove);
 		}
-		applyDataRowStyles();	
+		applyDataRowStyles();
 	}
 
 	private HorizontalPanel getOpportunityVP(final OpportunityVO o,
@@ -86,7 +87,7 @@ public class MyOpportunitiesWidget extends Composite {
 				parent.showOnMap(o);
 			}
 		});
-		
+
 		HorizontalPanel ovp = new HorizontalPanel();
 		ovp.add(date);
 		ovp.add(new HTML("<b>&nbsp</b>"));
@@ -97,21 +98,20 @@ public class MyOpportunitiesWidget extends Composite {
 		ovp.add(new Label("at"));
 		ovp.add(new HTML("<b>&nbsp</b>"));
 		ovp.add(location);
-		
+
 		return ovp;
 
 	}
-	
+
 	private void applyDataRowStyles() {
-	    HTMLTable.RowFormatter rf = flexTable.getRowFormatter();
-	    
-	    for (int row = 0; row < flexTable.getRowCount(); ++row) {
-	      if ((row % 2) != 0) {
-	        rf.addStyleName(row, "FlexTable-OddRow");
-	      }
-	      else {
-	        rf.addStyleName(row, "FlexTable-EvenRow");
-	      }
-	    }
-	  }
+		HTMLTable.RowFormatter rf = flexTable.getRowFormatter();
+
+		for (int row = 0; row < flexTable.getRowCount(); ++row) {
+			if ((row % 2) != 0) {
+				rf.addStyleName(row, "FlexTable-OddRow");
+			} else {
+				rf.addStyleName(row, "FlexTable-EvenRow");
+			}
+		}
+	}
 }

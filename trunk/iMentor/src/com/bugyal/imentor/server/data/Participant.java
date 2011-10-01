@@ -261,7 +261,7 @@ public class Participant implements LocationCapable {
 		return name;
 	}
 
-	Participant setName(String name) {
+	public Participant setName(String name) {
 		this.name = name;
 		this.lastModifiedTime = System.currentTimeMillis();
 		return this;

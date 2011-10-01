@@ -30,7 +30,6 @@ public interface MentorServiceAsync {
 			int radius, List<String> hasSubs, List<String> needSubs,
 			AsyncCallback<SearchResponse> callback);
 
-
 	void getParticipantVOByEmailId(AsyncCallback<ParticipantVO> callback);
 
 	void createSession(String emailId, String provider, String providerId,
@@ -49,11 +48,10 @@ public interface MentorServiceAsync {
 	void createOpportunity(OpportunityVO o,
 			AsyncCallback<OpportunityVO> callback);
 
-	void addMentorAndMentee(Boolean isHas, String mentorMailId, AsyncCallback<Boolean> callback);
+	void addMentorAndMentee(Boolean isHas, String mentorMailId,
+			AsyncCallback<Boolean> callback);
 
-	void commment(String subject, String comment,
-			AsyncCallback<Void> callback);	
-	
+	void commment(String subject, String comment, AsyncCallback<Void> callback);
 
 	void getMentorAndMentees(ParticipantVO participantVO,
 			AsyncCallback<MentorDataStatus> callback1);
@@ -68,11 +66,11 @@ public interface MentorServiceAsync {
 	void removeMentorForOpportunity(long id, AsyncCallback<Boolean> callback);
 
 	void searchOwnersById(Long id, AsyncCallback<List<MentorsResult>> callback);
-	
+
 	void getMentorsForOpportunity(Long id,
 			AsyncCallback<MentorDataStatus> callback1);
 
 	void getMyMentors(AsyncCallback<List<SearchResult>> asyncCallback);
 
-	void getMyMentees(AsyncCallback<List<SearchResult>> asyncCallback);	
+	void getMyMentees(AsyncCallback<List<SearchResult>> asyncCallback);
 }

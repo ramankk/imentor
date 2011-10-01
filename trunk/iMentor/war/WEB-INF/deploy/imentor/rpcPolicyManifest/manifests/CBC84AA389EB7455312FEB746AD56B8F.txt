@@ -1,0 +1,2 @@
+serviceClass: com.bugyal.imentor.frontend.client.MentorService
+path: 561D72D93C6781A30492855A1D094DB0.gwt.rpc
