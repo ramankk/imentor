@@ -9,6 +9,7 @@ import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.user.client.DOM;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.Button;
@@ -18,6 +19,7 @@ import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RadioButton;
+import com.google.gwt.user.client.ui.RootPanel;
 import com.google.gwt.user.client.ui.TabPanel;
 import com.google.gwt.user.client.ui.TextArea;
 import com.google.gwt.user.client.ui.TextBox;
@@ -44,7 +46,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 
 	public ProfileWidget(final MainPageWidget mainPage) {
 		this.mainPage = mainPage;
-
+		showDefaultCursor();
 		service = (MentorServiceAsync) GWT.create(MentorService.class);
 		init();
 
@@ -282,5 +284,12 @@ public class ProfileWidget extends Composite implements ClickHandler {
 				}
 			}
 		}
+	}
+	
+	public static void showWaitCursor() {
+		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "wait");
+	}
+	public static void showDefaultCursor() {
+		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "default");
 	}
 }

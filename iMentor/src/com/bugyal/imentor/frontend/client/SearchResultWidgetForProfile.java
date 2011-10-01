@@ -51,6 +51,9 @@ public class SearchResultWidgetForProfile extends Composite implements
 		table.setWidget(0, 2, subjects);
 		table.getCellFormatter().setWidth(0, 2, "300px");
 		table.setWidget(0, 3, pursueImage);
+		pursueImage.setSize("15px","15px");
+		pursueImage.setUrl("images/magni.png");
+		pursueImage.setVisible(false);
 		table.getCellFormatter().setWidth(0, 3, "20px");
 		
 		DOM.setStyleAttribute(pursueImage.getElement(), "cursor", "pointer");
@@ -77,9 +80,8 @@ public class SearchResultWidgetForProfile extends Composite implements
 	public void setResult(SearchResult result) {
 		
 		searchResult = result;
-		pursueImage.setSize("15px","15px");
-		pursueImage.setUrl("images/magni.png");
-
+		
+		pursueImage.setVisible(true);
 		if(result.isTypeParticipant()) {
 			name.setText(result.getP().getName());
 			location.setText(result.getP().getLocationString());
@@ -104,7 +106,7 @@ public class SearchResultWidgetForProfile extends Composite implements
 		name.setText("");
 		location.setText("");
 		subjects.setText("");
-		pursueImage.setUrl(null);
+		pursueImage.setVisible(false);
 	}
 
 }

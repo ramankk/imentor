@@ -14,7 +14,8 @@ public class IMentor implements EntryPoint {
 	public static final boolean TEST_MODE_FLAG = false;
 	public static final String PATH = "Path";
 
-	public void onModuleLoad() {		
+	public void onModuleLoad() {
+		showWaitCursor();
 		setShowTrigger(this);
 		setShowTrigger2(this);
 		Anchor feedback = new Anchor("Feedback");
@@ -74,5 +75,13 @@ public class IMentor implements EntryPoint {
 
 	public void logout() {
 		RootPanel.get("middle").clear();
+	}
+	
+	public static void showWaitCursor() {
+		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "wait");
+	}
+
+	public static void showDefaultCursor() {
+		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "default");
 	}
 }
