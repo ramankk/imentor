@@ -149,6 +149,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 					setDefaultLocationOnMap();
 					tabPanel.getTabBar().setTabText(0, "Create Opportunity");
 					clearOpportunity();
+					setDefaultLocationOnMap();
 				}
 			}
 

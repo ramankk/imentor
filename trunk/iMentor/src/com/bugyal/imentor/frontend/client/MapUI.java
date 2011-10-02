@@ -64,8 +64,8 @@ public class MapUI extends Composite {
 		map.clearOverlays();
 		for (final SearchResult record : response) {
 
-			LatLng ll = LatLng.newInstance(record.getLatitude(), record
-					.getLongitude());
+			LatLng ll = LatLng.newInstance(record.getLatitude(),
+					record.getLongitude());
 			Marker partMarker = new Marker(ll);
 			map.addOverlay(partMarker);
 			partMarker.setDraggingEnabled(false);
@@ -117,32 +117,15 @@ public class MapUI extends Composite {
 						.setErrorMessage("Unable to perform the Operation!");
 			}
 
+			final String temp = partSubjects.toString();
+
 			partMarker.addMarkerMouseOverHandler(new MarkerMouseOverHandler() {
 
 				@Override
 				public void onMouseOver(MarkerMouseOverEvent event) {
-					String temp = partSubjects.toString();
-					Image i = new Image("images/magni.png");
-					HTML html = new HTML(temp);
 
-					i.setPixelSize(15, 15);
-					i.addClickHandler(new ClickHandler() {
-
-						@Override
-						public void onClick(ClickEvent event) {
-							ProfileInfo pInfo = new ProfileInfo(null, record);
-							pInfo.show();
-							pInfo.center();
-						}
-
-					});
-					FlowPanel panel = new FlowPanel();
-					panel.add(html);
-					panel.add(i);
-					InfoWindowContent iwc = new InfoWindowContent(panel);
-
+					InfoWindowContent iwc = new InfoWindowContent(temp);
 					InfoWindow info = map.getInfoWindow();
-
 					info.open(event.getSender(), iwc);
 				}
 			});
@@ -171,8 +154,10 @@ public class MapUI extends Composite {
 
 			@Override
 			public void onClick(MapClickEvent event) {
-				if(marker == null){
-					marker = new Marker(LatLng.newInstance(event.getLatLng().getLatitude(), event.getLatLng().getLongitude(),true));
+				if (marker == null) {
+					marker = new Marker(LatLng.newInstance(event.getLatLng()
+							.getLatitude(), event.getLatLng().getLongitude(),
+							true));
 					map.addOverlay(marker);
 				}
 				marker.setLatLng(event.getLatLng());
@@ -195,8 +180,8 @@ public class MapUI extends Composite {
 				slider.setNumTicks(20);
 				slider.setNumLabels(5);
 				slider.setSize("300px", "50px");
-				drawCircleFromRadius(marker.getLatLng(), slider
-						.getCurrentValue() * 1000, 30);
+				drawCircleFromRadius(marker.getLatLng(),
+						slider.getCurrentValue() * 1000, 30);
 
 				slider.addChangeListener(new ChangeListener() {
 
@@ -206,8 +191,8 @@ public class MapUI extends Composite {
 						if (oldCircle != null) {
 							map.removeOverlay(oldCircle);
 						}
-						drawCircleFromRadius(marker.getLatLng(), sb
-								.getCurrentValue() * 1000, 30);
+						drawCircleFromRadius(marker.getLatLng(),
+								sb.getCurrentValue() * 1000, 30);
 						map.addOverlay(oldCircle);
 
 						lData.setRadius((int) slider.getCurrentValue() * 1000);
@@ -242,8 +227,8 @@ public class MapUI extends Composite {
 			double lng2 = lng1
 					+ Math.atan2(Math.sin(tc) * Math.sin(d) * Math.cos(lat1),
 							Math.cos(d) - Math.sin(lat1) * Math.sin(lat2));
-			LatLng point = LatLng.newInstance(Math.toDegrees(lat2), Math
-					.toDegrees(lng2));
+			LatLng point = LatLng.newInstance(Math.toDegrees(lat2),
+					Math.toDegrees(lng2));
 			circlePoints[i] = point;
 			bounds.extend(point);
 			a += step;
@@ -297,8 +282,8 @@ public class MapUI extends Composite {
 
 	public void clear() {
 		map.clearOverlays();
-		marker = new Marker(LatLng.newInstance(lData.getLatitude(), lData
-				.getLongitude(), true));
+		marker = new Marker(LatLng.newInstance(lData.getLatitude(),
+				lData.getLongitude(), true));
 		map.addOverlay(marker);
 	}
 
