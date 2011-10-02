@@ -45,14 +45,14 @@ public class MentorManagerImplTest {
 		List<String> ss = new ArrayList<String>();
 		ss.add("CS");
 		
-		Participant p = pmi.createParticipant("raman","male", TestLocations.GACHIBOWLI, "raman@bugyal.com");
+		Participant p = pmi.createParticipant("raman","male", TestLocations.GACHIBOWLI, "raman@bugyal.com", "100002992300278");
 		List<Participant> plist = new ArrayList<Participant>();
 		plist.add(p);
 		
-		Participant seaker = pmi.createParticipant("kumar", "male", TestLocations.BODUPPAL_10, "kumar@bugyal.com");
+		Participant seaker = pmi.createParticipant("kumar", "male", TestLocations.BODUPPAL_10, "kumar@bugyal.com", "100002992300278");
 		pmi.addHasKnowledge(seaker, Arrays.asList(new String[]{"CS"}), 6, seaker);
 		
-		Participant seaker2 = pmi.createParticipant("krk", "female", TestLocations.KONDAPUR, "krk@bugyal.com");
+		Participant seaker2 = pmi.createParticipant("krk", "female", TestLocations.KONDAPUR, "krk@bugyal.com", "100002992300278");
 		pmi.addHasKnowledge(seaker2, Arrays.asList(new String[]{"Math"}), 4, seaker2);
 		
 		Opportunity o1 = omi.createOpportunity(TestLocations.KPHB, subjects, 2, plist, 7, "", p);

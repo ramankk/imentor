@@ -33,7 +33,7 @@ public class ParticipantManagerImplTest {
 	public void testSaveAndSearch() throws Exception {
 		ParticipantManagerImpl pmi = new ParticipantManagerImpl();
 		
-		Participant p = pmi.createParticipant("Raman", "male", dummyLoc1, "raman@gmail.com");
+		Participant p = pmi.createParticipant("Raman", "male", dummyLoc1, "raman@gmail.com", "100002992300278");
 		p.addInterest("interest1");
 		pmi.save(p);
 		
@@ -54,9 +54,9 @@ public class ParticipantManagerImplTest {
 	public void testMultipleParticipantsWithSameEmail() throws Exception {
 		ParticipantManagerImpl pmi = new ParticipantManagerImpl();
 		
-		pmi.createParticipant("Raman", "male", dummyLoc1, "raman@gmail.com");
+		pmi.createParticipant("Raman", "male", dummyLoc1, "raman@gmail.com", "100002992300278");
 		try {
-			pmi.createParticipant("Kumar", "male", dummyLoc1, "raman@gmail.com");
+			pmi.createParticipant("Kumar", "male", dummyLoc1, "raman@gmail.com", "100002992300278");
 			fail();
 		} catch (MentorException me) {
 			assertEquals("Participant with email raman@gmail.com already exists." , me.getMessage());
@@ -67,8 +67,8 @@ public class ParticipantManagerImplTest {
 	public void testMentorsMentees() throws Exception {
 		ParticipantManagerImpl pmi = new ParticipantManagerImpl();
 		
-		Participant p = pmi.createParticipant("Raman", "male", dummyLoc1, "raman@bugyal.com");
-		Participant p2 = pmi.createParticipant("Kumar", "male", dummyLoc1, "kumar@bugyal.com");
+		Participant p = pmi.createParticipant("Raman", "male", dummyLoc1, "raman@bugyal.com", "100002992300278");
+		Participant p2 = pmi.createParticipant("Kumar", "male", dummyLoc1, "kumar@bugyal.com", "100002992300278");
 		
 		Participant m1 = pmi.createParticipant("mentee1", "male", dummyLoc1, p2);
 		pmi.addMentor(m1, p);
@@ -86,9 +86,9 @@ public class ParticipantManagerImplTest {
 	public void testKnowledgeQueries() throws Exception {
 		ParticipantManagerImpl pmi = new ParticipantManagerImpl();
 		
-		Participant p = pmi.createParticipant("Raman", "male", dummyLoc1, "raman@bugyal.com");
-		Participant p2 = pmi.createParticipant("Kumar", "male", dummyLoc1, "kumar@bugyal.com");
-		Participant p3 = pmi.createParticipant("Sridhar", "male", dummyLoc2, "s@bugyal.com");
+		Participant p = pmi.createParticipant("Raman", "male", dummyLoc1, "raman@bugyal.com", "100002992300278");
+		Participant p2 = pmi.createParticipant("Kumar", "male", dummyLoc1, "kumar@bugyal.com", "100002992300278");
+		Participant p3 = pmi.createParticipant("Sridhar", "male", dummyLoc2, "s@bugyal.com", "100002992300278");
 		
 		printCells(p);
 		printCells(p2);

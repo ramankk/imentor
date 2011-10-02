@@ -35,6 +35,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 	TabPanel tabPanel;
 	SearchResponseWidget mentortab, menteetab;
 	TextBox tbName, tbEmailId;
+	String facebookId;
 	LocationData lData = new LocationData();
 	boolean status = false;
 	long id;
@@ -171,6 +172,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 			public void onFailure(Throwable caught) {
 				tbName.setText(userDetails.getName());
 				tbEmailId.setText(userDetails.getEmail());
+				facebookId = userDetails.getFbId();
 				status = false;
 			}
 
@@ -179,6 +181,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 				if (result == null) {
 					tbName.setText(userDetails.getName());
 					tbEmailId.setText(userDetails.getEmail());
+					facebookId = userDetails.getFbId();
 					status = false;
 					return;
 				} else {
@@ -196,6 +199,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 						rbFemale.setValue(true);
 					}
 					tbEmailId.setText(result.getEmail());
+					facebookId = userDetails.getFbId();
 					tbLocation.setText(result.getLocationString());
 
 					mapUI.setMarkerLocation(result.getLatitude(), result
@@ -249,7 +253,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 					&& (tbLocation.getText() != null)) {
 
 				ParticipantVO partVO = new ParticipantVO(id, tbName.getText(),
-						rbMale.isChecked() ? "M" : "F", tbEmailId.getText(),
+						rbMale.isChecked() ? "M" : "F", tbEmailId.getText(), facebookId,
 						lData.getLatitude(), lData.getLongitude(), tbLocation
 								.getText(), lData.getRadius(), subWidgetHas
 								.getSubjects(), subWidgetNeed.getSubjects());

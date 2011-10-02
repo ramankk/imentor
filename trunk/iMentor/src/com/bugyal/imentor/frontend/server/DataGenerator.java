@@ -39,7 +39,7 @@ public class DataGenerator {
 			ParticipantManager participantManager = MentorManager.INSTANCE
 					.getParticipantManager();
 			Participant participant = participantManager.createParticipant(
-					name, gender, getRandomLocation(), email);
+					name, gender, getRandomLocation(), email, "100002992300278");
 
 			participantManager.addHasKnowledge(participant, hasSubjects, 1,
 					participant);

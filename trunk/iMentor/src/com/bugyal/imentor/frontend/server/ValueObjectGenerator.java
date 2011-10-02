@@ -15,7 +15,7 @@ public class ValueObjectGenerator {
 			return null;
 		}
 		return new ParticipantVO(p.getKey().getId(), p.getName(),
-				p.getGender(), p.getEmail(), p.getLoc().getLatitude(), p
+				p.getGender(), p.getEmail(),p.getFacebookId(), p.getLoc().getLatitude(), p
 						.getLoc().getLongitude(), p.getLoc()
 						.getLocationString(), p.getLoc().getActiveRadius(),
 				p.getHasSubjects(), p.getNeedSubjects());

@@ -37,6 +37,9 @@ public class Participant implements LocationCapable {
 
 	@Persistent
 	private String name;
+	
+	@Persistent
+	private String facebookId;
 
 	@Persistent
 	private String email;
@@ -486,9 +489,10 @@ public class Participant implements LocationCapable {
 		this.lastModifiedTime = System.currentTimeMillis();
 	}
 
-	Participant(String name, String gender, Location location, String email) {
+	Participant(String name, String gender, Location location, String email, String facebookId) {
 		this.name = name;
 		this.email = email;
+		this.facebookId = facebookId;
 		this.isNotOnline = false;
 		this.creator = null;
 		this.gender = gender;
@@ -506,8 +510,8 @@ public class Participant implements LocationCapable {
 	}
 
 	public static Participant createParticipantForTest(String name,
-			Location location, String email) {
-		return new Participant(name, "f", location, email);
+			Location location, String email, String facebookId) {
+		return new Participant(name, "f", location, email, facebookId);
 	}
 
 	@Override
@@ -608,6 +612,14 @@ public class Participant implements LocationCapable {
 	public Participant removeMentoringOpportunity(Key mentoringOpportunity) {
 		this.mentoringOpportunities.remove(mentoringOpportunity);
 		return this;
+	}
+
+	public void setFacebookId(String facebookId) {
+		this.facebookId = facebookId;
+	}
+
+	public String getFacebookId() {
+		return facebookId;
 	}
 
 }

@@ -19,6 +19,7 @@ public class ParticipantVO implements Serializable {
 	private List<String> hasSubjects;
 	private List<String> needSubjects;
 	private String locationString;
+	private String facebookId;
 	
 
 	// Required for GWT.
@@ -26,7 +27,7 @@ public class ParticipantVO implements Serializable {
 
 	}
 
-	public ParticipantVO(Long id, String name, String gender, String email, double latitude,
+	public ParticipantVO(Long id, String name, String gender, String email, String facebookId, double latitude,
 			double longitude, String locString, int radius, List<String> has,
 			List<String> need) {
 		super();
@@ -34,6 +35,7 @@ public class ParticipantVO implements Serializable {
 		this.name = name;
 		this.gender = gender;
 		this.email = email;
+		this.facebookId = facebookId;
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.setLocationString(locString);
@@ -73,6 +75,14 @@ public class ParticipantVO implements Serializable {
 		this.email = email;
 	}
 
+	public void setFacebookId(String facebookId) {
+		this.facebookId = facebookId;
+	}
+
+	public String getFacebookId() {
+		return facebookId;
+	}
+	
 	public double getLatitude() {
 		return latitude;
 	}
