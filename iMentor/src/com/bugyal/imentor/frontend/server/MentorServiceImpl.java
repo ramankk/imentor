@@ -241,10 +241,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 
 	@Override
 	public List<String> getSubjects() throws MeException {
-		List<String> list = new ArrayList<String>();
-		Subject s = new Subject();
-		list = s.getsubjects();
-		return list;
+		return Subject.subjects;
 	}
 
 	@Override

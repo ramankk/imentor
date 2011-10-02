@@ -11,9 +11,9 @@ import java.util.List;
  * 
  */
 public class Subject {
-	List<String> subjects;
+	static public List<String> subjects;
 
-	public Subject() {
+	static {
 		subjects = new ArrayList<String>();
 		String s[] = { "Accounting", "Accounting And Financial Management",
 				"Adaptive Control Systems",
@@ -493,16 +493,5 @@ public class Subject {
 		for (String sub : s) {
 			subjects.add(sub);
 		}
-	}
-
-	public List<String> getsubjects() {
-		return subjects;
-
-	}
-
-	public boolean addMoreSubjects(List<String> moresubjects) {
-		if (subjects.addAll(moresubjects))
-			return true;
-		return false;
 	}
 }
