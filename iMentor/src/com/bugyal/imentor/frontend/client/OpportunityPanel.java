@@ -146,6 +146,7 @@ public class OpportunityPanel extends Composite implements ClickHandler {
 			@Override
 			public void onSelection(SelectionEvent event) {
 				if (event.getSelectedItem() == (Object) 1) {
+					setDefaultLocationOnMap();
 					tabPanel.getTabBar().setTabText(0, "Create Opportunity");
 					clearOpportunity();
 				}

@@ -70,7 +70,7 @@ public class MapUI extends Composite {
 			map.addOverlay(partMarker);
 			partMarker.setDraggingEnabled(false);
 
-			StringBuilder partSubjects = new StringBuilder();
+			final StringBuilder partSubjects = new StringBuilder();
 
 			switch (index) {
 			case 0:
@@ -113,15 +113,18 @@ public class MapUI extends Composite {
 				break;
 
 			default:
-				MainPageWidget.setErrorMessage("Unable to perform the Operation!");
+				MainPageWidget
+						.setErrorMessage("Unable to perform the Operation!");
 			}
-			final String temp = partSubjects.toString();
+
 			partMarker.addMarkerMouseOverHandler(new MarkerMouseOverHandler() {
 
 				@Override
 				public void onMouseOver(MarkerMouseOverEvent event) {
-					HTML html = new HTML(temp);
+					String temp = partSubjects.toString();
 					Image i = new Image("images/magni.png");
+					HTML html = new HTML(temp);
+
 					i.setPixelSize(15, 15);
 					i.addClickHandler(new ClickHandler() {
 

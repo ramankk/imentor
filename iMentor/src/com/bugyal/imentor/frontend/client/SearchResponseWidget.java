@@ -112,7 +112,7 @@ public class SearchResponseWidget extends Composite {
 	}
 
 	public void clearAll() {
-		for (int i = 0; i <= searchResults.size(); i++)
-			contentPanel.remove(contentPanel.getWidget(i));
+		searchResults.clear();
+		showPage(0);
 	}
 }
