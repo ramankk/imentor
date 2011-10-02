@@ -21,9 +21,10 @@ public interface ParticipantManager {
 	 * @throws MentorException
 	 *             if a participant already exists with same email.
 	 */
-	Participant createParticipant(String name, String gender, Location location, String email)
+	Participant createParticipant(String name, String gender,
+			Location location, String email, String facebookId)
 			throws MentorException;
-
+	
 	Participant createParticipant(String name, String gender, Location location,
 			Participant creator) throws MentorException;
 
@@ -85,4 +86,5 @@ public interface ParticipantManager {
 
 	boolean saveOpportunityToParticipant(Key participantkey,
 			Key opportunitykey, boolean isMentoring);
+	
 }

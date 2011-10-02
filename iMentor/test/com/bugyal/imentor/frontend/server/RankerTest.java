@@ -21,22 +21,22 @@ public class RankerTest {
 
 	@Before
 	public void setup() {
-		p1 = new ParticipantVO(null, "name1", "m", "name1@k.c", 17.000000, 75.0, "",
+		p1 = new ParticipantVO(null, "name1", "m", "name1@k.c","100002992300278", 17.000000, 75.0, "",
 				200000, Arrays.asList("chemistry", "physics"), Arrays.asList(
 						"maths", "science"));
 
-		p2 = new ParticipantVO(null, "name2", "m", "name2@k.c", 17.000000, 75.1, "",
+		p2 = new ParticipantVO(null, "name2", "m", "name2@k.c","100002992300278", 17.000000, 75.1, "",
 				200000, Arrays.asList("maths"), Arrays.asList("chemistry",
 						"physics"));
 
-		p3 = new ParticipantVO(null, "name3", "m", "name3@k.c", 17.000000, 75.2, "",
+		p3 = new ParticipantVO(null, "name3", "m", "name3@k.c","100002992300278", 17.000000, 75.2, "",
 				200000, Arrays.asList("maths", "science"), Arrays
 						.asList("chemistry"));
 
-		p4 = new ParticipantVO(null, "name4", "m", "name4@k.c", 17.000000, 75.3, "",
+		p4 = new ParticipantVO(null, "name4", "m", "name4@k.c","100002992300278", 17.000000, 75.3, "",
 				200000, Arrays.asList("maths"), Arrays.asList("physics"));
 
-		p5 = new ParticipantVO(null, "name5", "m", "name5@k.c", 17.000000, 75.4, "",
+		p5 = new ParticipantVO(null, "name5", "m", "name5@k.c","100002992300278", 17.000000, 75.4, "",
 				200000, Arrays.asList("science"), Arrays.asList("chemistry",
 						"physics"));
 
@@ -60,7 +60,7 @@ public class RankerTest {
 				.addScorer(new SubjectCorrelationScorer());
 
 		Participant p = Participant.createParticipantForTest("abc",
-				new Location(17.0, 75.12, "some-location", 40), "abc@ui.com");
+				new Location(17.0, 75.12, "some-location", 40), "abc@ui.com", "100002992300278");
 		disSubRanker.rank(sr1, p) ;
 		
 		assertEquals("name2",sr1.getAllResults().get(0).getP().getName());
@@ -76,7 +76,7 @@ public class RankerTest {
 	public void testDistanceScorer() {
 		Ranker subOnlyRanker = new Ranker().addScorer(new DistanceScorer());
 		Participant p = Participant.createParticipantForTest("abc",
-				new Location(17.0, 75.12, "some-location", 40), "abc@ui.com");
+				new Location(17.0, 75.12, "some-location", 40), "abc@ui.com","100002992300278");
 		subOnlyRanker.rank(sr1, p);
 
 		assertEquals("name2", sr1.getAllResults().get(0).getP().getName());
@@ -93,7 +93,7 @@ public class RankerTest {
 		Ranker subOnlyRanker = new Ranker()
 				.addScorer(new SubjectCorrelationScorer());
 		Participant p = Participant.createParticipantForTest("abc",
-				new Location(17.0, 75.0, "some-location", 40), "abc@ui.com");
+				new Location(17.0, 75.0, "some-location", 40), "abc@ui.com", "100002992300278");
 		subOnlyRanker.rank(sr1, p);
 
 		assertEquals("name1", sr1.getAllResults().get(0).getP().getName());

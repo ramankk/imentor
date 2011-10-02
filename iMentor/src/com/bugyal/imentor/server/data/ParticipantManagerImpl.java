@@ -99,14 +99,14 @@ public class ParticipantManagerImpl implements ParticipantManager {
 
 	@Override
 	public Participant createParticipant(String name, String gender,
-			Location location, String email) throws MentorException {
+			Location location, String email, String facebookId) throws MentorException {
 		long t = System.currentTimeMillis();
 		Participant e = findParticipantByEmail(email);
 		if (e != null) {
 			throw new MentorException("Participant with email " + email
 					+ " already exists.");
 		}
-		Participant i = new Participant(name, gender, location, email);
+		Participant i = new Participant(name, gender, location, email, facebookId);
 		save(i);
 		createParticipantByEmailTimeState.inc(System.currentTimeMillis() - t);
 		return i;

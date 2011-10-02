@@ -97,7 +97,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		Participant pi = null;
 		try {
 			pi = pm.createParticipant(p.getName(), p.getGender(), location, p
-					.getEmail());
+					.getEmail(), p.getFacebookId());
 			pm.addHasKnowledge(pi, p.getHasSubjects(), 1, pi);
 			pm.addNeedKnowledge(pi, p.getNeedSubjects(), 1, pi);
 

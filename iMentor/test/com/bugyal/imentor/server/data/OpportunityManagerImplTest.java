@@ -37,7 +37,7 @@ public class OpportunityManagerImplTest {
 		subjects.add("Math");
 		subjects.add("CS");
 		
-		Participant p = pmi.createParticipant("raman", "male", TestLocations.GACHIBOWLI, "raman@bugyal.com");
+		Participant p = pmi.createParticipant("raman", "male", TestLocations.GACHIBOWLI, "raman@bugyal.com", "100002992300278");
 		List<Participant> plist = new ArrayList<Participant>();
 		plist.add(p);
 		
