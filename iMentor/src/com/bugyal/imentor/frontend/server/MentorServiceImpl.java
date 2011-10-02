@@ -441,8 +441,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			temp = System.currentTimeMillis();
 			List<Participant> participants = pm
 					.searchParticipantsByLocation(location);
-			LOG
-					.info("For Local Activity searchParticipantsByLocation(location) "
+			LOG.info("For Local Activity searchParticipantsByLocation(location) "
 							+ (System.currentTimeMillis() - temp));
 			for (Participant p : participants) {
 				double distance = GeocellUtils.distance(pi.getLocation(), p
