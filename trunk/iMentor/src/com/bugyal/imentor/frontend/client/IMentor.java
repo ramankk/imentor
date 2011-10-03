@@ -16,8 +16,7 @@ public class IMentor implements EntryPoint {
 
 	public void onModuleLoad() {
 		showWaitCursor();
-		setShowTrigger(this);
-		setShowTrigger2(this);
+		checkFbLogin(this);
 		Anchor feedback = new Anchor("Feedback");
 		feedback.addClickHandler(new ClickHandler() {
 
@@ -31,7 +30,7 @@ public class IMentor implements EntryPoint {
 		RootPanel.get("feedback").add(feedback);
 	}
 
-	public void loadApp(String email, String name, String fbId) {
+	public void loadApp(String fbId, String email, String name) {
 		UserDetails userDetails = new UserDetails();
 		userDetails.setName(name);
 		userDetails.setEmail(email);
@@ -84,4 +83,24 @@ public class IMentor implements EntryPoint {
 	public static void showDefaultCursor() {
 		DOM.setStyleAttribute(RootPanel.getBodyElement(), "cursor", "default");
 	}
+	
+	public native void checkFbLogin(IMentor o)/*-{
+	$wnd.FB
+			.login(
+					function(response) {
+						if (response.session) {
+							$wnd.FB
+									.api(
+											'/me',
+											function(response) {
+												o.@com.bugyal.imentor.frontend.client.IMentor::loadApp(Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)(response.id,response.email,response.name);
+
+											});
+						} else {
+							alert("User cancelled login or did not fully authorize.");
+						}
+					}, {
+						perms : 'email'
+					});
+}-*/;		
 }

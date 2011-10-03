@@ -126,10 +126,12 @@ public class ProfileWidget extends Composite implements ClickHandler {
 				HasHorizontalAlignment.ALIGN_RIGHT);
 
 		HorizontalPanel buttonsHorizontal = new HorizontalPanel();
-
+		Button send_Msg = new Button("Send Msg");
 		btnSave = new Button("Save");
 		btnSave.addClickHandler(this);
+		send_Msg.addClickHandler(this);
 		buttonsHorizontal.add(btnSave);
+		buttonsHorizontal.add(send_Msg);
 
 		TabPanel tabPanel = new TabPanel();
 		tabPanel.setWidth("700px");
@@ -293,6 +295,8 @@ public class ProfileWidget extends Composite implements ClickHandler {
 					});
 				}
 			}
+		} else {
+			MainPageWidget.msgToFbFriend();
 		}
 	}
 
