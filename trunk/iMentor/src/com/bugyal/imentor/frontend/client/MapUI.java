@@ -54,7 +54,8 @@ public class MapUI extends Composite {
 	TextBox searchBox = new TextBox();
 	Button searchButton = new Button("Search Location");
 	LocationData lData = new LocationData();
-	
+
+	HorizontalPanel searchPanel = new HorizontalPanel();
 	private boolean needSlider;
 	private final TextArea locationDisplay;
 
@@ -329,8 +330,8 @@ public class MapUI extends Composite {
 			}
 			
 		});
-	}
-	
+	}	
+
 	public LocationData getLocationDetails() {
 		return lData;
 	}

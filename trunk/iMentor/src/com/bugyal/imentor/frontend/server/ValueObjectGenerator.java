@@ -5,8 +5,10 @@ import java.util.List;
 
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
+import com.bugyal.imentor.frontend.shared.PulseVO;
 import com.bugyal.imentor.server.data.Opportunity;
 import com.bugyal.imentor.server.data.Participant;
+import com.bugyal.imentor.server.data.ParticipantPulse;
 
 public class ValueObjectGenerator {
 
@@ -21,6 +23,15 @@ public class ValueObjectGenerator {
 				p.getHasSubjects(), p.getNeedSubjects());
 	}
 
+	public static List<PulseVO> createPulseVO(List<ParticipantPulse> pulseList) {
+		List<PulseVO> pulseRecords = new ArrayList<PulseVO>();
+		for(ParticipantPulse p : pulseList) {
+			PulseVO pv=new PulseVO(p.getEmailId(), p.getName(), p.getFacebookId(), p.getLongitude(), p.getLatitude(), p.getLocationString(), p.isMentor());
+			pulseRecords.add(pv);
+		}
+		return pulseRecords;		
+	}
+	
 	public static OpportunityVO create(Opportunity o) {
 		// TODO(raman): Understand if participant info has to be supplied.
 		// TODO(sudhakar): Add support for saying active vs. passive
@@ -55,5 +66,5 @@ public class ValueObjectGenerator {
 			}
 		}
 		return opVos;
-	}
+	}	
 }

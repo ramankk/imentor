@@ -6,6 +6,7 @@ import com.bugyal.imentor.frontend.shared.MentorDataStatus;
 import com.bugyal.imentor.frontend.shared.MentorsResult;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
+import com.bugyal.imentor.frontend.shared.PulseVO;
 import com.bugyal.imentor.frontend.shared.SearchResponse;
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -73,4 +74,7 @@ public interface MentorServiceAsync {
 	void getMyMentors(AsyncCallback<List<SearchResult>> asyncCallback);
 
 	void getMyMentees(AsyncCallback<List<SearchResult>> asyncCallback);
+
+	void getParticipantPulse(int range, AsyncCallback<List<PulseVO>> callback);
+
 }
