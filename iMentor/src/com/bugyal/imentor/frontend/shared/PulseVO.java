@@ -2,7 +2,14 @@ package com.bugyal.imentor.frontend.shared;
 
 import java.io.Serializable;
 
-public class PulseVO implements Serializable{	
+public class PulseVO implements Serializable{		
+	
+
+	public enum State {
+		mentor,
+		mentee,
+		user
+	}
 	
 	private static final long serialVersionUID = -7381764235562694506L;
 	private String emailId;
@@ -11,12 +18,15 @@ public class PulseVO implements Serializable{
 	private double longitude; 
 	private double latitude;
 	private String locationString;
-	private boolean isMentor;
+	private State state;
+	private String othersFacebookId;
 	
 	
+	public PulseVO() {
+	}
 	public PulseVO(String emailId, String name, String facebookId,
 			double longitude, double latitude, String locationString,
-			boolean isMentor) {
+			State state, String othersFacebookId) {
 		super();
 		this.emailId = emailId;
 		this.name = name;
@@ -24,7 +34,8 @@ public class PulseVO implements Serializable{
 		this.longitude = longitude;
 		this.latitude = latitude;
 		this.locationString = locationString;
-		this.isMentor = isMentor;
+		this.state = state;
+		this.othersFacebookId = othersFacebookId;
 	}
 	
 	public String getEmailId() {
@@ -62,16 +73,17 @@ public class PulseVO implements Serializable{
 	}
 	public void setLocationString(String locationString) {
 		this.locationString = locationString;
+	}	
+	public void setState(State state) {
+		this.state = state;
 	}
-	
-	public boolean isMentor() {
-		return isMentor;
+	public State getState() {
+		return state;
 	}
-
-	public void setMentor(boolean isMentor) {
-		this.isMentor = isMentor;
+	public void setOthersFacebookId(String othersFacebookId) {
+		this.othersFacebookId = othersFacebookId;
 	}
-
-	public PulseVO() {
+	public String getOthersFacebookId() {
+		return othersFacebookId;
 	}
 }

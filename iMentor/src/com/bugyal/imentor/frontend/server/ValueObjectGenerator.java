@@ -26,7 +26,7 @@ public class ValueObjectGenerator {
 	public static List<PulseVO> createPulseVO(List<ParticipantPulse> pulseList) {
 		List<PulseVO> pulseRecords = new ArrayList<PulseVO>();
 		for(ParticipantPulse p : pulseList) {
-			PulseVO pv=new PulseVO(p.getEmailId(), p.getName(), p.getFacebookId(), p.getLongitude(), p.getLatitude(), p.getLocationString(), p.isMentor());
+			PulseVO pv=new PulseVO(p.getEmailId(), p.getName(), p.getFacebookId(), p.getLongitude(), p.getLatitude(), p.getLocationString(), p.getState(), p.getOthersFacebookId());
 			pulseRecords.add(pv);
 		}
 		return pulseRecords;		
