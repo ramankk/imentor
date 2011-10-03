@@ -558,4 +558,33 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		}		
 		return false;		
 	}
+
+	@Override
+	public boolean createPulse(ParticipantPulse... pulseEntry) throws MentorException {
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		try{
+			pm.makePersistentAll(pulseEntry);
+			return true;
+		} catch(Exception e){
+			return false;
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<ParticipantPulse>  getTopEntries(int range) throws MentorException {
+		
+		PersistenceManager pm = PMF.get().getPersistenceManager();
+		List<ParticipantPulse> result = new ArrayList<ParticipantPulse>();
+		try {
+			String strquery = "select top " + range + " from ParticipantPulse";
+			Query q = pm.newQuery(strquery);
+			result = (List<ParticipantPulse>) q.execute();
+			return result;			
+		} catch(Exception e) {
+			
+		}
+		return null;
+		
+	}
 }

@@ -6,6 +6,7 @@ import com.bugyal.imentor.MentorException;
 import com.bugyal.imentor.server.data.Feedback;
 import com.bugyal.imentor.server.data.Location;
 import com.bugyal.imentor.server.data.Participant;
+import com.bugyal.imentor.server.data.ParticipantPulse;
 import com.google.appengine.api.datastore.Key;
 
 public interface ParticipantManager {
@@ -77,6 +78,8 @@ public interface ParticipantManager {
 	boolean addMentorToMentee(Participant mentor, Participant mentee);
 
 	void createComment(Feedback... strings) throws MentorException;
+	
+	boolean createPulse(ParticipantPulse... strings) throws MentorException;
 
 	boolean deleteMentorFromMentee(Participant mentor, Participant mentee);
 
@@ -86,5 +89,7 @@ public interface ParticipantManager {
 
 	boolean saveOpportunityToParticipant(Key participantkey,
 			Key opportunitykey, boolean isMentoring);
+
+	List<ParticipantPulse> getTopEntries(int range) throws MentorException;
 	
 }
