@@ -45,7 +45,10 @@ element.style {
     background-color            :   #B9E9E6;
 }
 
-
+.mapSearchLabel {
+	font-size: 1em;
+	color: gray;
+}	
 
 
 

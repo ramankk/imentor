@@ -6,6 +6,8 @@ import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.maps.client.InfoWindow;
 import com.google.gwt.maps.client.InfoWindowContent;
 import com.google.gwt.maps.client.MapUIOptions;
@@ -14,18 +16,25 @@ import com.google.gwt.maps.client.Maps;
 import com.google.gwt.maps.client.event.MapClickHandler;
 import com.google.gwt.maps.client.event.MarkerMouseOverHandler;
 import com.google.gwt.maps.client.geocode.Geocoder;
+import com.google.gwt.maps.client.geocode.LatLngCallback;
 import com.google.gwt.maps.client.geocode.LocationCallback;
 import com.google.gwt.maps.client.geocode.Placemark;
 import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.geom.LatLngBounds;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.Polygon;
+import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Composite;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.KeyboardListener;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.TextArea;
+import com.google.gwt.user.client.ui.TextBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import com.google.gwt.user.client.ui.Widget;
 import com.google.gwt.widgetideas.client.SliderBar;
@@ -42,8 +51,10 @@ public class MapUI extends Composite {
 	private SliderBar slider = new SliderBar(0.0, 200.0);
 	private VerticalPanel panel = new VerticalPanel();
 	// private String partSubjects = "";
+	TextBox searchBox = new TextBox();
+	Button searchButton = new Button("Search Location");
 	LocationData lData = new LocationData();
-
+	
 	private boolean needSlider;
 	private final TextArea locationDisplay;
 
@@ -56,6 +67,7 @@ public class MapUI extends Composite {
 				});
 		this.needSlider = needSlider;
 		this.locationDisplay = locationDisplay;
+		
 		initWidget(panel);
 	}
 
@@ -167,7 +179,48 @@ public class MapUI extends Composite {
 			}
 
 		});
+		
+		searchBox.setWidth("550px");
+		searchBox.addKeyboardListener(new KeyboardListener() {
+			
+			@Override
+			public void onKeyUp(Widget sender, char keyCode, int modifiers) {
+				 if (KeyboardListener.KEY_ENTER == keyCode)
+				        searchAddress();
+			}
+			
+			@Override
+			public void onKeyPress(Widget sender, char keyCode, int modifiers) {
+				if (KeyboardListener.KEY_ENTER == keyCode)
+			        searchAddress();
+			}
+			
+			@Override
+			public void onKeyDown(Widget sender, char keyCode, int modifiers) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		searchButton.addClickHandler(new ClickHandler() {
+			
+			@Override
+			public void onClick(ClickEvent event) {
+				searchAddress();
+			}
+		});
+		
+		HorizontalPanel hPanel = new HorizontalPanel();
+		hPanel.setSpacing(10);
+		hPanel.add(searchBox);
+		hPanel.add(searchButton);
+		VerticalPanel searchPanel = new VerticalPanel();
+		searchPanel.add(hPanel);
+		Label l= new Label("Enter any city name");
+		l.addStyleName("mapSearchLabel");
+		searchPanel.add(l);
+		panel.add(searchPanel);
 		panel.add(map);
+		
 	}
 
 	private void addMouseOverHandler() {
@@ -257,7 +310,27 @@ public class MapUI extends Composite {
 
 		});
 	}
+	
+	public void searchAddress(){
+		Geocoder coder = new Geocoder();
+		coder.getLatLng(searchBox.getText(), new LatLngCallback(){
 
+			@Override
+			public void onFailure() {
+				Window.alert("Unable to search your location");
+			}
+
+			@Override
+			public void onSuccess(LatLng point) {
+				marker.setLatLng(point);
+				map.setZoomLevel(10);
+				map.setCenter(point);
+				getAddress(point);
+			}
+			
+		});
+	}
+	
 	public LocationData getLocationDetails() {
 		return lData;
 	}
@@ -328,4 +401,5 @@ public class MapUI extends Composite {
 			return 9;
 
 	}
+	
 }
