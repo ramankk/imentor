@@ -4,7 +4,7 @@ import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
-
+import com.bugyal.imentor.frontend.shared.PulseVO.State;
 import com.google.appengine.api.datastore.Key;
 
 @PersistenceCapable
@@ -13,6 +13,7 @@ public class ParticipantPulse {
 	@PrimaryKey
 	@Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
 	private Key key;
+	
 	
 	@Persistent
 	private String emailId;
@@ -33,12 +34,15 @@ public class ParticipantPulse {
 	private String locationString;
 
 	@Persistent
-	private boolean isMentor;
+	private State state;   // Here State is Emum type imported from "import com.bugyal.imentor.frontend.shared.PulseVO.State"
+	
+	@Persistent
+	private String othersFacebookId;
 	
 	
 	public ParticipantPulse(String emailId, String name,
 			String facebookId, double longitude, double latitude,
-			String locationString, boolean isMentor) {
+			String locationString, State state, String othersFacebookId) {
 		super();
 		this.emailId = emailId;
 		this.name = name;
@@ -46,7 +50,8 @@ public class ParticipantPulse {
 		this.longitude = longitude;
 		this.latitude = latitude;
 		this.locationString = locationString;
-		this.isMentor = isMentor;
+		this.state = state;
+		this.othersFacebookId = othersFacebookId;
 	}
 	
 	public Key getKey() {
@@ -100,13 +105,21 @@ public class ParticipantPulse {
 	public void setLocationString(String locationString) {
 		this.locationString = locationString;
 	}
-	
-	public boolean isMentor() {
-		return isMentor;
+
+	public void setState(State state) {
+		this.state = state;
 	}
 
-	public void setMentor(boolean isMentor) {
-		this.isMentor = isMentor;
+	public State getState() {
+		return state;
 	}
+
+	public void setOthersFacebookId(String othersFacebookId) {
+		this.othersFacebookId = othersFacebookId;
+	}
+
+	public String getOthersFacebookId() {
+		return othersFacebookId;
+	}	
 	
 }

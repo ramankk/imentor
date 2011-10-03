@@ -18,6 +18,7 @@ import com.bugyal.imentor.frontend.shared.MentorsResult;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
 import com.bugyal.imentor.frontend.shared.PulseVO;
+import com.bugyal.imentor.frontend.shared.PulseVO.State;
 import com.bugyal.imentor.frontend.shared.SearchResponse;
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.bugyal.imentor.server.MentorManager;
@@ -562,7 +563,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			Participant mentor = pm.findParticipantByEmail(mentorMailId);
 			Participant mentee = pm.findParticipantByEmail(getUserId());
 			if (isHas) {
-				PulseVO p = new PulseVO(mentee.getEmail(), mentee.getName(), mentee.getFacebookId(), mentee.getLoc().getLongitude(), mentee.getLoc().getLatitude(), mentee.getLoc().getLocationString(), false);
+				PulseVO p = new PulseVO(mentee.getEmail(), mentee.getName(), mentee.getFacebookId(), mentee.getLoc().getLongitude(), mentee.getLoc().getLatitude(), mentee.getLoc().getLocationString(), State.mentee, mentor.getFacebookId());
 				boolean pulsestatus = createParticipantPulse(p);
 				boolean mentorstatus = pm.addMentorToMentee(mentor, mentee);
 				if(pulsestatus && mentorstatus) {
@@ -572,7 +573,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 					return false;
 				}
 			} else {
-				PulseVO p = new PulseVO(mentee.getEmail(), mentee.getName(), mentee.getFacebookId(), mentee.getLoc().getLongitude(), mentee.getLoc().getLatitude(), mentee.getLoc().getLocationString(), true);
+				PulseVO p = new PulseVO(mentee.getEmail(), mentee.getName(), mentee.getFacebookId(), mentee.getLoc().getLongitude(), mentee.getLoc().getLatitude(), mentee.getLoc().getLocationString(), State.mentor, mentor.getFacebookId());
 				boolean pulsestatus = createParticipantPulse(p);
 				boolean mentorstatus = pm.addMentorToMentee(mentee, mentor);
 				if(pulsestatus && mentorstatus) {
@@ -822,7 +823,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 	}
 		
 	public boolean createParticipantPulse(PulseVO p) {
-		ParticipantPulse pulse = new ParticipantPulse(p.getEmailId(), p.getName(), p.getFacebookId(), p.getLongitude(), p.getLatitude(), p.getLocationString(), p.isMentor());
+		ParticipantPulse pulse = new ParticipantPulse(p.getEmailId(), p.getName(), p.getFacebookId(), p.getLongitude(), p.getLatitude(), p.getLocationString(), p.getState(), p.getOthersFacebookId());  
 		try {
 			return pm.createPulse(pulse);
 		} catch (MentorException e) {
