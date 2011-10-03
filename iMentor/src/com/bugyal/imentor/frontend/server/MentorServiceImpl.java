@@ -17,6 +17,7 @@ import com.bugyal.imentor.frontend.shared.MentorDataStatus;
 import com.bugyal.imentor.frontend.shared.MentorsResult;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
+import com.bugyal.imentor.frontend.shared.PulseVO;
 import com.bugyal.imentor.frontend.shared.SearchResponse;
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.bugyal.imentor.server.MentorManager;
@@ -26,6 +27,7 @@ import com.bugyal.imentor.server.data.Feedback;
 import com.bugyal.imentor.server.data.Location;
 import com.bugyal.imentor.server.data.Opportunity;
 import com.bugyal.imentor.server.data.Participant;
+import com.bugyal.imentor.server.data.ParticipantPulse;
 import com.bugyal.imentor.server.data.old.Subject;
 import com.google.appengine.api.datastore.Key;
 import com.google.appengine.api.datastore.KeyFactory;
@@ -560,9 +562,25 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			Participant mentor = pm.findParticipantByEmail(mentorMailId);
 			Participant mentee = pm.findParticipantByEmail(getUserId());
 			if (isHas) {
-				return pm.addMentorToMentee(mentor, mentee);
+				PulseVO p = new PulseVO(mentee.getEmail(), mentee.getName(), mentee.getFacebookId(), mentee.getLoc().getLongitude(), mentee.getLoc().getLatitude(), mentee.getLoc().getLocationString(), false);
+				boolean pulsestatus = createParticipantPulse(p);
+				boolean mentorstatus = pm.addMentorToMentee(mentor, mentee);
+				if(pulsestatus && mentorstatus) {
+					return true;
+				}
+				else {
+					return false;
+				}
 			} else {
-				return pm.addMentorToMentee(mentee, mentor);
+				PulseVO p = new PulseVO(mentee.getEmail(), mentee.getName(), mentee.getFacebookId(), mentee.getLoc().getLongitude(), mentee.getLoc().getLatitude(), mentee.getLoc().getLocationString(), true);
+				boolean pulsestatus = createParticipantPulse(p);
+				boolean mentorstatus = pm.addMentorToMentee(mentee, mentor);
+				if(pulsestatus && mentorstatus) {
+					return true;
+				}
+				else {
+					return false;
+				}
 			}
 		} catch (MentorException e) {
 			e.printStackTrace();
@@ -802,5 +820,23 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		}
 		return null;
 	}
-
+		
+	public boolean createParticipantPulse(PulseVO p) {
+		ParticipantPulse pulse = new ParticipantPulse(p.getEmailId(), p.getName(), p.getFacebookId(), p.getLongitude(), p.getLatitude(), p.getLocationString(), p.isMentor());
+		try {
+			return pm.createPulse(pulse);
+		} catch (MentorException e) {
+			return false;
+		}
+	}
+	@Override
+	public List<PulseVO> getParticipantPulse(int range) {
+		List<ParticipantPulse> pulses = new ArrayList<ParticipantPulse>();
+		try {
+			pulses = pm.getTopEntries(range);
+		} catch (MentorException e) {			
+			e.printStackTrace();
+		}
+		return ValueObjectGenerator.createPulseVO(pulses);		
+	}
 }

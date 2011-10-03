@@ -7,6 +7,7 @@ import com.bugyal.imentor.frontend.shared.MentorDataStatus;
 import com.bugyal.imentor.frontend.shared.MentorsResult;
 import com.bugyal.imentor.frontend.shared.OpportunityVO;
 import com.bugyal.imentor.frontend.shared.ParticipantVO;
+import com.bugyal.imentor.frontend.shared.PulseVO;
 import com.bugyal.imentor.frontend.shared.SearchResponse;
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.user.client.rpc.RemoteService;
@@ -74,4 +75,6 @@ public interface MentorService extends RemoteService {
 	List<SearchResult> getMyMentors();
 
 	List<SearchResult> getMyMentees();
+
+	List<PulseVO> getParticipantPulse(int range);
 }
