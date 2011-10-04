@@ -17,6 +17,9 @@ public class MainPageWidget extends Composite {
 	private SearchWidget searchWidget = new SearchWidget();
 	private FlexTable searchPanel = new FlexTable();
 
+	private FlexTable pulsePanel = new FlexTable();
+	private PulseWidget pulseWidget = new PulseWidget();
+	
 	private ProfileWidget profilePanel = null;
 	private OpportunityPanel opportunityPanel = null;
 
@@ -44,6 +47,7 @@ public class MainPageWidget extends Composite {
 
 		searchPanel.setWidget(0, 0, searchWidget);
 
+		pulsePanel.setWidget(0, 0, pulseWidget);
 		// profilePanel = new ProfileWidget(this);
 		opportunityPanel = new OpportunityPanel();
 
@@ -68,6 +72,11 @@ public class MainPageWidget extends Composite {
 		ft.setWidget(1, 0, searchPanel);
 	}
 
+	public void showPulsePanel() {
+		pulseWidget.runMapPulse();
+		ft.setWidget(1, 0, pulsePanel);
+	}
+	
 	public void showProfilePanel(boolean initProfileWidget) {
 		if (initProfileWidget || profilePanel == null) {
 			profilePanel = new ProfileWidget(this);

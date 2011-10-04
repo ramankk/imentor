@@ -32,7 +32,6 @@ public class ProfileWidget extends Composite implements ClickHandler {
 			new ArrayList<String>());
 	TextArea tbLocation = new TextArea();
 	Button btnSave;
-	TabPanel tabPanel;
 	SearchResponseWidget mentortab, menteetab;
 	TextBox tbName, tbEmailId;
 	String facebookId;

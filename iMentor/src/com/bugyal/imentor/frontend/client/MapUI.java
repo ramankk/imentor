@@ -2,12 +2,11 @@ package com.bugyal.imentor.frontend.client;
 
 import java.util.List;
 
+import com.bugyal.imentor.frontend.shared.PulseVO;
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.core.client.JsArray;
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.event.dom.client.FocusEvent;
-import com.google.gwt.event.dom.client.FocusHandler;
 import com.google.gwt.maps.client.InfoWindow;
 import com.google.gwt.maps.client.InfoWindowContent;
 import com.google.gwt.maps.client.MapUIOptions;
@@ -23,12 +22,13 @@ import com.google.gwt.maps.client.geom.LatLng;
 import com.google.gwt.maps.client.geom.LatLngBounds;
 import com.google.gwt.maps.client.overlay.Marker;
 import com.google.gwt.maps.client.overlay.Polygon;
+import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.ChangeListener;
 import com.google.gwt.user.client.ui.Composite;
-import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.HTML;
+import com.google.gwt.user.client.ui.HasHorizontalAlignment;
 import com.google.gwt.user.client.ui.HorizontalPanel;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.KeyboardListener;
@@ -52,10 +52,9 @@ public class MapUI extends Composite {
 	private VerticalPanel panel = new VerticalPanel();
 	// private String partSubjects = "";
 	TextBox searchBox = new TextBox();
-	Button searchButton = new Button("Search Location");
+	Button searchButton = new Button("Search");
 	LocationData lData = new LocationData();
 
-	HorizontalPanel searchPanel = new HorizontalPanel();
 	private boolean needSlider;
 	private final TextArea locationDisplay;
 
@@ -181,7 +180,7 @@ public class MapUI extends Composite {
 
 		});
 		
-		searchBox.setWidth("550px");
+		searchBox.setWidth("200px");
 		searchBox.addKeyboardListener(new KeyboardListener() {
 			
 			@Override
@@ -210,16 +209,13 @@ public class MapUI extends Composite {
 			}
 		});
 		
-		HorizontalPanel hPanel = new HorizontalPanel();
-		hPanel.setSpacing(10);
-		hPanel.add(searchBox);
-		hPanel.add(searchButton);
-		VerticalPanel searchPanel = new VerticalPanel();
-		searchPanel.add(hPanel);
-		Label l= new Label("Enter any city name");
-		l.addStyleName("mapSearchLabel");
-		searchPanel.add(l);
+		HorizontalPanel searchPanel = new HorizontalPanel();
+		searchPanel.setSpacing(5);
+		searchPanel.add(searchBox);
+		searchPanel.add(searchButton);
+
 		panel.add(searchPanel);
+		panel.setCellHorizontalAlignment(searchPanel, HasHorizontalAlignment.ALIGN_RIGHT);
 		panel.add(map);
 		
 	}
@@ -403,4 +399,30 @@ public class MapUI extends Composite {
 
 	}
 	
+	public void mapPulse(List<PulseVO> result){
+		map.setZoomLevel(2);
+		for (PulseVO pulseVO : result){
+			map.clearOverlays();
+			final LatLng point = LatLng.newInstance(pulseVO.getLatitude(), pulseVO.getLongitude());
+			map.setCenter(point);
+			for(int i = 2; i < 10; i++)
+				map.zoomIn();
+			HorizontalPanel hp = new HorizontalPanel();
+			hp.add(new Image("http://graph.facebook.com/"+pulseVO.getFacebookId()+"/picture"));
+			final VerticalPanel vp = new VerticalPanel();
+			vp.add(new HTML("<b>Name: </b>"+pulseVO.getName()));
+			vp.add(new HTML("<b>Activity: </b>"+pulseVO.getState()));
+			vp.add(new HTML("<b>Location: </b>"+pulseVO.getLocationString()));
+			Timer timer = new Timer(){
+				@Override
+			    public void run() {
+					InfoWindowContent iwc = new InfoWindowContent(vp);
+					map.getInfoWindow().open(point, iwc);
+				}
+			};
+			timer.schedule(3000);
+			for(int i = 2; i < 10; i++)
+				map.zoomOut();					
+		}
+	}
 }
