@@ -99,6 +99,11 @@ public class HeaderWidget extends Composite {
 		
 		MenuItem searchData = new MenuItem("Search", false, searchCommand());
 		menuBar.addItem(searchData);
+
+		menuBar.addSeparator(new MenuItemSeparator());
+		MenuItem mntmPulse = new MenuItem("Pulse", false, pulseCommand());
+		menuBar.addItem(mntmPulse);
+		
 		menuBar.addStyleName("menuBar");
 	}
 	
@@ -142,6 +147,15 @@ public class HeaderWidget extends Composite {
 			@Override
 			public void execute() {
 				mainPage.showSearchPanel();
+			}
+		};
+	}
+	
+	public Command pulseCommand() {
+		return new Command() {
+			@Override
+			public void execute() {
+				mainPage.showPulsePanel();
 			}
 		};
 	}
