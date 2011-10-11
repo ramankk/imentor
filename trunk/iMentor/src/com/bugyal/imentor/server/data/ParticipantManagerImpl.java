@@ -577,8 +577,8 @@ public class ParticipantManagerImpl implements ParticipantManager {
 		PersistenceManager pm = PMF.get().getPersistenceManager();
 		List<ParticipantPulse> result = new ArrayList<ParticipantPulse>();
 		try {
-			String strquery = "select top " + range + " from ParticipantPulse";
-			Query q = pm.newQuery(strquery);
+			Query q = pm.newQuery(ParticipantPulse.class);
+			q.setRange(0, range);
 			result = (List<ParticipantPulse>) q.execute();
 			return result;			
 		} catch(Exception e) {

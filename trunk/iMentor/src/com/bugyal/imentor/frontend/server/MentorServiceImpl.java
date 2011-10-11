@@ -85,7 +85,6 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		for (Opportunity o : oList) {
 			rList.add(ValueObjectGenerator.create(o));
 		}
-
 		return rList;
 	}
 
@@ -103,7 +102,6 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 					.getEmail(), p.getFacebookId());
 			pm.addHasKnowledge(pi, p.getHasSubjects(), 1, pi);
 			pm.addNeedKnowledge(pi, p.getNeedSubjects(), 1, pi);
-
 			save(pi, p);
 		} catch (MentorException m) {
 			throw new MeException(m.getMessage());
@@ -120,10 +118,8 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				.getLocationString(), p.getRadius());
 		clearSubjects(pi);
 		if (p.getHasSubjects() != null) {
-
 			pm.addHasKnowledge(pi, p.getHasSubjects(), 5, pi);
 		}
-
 		if (p.getNeedSubjects() != null) {
 			pm.addNeedKnowledge(pi, p.getNeedSubjects(), 5, pi);
 		}
@@ -761,7 +757,6 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 					mentor.setMentor(isMentor);
 					result.add(mentor);
 				}
-
 			}
 			return new MentorDataStatus(result, isExisted);
 		} catch (Exception e) {
@@ -830,6 +825,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 			return false;
 		}
 	}
+	
 	@Override
 	public List<PulseVO> getParticipantPulse(int range) {
 		List<ParticipantPulse> pulses = new ArrayList<ParticipantPulse>();
