@@ -67,7 +67,7 @@ public class MapUI extends Composite {
 				});
 		this.needSlider = needSlider;
 		this.locationDisplay = locationDisplay;
-		
+
 		initWidget(panel);
 	}
 
@@ -179,45 +179,46 @@ public class MapUI extends Composite {
 			}
 
 		});
-		
+
 		searchBox.setWidth("200px");
 		searchBox.addKeyboardListener(new KeyboardListener() {
-			
+
 			@Override
 			public void onKeyUp(Widget sender, char keyCode, int modifiers) {
-				 if (KeyboardListener.KEY_ENTER == keyCode)
-				        searchAddress();
+				if (KeyboardListener.KEY_ENTER == keyCode)
+					searchAddress();
 			}
-			
+
 			@Override
 			public void onKeyPress(Widget sender, char keyCode, int modifiers) {
 				if (KeyboardListener.KEY_ENTER == keyCode)
-			        searchAddress();
+					searchAddress();
 			}
-			
+
 			@Override
 			public void onKeyDown(Widget sender, char keyCode, int modifiers) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 		searchButton.addClickHandler(new ClickHandler() {
-			
+
 			@Override
 			public void onClick(ClickEvent event) {
 				searchAddress();
 			}
 		});
-		
+
 		HorizontalPanel searchPanel = new HorizontalPanel();
 		searchPanel.setSpacing(5);
 		searchPanel.add(searchBox);
 		searchPanel.add(searchButton);
 
 		panel.add(searchPanel);
-		panel.setCellHorizontalAlignment(searchPanel, HasHorizontalAlignment.ALIGN_RIGHT);
+		panel.setCellHorizontalAlignment(searchPanel,
+				HasHorizontalAlignment.ALIGN_RIGHT);
 		panel.add(map);
-		
+
 	}
 
 	private void addMouseOverHandler() {
@@ -307,10 +308,10 @@ public class MapUI extends Composite {
 
 		});
 	}
-	
-	public void searchAddress(){
+
+	public void searchAddress() {
 		Geocoder coder = new Geocoder();
-		coder.getLatLng(searchBox.getText(), new LatLngCallback(){
+		coder.getLatLng(searchBox.getText(), new LatLngCallback() {
 
 			@Override
 			public void onFailure() {
@@ -324,9 +325,9 @@ public class MapUI extends Composite {
 				map.setCenter(point);
 				getAddress(point);
 			}
-			
+
 		});
-	}	
+	}
 
 	public LocationData getLocationDetails() {
 		return lData;
@@ -398,31 +399,128 @@ public class MapUI extends Composite {
 			return 9;
 
 	}
-	
-	public void mapPulse(List<PulseVO> result){
-		map.setZoomLevel(2);
-		for (PulseVO pulseVO : result){
-			map.clearOverlays();
-			final LatLng point = LatLng.newInstance(pulseVO.getLatitude(), pulseVO.getLongitude());
-			map.setCenter(point);
-			for(int i = 2; i < 10; i++)
-				map.zoomIn();
-			HorizontalPanel hp = new HorizontalPanel();
-			hp.add(new Image("http://graph.facebook.com/"+pulseVO.getFacebookId()+"/picture"));
-			final VerticalPanel vp = new VerticalPanel();
-			vp.add(new HTML("<b>Name: </b>"+pulseVO.getName()));
-			vp.add(new HTML("<b>Activity: </b>"+pulseVO.getState()));
-			vp.add(new HTML("<b>Location: </b>"+pulseVO.getLocationString()));
-			Timer timer = new Timer(){
-				@Override
-			    public void run() {
-					InfoWindowContent iwc = new InfoWindowContent(vp);
-					map.getInfoWindow().open(point, iwc);
-				}
-			};
-			timer.schedule(3000);
-			for(int i = 2; i < 10; i++)
-				map.zoomOut();					
+
+	static MapWidget mymap;
+	static Timer timer = new Timer() {
+		@Override
+		public void run() {
+			// mymap.setZoomLevel(count);
 		}
+	};
+	
+	int zoomLevel = 2, listSize, index = 0, zoomOutLevel= 2;
+	HorizontalPanel pulsePanel;
+	LatLng point; 
+	List<PulseVO> resultList;
+	boolean addMarker = true, increment = true;
+	
+	Timer zoomin = new Timer(){
+
+		@Override
+		public void run() {
+			map.setZoomLevel(zoomLevel);
+			zoomLevel++;
+			if(addMarker){
+				map.clearOverlays();
+				LatLng point = LatLng.newInstance(resultList.get(index).getLatitude(), resultList.get(index).getLongitude());
+				map.panTo(point);
+				map.setCenter(point);
+				marker = new Marker(point);
+				map.addOverlay(marker);
+				addMarker = false;
+			}
+			if(zoomLevel == 12){
+				cancel();
+				popupInfoWindow.schedule(2000);
+				
+			}
+		}
+		
+	};
+	
+	Timer popupInfoWindow = new Timer(){
+
+		@Override
+		public void run() {
+			getInfoWindowContent();
+			cancel();
+			int temp;
+			if(index == listSize-1){
+				temp =0;
+			} else {
+				temp = index + 1;
+			}
+			int km =getDistanceBetweenTwoPoints(resultList.get(index).getLatitude(), resultList.get(index).getLongitude(), resultList.get(temp).getLatitude(), resultList.get(temp).getLongitude());
+			if(km != 0.0) zoomOutLevel= getZoomLevelByKM(km);
+			else zoomOutLevel = zoomLevel;
+			zoomout.scheduleRepeating(1000);
+		}
+		
+	};
+	
+	Timer zoomout = new Timer(){
+
+		@Override
+		public void run() {
+			map.setZoomLevel(zoomLevel);
+			zoomLevel--;
+			if(zoomLevel == zoomOutLevel){
+				cancel();
+				addMarker = true;
+				zoomin.scheduleRepeating(1000);
+			}
+		}
+		
+	};
+
+	public void getInfoWindowContent(){
+//		if(increment){
+//			if(index == listSize-1) increment = false;
+//			index++;
+//		} else {
+//			if(index == 1) increment = true;
+//			index--;
+//		}
+		if(index == listSize-1) index =0;
+		else index++;
+		//Window.alert(index+"");
+		PulseVO pulseVO = resultList.get(index);
+		final HorizontalPanel hp = new HorizontalPanel();
+		hp.add(new Image("http://graph.facebook.com/"
+				+ pulseVO.getFacebookId() + "/picture"));
+		final VerticalPanel vp = new VerticalPanel();
+		vp.add(new HTML("<b>Name: </b>" + pulseVO.getName()));
+		vp.add(new HTML("<b>Activity: </b>" + pulseVO.getState()));
+		vp.add(new HTML("<b>Location: </b>" + pulseVO.getLocationString()));
+		hp.add(vp);
+		hp.setWidth("300px");
+	//	hp.setCellWidth(vp, "40px");
+		InfoWindowContent iwc = new InfoWindowContent(hp);
+		InfoWindow infoWindow = map.getInfoWindow();
+		infoWindow.open(marker, iwc);
+		infoWindow.setVisible(true);
+	}
+	
+	public void mapPulse(List<PulseVO> result) {
+		marker.setDraggingEnabled(false);
+		zoomLevel = 2;
+		listSize = result.size();
+		Window.alert(listSize+"");
+		resultList = result;
+		zoomin.scheduleRepeating(1000);
+	}
+	
+	public int getDistanceBetweenTwoPoints(double lat1, double lng1, double lat2, double lng2){
+		Window.alert(lat1+"  "+lng1+"  "+lat2+"  "+lng2);
+		double R = 6371;
+		double dLat = Math.toRadians(Math.abs(lat2 - lat1));
+		double dLng = Math.toRadians(Math.abs(lng2 - lng1));
+		lat1 = Math.toRadians(lat1);
+		lng1 = Math.toRadians(lng1);
+		
+		double a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.sin(dLng/2) * Math.sin(dLng/2) * Math.cos(lat1) * Math.cos(lat2);
+		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+		Window.alert(a+" * "+c+"= "+R*c + "");
+		return (int)(R*c);
 	}
 }
