@@ -126,6 +126,7 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 		pi.setName(p.getName());
 		pi.setGender(p.getGender());
 		pi.setLocation(location);
+		pi.setFacebookId(p.getFacebookId());
 		pm.save(pi);
 	}
 
@@ -529,8 +530,16 @@ public class MentorServiceImpl extends RemoteServiceServlet implements
 				+ ", id: " + providerId);
 		System.out.println("Created session for " + emailId + ", provider: "
 				+ provider + ", id: " + providerId);
-		if (getParticipantVOByEmailId() != null) {
-			System.out.println("Session created for returning user.");
+		ParticipantVO participant = getParticipantVOByEmailId();
+		if (participant != null) {
+			LOG.info("Session created for returning user.");
+			LOG.info("Facebook ID:: " + participant.getFacebookId());
+			// To Handle data migration. Now we need facebookId.
+			if (participant.getFacebookId() == null) {
+				LOG.info("Null facebookId... trying to update it with " + providerId);
+				participant.setFacebookId(providerId);
+				update(participant);
+			}
 			return true;
 		} else {
 			System.out.println("Session created for new user.");

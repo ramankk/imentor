@@ -449,14 +449,13 @@ public class MapUI extends Composite {
 		public void run() {
 			cancel();
 			int temp;
-			if(index == listSize-1){
-				temp =0;
+			if(index == 0){
+				temp = listSize -1;
 			} else {
-				temp = index + 1;
+				temp = index - 1;
 			}
 			int km =getDistanceBetweenTwoPoints(resultList.get(index).getLatitude(), resultList.get(index).getLongitude(), resultList.get(temp).getLatitude(), resultList.get(temp).getLongitude());
-			if(km != 0.0) zoomOutLevel= getZoomLevelByKM(km)-1;
-			else zoomOutLevel = zoomLevel-1;
+			zoomOutLevel = zoomLevel-1;
 			zoomout.scheduleRepeating(1000);
 		}
 		
@@ -478,23 +477,22 @@ public class MapUI extends Composite {
 	};
 
 	public void getInfoWindowContent(){
-
-		if(index == listSize-1) index =0;
-		else index++;
 		PulseVO pulseVO = resultList.get(index);
 		final HorizontalPanel hp = new HorizontalPanel();
 		hp.add(new Image("http://graph.facebook.com/"
 				+ pulseVO.getFacebookId() + "/picture"));
 		final VerticalPanel vp = new VerticalPanel();
-		vp.add(new HTML("<b>Name: </b>" + pulseVO.getName()));
-		vp.add(new HTML("<b>Activity: </b>" + pulseVO.getState()));
-		vp.add(new HTML("<b>Location: </b>" + pulseVO.getLocationString()));
+		vp.add(new HTML("<b>"+ pulseVO.getName()+"</b> ["+ pulseVO.getState() + "]"));
+		vp.add(new HTML("<i class = mapLocation >" + pulseVO.getLocationString() + "</i>"));
 		hp.add(vp);
 		hp.setWidth("300px");
+		hp.setCellWidth(vp, "230px");
 		InfoWindowContent iwc = new InfoWindowContent(hp);
 		InfoWindow infoWindow = map.getInfoWindow();
 		infoWindow.open(marker, iwc);
 		infoWindow.setVisible(true);
+		if(index == listSize-1) index =0;
+		else index++;
 	}
 	
 	public void mapPulse(List<PulseVO> result) {
