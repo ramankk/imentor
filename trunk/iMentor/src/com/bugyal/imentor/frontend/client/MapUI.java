@@ -56,9 +56,10 @@ public class MapUI extends Composite {
 	LocationData lData = new LocationData();
 
 	private boolean needSlider;
+	private boolean showSearch;
 	private final TextArea locationDisplay;
 
-	public MapUI(boolean needSlider, TextArea locationDisplay) {
+	public MapUI(boolean needSlider, boolean showSearch, TextArea locationDisplay) {
 		Maps.loadMapsApi(TEST_RAVI_KAWANAN_APPSPOT_KEY, "2", false,
 				new Runnable() {
 					public void run() {
@@ -66,6 +67,7 @@ public class MapUI extends Composite {
 					}
 				});
 		this.needSlider = needSlider;
+		this.showSearch = showSearch;
 		this.locationDisplay = locationDisplay;
 
 		initWidget(panel);
@@ -214,7 +216,9 @@ public class MapUI extends Composite {
 		searchPanel.add(searchBox);
 		searchPanel.add(searchButton);
 
-		panel.add(searchPanel);
+		if (showSearch) {
+			panel.add(searchPanel);
+		}
 		panel.setCellHorizontalAlignment(searchPanel,
 				HasHorizontalAlignment.ALIGN_RIGHT);
 		panel.add(map);
@@ -427,6 +431,7 @@ public class MapUI extends Composite {
 				map.setCenter(point);
 				marker = new Marker(point);
 				map.addOverlay(marker);
+				getInfoWindowContent();
 				addMarker = false;
 			}
 			if(zoomLevel == 12){
@@ -442,7 +447,6 @@ public class MapUI extends Composite {
 
 		@Override
 		public void run() {
-			getInfoWindowContent();
 			cancel();
 			int temp;
 			if(index == listSize-1){
@@ -495,7 +499,7 @@ public class MapUI extends Composite {
 	
 	public void mapPulse(List<PulseVO> result) {
 		marker.setDraggingEnabled(false);
-		zoomLevel = 2;
+		zoomLevel = 8;
 		listSize = result.size();
 		resultList = result;
 		zoomin.scheduleRepeating(1000);

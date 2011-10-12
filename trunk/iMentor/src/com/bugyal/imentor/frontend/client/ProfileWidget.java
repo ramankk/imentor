@@ -100,7 +100,7 @@ public class ProfileWidget extends Composite implements ClickHandler {
 		tbLocation = new TextArea();
 		tbLocation.setEnabled(false);
 		tbLocation.setTitle("used to find members in your Location");
-		mapUI = new MapUI(true, tbLocation);
+		mapUI = new MapUI(true, true, tbLocation);
 		locationVertical.add(tbLocation);
 
 		tbLocation.setText(lData.getLocation());

@@ -32,7 +32,7 @@ public class PulseWidget extends Composite {
 			}
 		});
 		
-		mapUI = new MapUI(false, null);
+		mapUI = new MapUI(false, false, null);
 		
 		TabPanel tabPanel = new TabPanel();
 		tabPanel.add(mapUI, "IMentor Pulse");
