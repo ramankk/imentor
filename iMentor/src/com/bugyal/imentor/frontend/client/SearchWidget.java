@@ -52,7 +52,7 @@ public class SearchWidget extends Composite implements ClickHandler,
 		location.setSize("213px", "43px");
 		location.setText(LOCATION_HELP);
 		location.setTitle(LOCATION_HELP);
-		mapUI = new MapUI(false, location);
+		mapUI = new MapUI(false, true, location);
 
 		subjectsSuggestWidget = new SubjectsSuggestWidget(
 				new ArrayList<String>());
