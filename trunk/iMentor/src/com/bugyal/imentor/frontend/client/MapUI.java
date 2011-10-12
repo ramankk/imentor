@@ -451,8 +451,8 @@ public class MapUI extends Composite {
 				temp = index + 1;
 			}
 			int km =getDistanceBetweenTwoPoints(resultList.get(index).getLatitude(), resultList.get(index).getLongitude(), resultList.get(temp).getLatitude(), resultList.get(temp).getLongitude());
-			if(km != 0.0) zoomOutLevel= getZoomLevelByKM(km);
-			else zoomOutLevel = zoomLevel;
+			if(km != 0.0) zoomOutLevel= getZoomLevelByKM(km)-1;
+			else zoomOutLevel = zoomLevel-1;
 			zoomout.scheduleRepeating(1000);
 		}
 		
@@ -474,16 +474,9 @@ public class MapUI extends Composite {
 	};
 
 	public void getInfoWindowContent(){
-//		if(increment){
-//			if(index == listSize-1) increment = false;
-//			index++;
-//		} else {
-//			if(index == 1) increment = true;
-//			index--;
-//		}
+
 		if(index == listSize-1) index =0;
 		else index++;
-		//Window.alert(index+"");
 		PulseVO pulseVO = resultList.get(index);
 		final HorizontalPanel hp = new HorizontalPanel();
 		hp.add(new Image("http://graph.facebook.com/"
@@ -494,7 +487,6 @@ public class MapUI extends Composite {
 		vp.add(new HTML("<b>Location: </b>" + pulseVO.getLocationString()));
 		hp.add(vp);
 		hp.setWidth("300px");
-	//	hp.setCellWidth(vp, "40px");
 		InfoWindowContent iwc = new InfoWindowContent(hp);
 		InfoWindow infoWindow = map.getInfoWindow();
 		infoWindow.open(marker, iwc);
@@ -505,13 +497,12 @@ public class MapUI extends Composite {
 		marker.setDraggingEnabled(false);
 		zoomLevel = 2;
 		listSize = result.size();
-		Window.alert(listSize+"");
 		resultList = result;
 		zoomin.scheduleRepeating(1000);
 	}
 	
 	public int getDistanceBetweenTwoPoints(double lat1, double lng1, double lat2, double lng2){
-		Window.alert(lat1+"  "+lng1+"  "+lat2+"  "+lng2);
+	//	Window.alert(lat1+"  "+lng1+"  "+lat2+"  "+lng2);
 		double R = 6371;
 		double dLat = Math.toRadians(Math.abs(lat2 - lat1));
 		double dLng = Math.toRadians(Math.abs(lng2 - lng1));
@@ -519,8 +510,10 @@ public class MapUI extends Composite {
 		lng1 = Math.toRadians(lng1);
 		
 		double a = Math.sin(dLat/2) * Math.sin(dLat/2) + Math.sin(dLng/2) * Math.sin(dLng/2) * Math.cos(lat1) * Math.cos(lat2);
-		double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-		Window.alert(a+" * "+c+"= "+R*c + "");
+		a = Math.abs(a);
+		double x=Math.sqrt(a);
+		double y=Math.sqrt(1-a);
+		double c = 2 * Math.atan2(x, y); 
 		return (int)(R*c);
 	}
 }
