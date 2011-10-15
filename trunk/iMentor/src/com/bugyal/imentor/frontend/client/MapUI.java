@@ -1,7 +1,9 @@
 package com.bugyal.imentor.frontend.client;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.beoui.geocell.model.BoundingBox;
 import com.bugyal.imentor.frontend.shared.PulseVO;
 import com.bugyal.imentor.frontend.shared.SearchResult;
 import com.google.gwt.core.client.JsArray;
@@ -403,108 +405,94 @@ public class MapUI extends Composite {
 			return 9;
 
 	}
-
-	static MapWidget mymap;
-	static Timer timer = new Timer() {
-		@Override
-		public void run() {
-			// mymap.setZoomLevel(count);
-		}
-	};
 	
-	int zoomLevel = 2, listSize, index = 0, zoomOutLevel= 2;
-	HorizontalPanel pulsePanel;
-	LatLng point; 
+	
+	int listSize=0;
 	List<PulseVO> resultList;
-	boolean addMarker = true, increment = true;
-	
-	Timer zoomin = new Timer(){
+	List<HorizontalPanel> listInfowindows = new ArrayList<HorizontalPanel>();
+	List<Marker> listMarkers = new ArrayList<Marker>();
+	int count=0;
+	InfoWindow infoWin = null;
+	Timer showPulse = new Timer(){
 
 		@Override
 		public void run() {
-			map.setZoomLevel(zoomLevel);
-			zoomLevel++;
-			if(addMarker){
-				map.clearOverlays();
-				LatLng point = LatLng.newInstance(resultList.get(index).getLatitude(), resultList.get(index).getLongitude());
-				map.panTo(point);
-				map.setCenter(point);
-				marker = new Marker(point);
-				map.addOverlay(marker);
-				getInfoWindowContent();
-				addMarker = false;
-			}
-			if(zoomLevel == 12){
-				cancel();
-				popupInfoWindow.schedule(2000);
-				
-			}
+			InfoWindowContent iwc = new InfoWindowContent(listInfowindows.get(count));
+			infoWin = map.getInfoWindow();
+			infoWin.open(listMarkers.get(count), iwc);
+			infoWin.setVisible(true);
+			listMarkers.get(count).setImage("images/marker1.png");
+			closePulse.schedule(4500);
 		}
 		
 	};
 	
-	Timer popupInfoWindow = new Timer(){
+	Timer closePulse = new Timer(){
 
 		@Override
 		public void run() {
-			cancel();
-			int temp;
-			if(index == 0){
-				temp = listSize -1;
-			} else {
-				temp = index - 1;
+			infoWin.setVisible(false);
+			listMarkers.get(count).setImage("images/marker.png");
+			if(count == listSize -1){
+				count = 0;
+			}else{
+				count++;
 			}
-			int km =getDistanceBetweenTwoPoints(resultList.get(index).getLatitude(), resultList.get(index).getLongitude(), resultList.get(temp).getLatitude(), resultList.get(temp).getLongitude());
-			zoomOutLevel = zoomLevel-1;
-			zoomout.scheduleRepeating(1000);
+			showPulse.schedule(500);
 		}
 		
 	};
 	
-	Timer zoomout = new Timer(){
-
-		@Override
-		public void run() {
-			map.setZoomLevel(zoomLevel);
-			zoomLevel--;
-			if(zoomLevel == zoomOutLevel){
-				cancel();
-				addMarker = true;
-				zoomin.scheduleRepeating(1000);
-			}
-		}
-		
-	};
-
-	public void getInfoWindowContent(){
-		PulseVO pulseVO = resultList.get(index);
-		final HorizontalPanel hp = new HorizontalPanel();
-		hp.add(new Image("http://graph.facebook.com/"
-				+ pulseVO.getFacebookId() + "/picture"));
-		final VerticalPanel vp = new VerticalPanel();
-		vp.add(new HTML("<b>"+ pulseVO.getName()+"</b> ["+ pulseVO.getState() + "]"));
-		vp.add(new HTML("<i class = mapLocation >" + pulseVO.getLocationString() + "</i>"));
-		hp.add(vp);
-		hp.setWidth("300px");
-		hp.setCellWidth(vp, "230px");
-		InfoWindowContent iwc = new InfoWindowContent(hp);
-		InfoWindow infoWindow = map.getInfoWindow();
-		infoWindow.open(marker, iwc);
-		infoWindow.setVisible(true);
-		if(index == listSize-1) index =0;
-		else index++;
-	}
+	
 	
 	public void mapPulse(List<PulseVO> result) {
-		marker.setDraggingEnabled(false);
-		zoomLevel = 8;
+		LatLng minll=null, maxll=null;
 		listSize = result.size();
+		Window.alert(listSize+"");
+		map.clearOverlays();
+		double minLat=0, minLng=0, maxLat=0, maxLng=0;
+		for(PulseVO p : result){
+			
+			if(minLat == 0 || p.getLatitude() < minLat){
+				minLat = p.getLatitude();
+			}
+			if(minLng == 0 || p.getLongitude() < minLng){
+				minLng = p.getLongitude();
+			}
+			if(maxLat == 0 || p.getLatitude() > maxLat) {
+				maxLat = p.getLatitude();
+			}
+			if(maxLng == 0 || p.getLongitude() > maxLng){
+				maxLng = p.getLongitude();
+			}
+			Window.alert(minLat+" "+minLng+" "+maxLat+" "+maxLng);
+			
+			HorizontalPanel hp = new HorizontalPanel();
+			hp.add(new Image("http://graph.facebook.com/" + p.getFacebookId() + "/picture"));
+			VerticalPanel vp = new VerticalPanel();
+			vp.add(new HTML("<b>"+ p.getName()+"</b> ["+ p.getState() + "]"));
+			vp.add(new HTML("<i class = mapLocation >" + p.getLocationString() + "</i>"));
+			hp.add(vp);
+			hp.setWidth("300px");
+			hp.setCellWidth(vp, "230px");
+			LatLng point =LatLng.newInstance(p.getLatitude(), p.getLongitude());
+			marker = new Marker(point);
+			marker.setImage("images/marker.png");
+			map.addOverlay(marker);
+			listInfowindows.add(hp);
+			listMarkers.add(marker);
+			
+		}
+		minll = LatLng.newInstance(minLat, minLng);
+		maxll = LatLng.newInstance(maxLat, maxLng);
+		int dist = getDistanceBetweenTwoPoints(maxll.getLatitude(), maxll.getLongitude(),minll.getLatitude(), minll.getLongitude());
+		Window.alert(dist+"");
+		map.setZoomLevel(getZoomLevelByKM(dist)-1);
 		resultList = result;
-		zoomin.scheduleRepeating(1000);
+		showPulse.schedule(1500);
 	}
 	
 	public int getDistanceBetweenTwoPoints(double lat1, double lng1, double lat2, double lng2){
-	//	Window.alert(lat1+"  "+lng1+"  "+lat2+"  "+lng2);
 		double R = 6371;
 		double dLat = Math.toRadians(Math.abs(lat2 - lat1));
 		double dLng = Math.toRadians(Math.abs(lng2 - lng1));
@@ -518,4 +506,7 @@ public class MapUI extends Composite {
 		double c = 2 * Math.atan2(x, y); 
 		return (int)(R*c);
 	}
+
 }
+
+
