@@ -125,12 +125,10 @@ public class ProfileWidget extends Composite implements ClickHandler {
 				HasHorizontalAlignment.ALIGN_RIGHT);
 
 		HorizontalPanel buttonsHorizontal = new HorizontalPanel();
-		Button send_Msg = new Button("Send Msg");
+
 		btnSave = new Button("Save");
 		btnSave.addClickHandler(this);
-		send_Msg.addClickHandler(this);
 		buttonsHorizontal.add(btnSave);
-		buttonsHorizontal.add(send_Msg);
 
 		TabPanel tabPanel = new TabPanel();
 		tabPanel.setWidth("700px");
@@ -212,6 +210,9 @@ public class ProfileWidget extends Composite implements ClickHandler {
 					for (String sub : result.getNeedSubjects()) {
 						subWidgetNeed.add(sub);
 					}
+					if(result.getHasSubjects().isEmpty()||result.getNeedSubjects().isEmpty()) {
+						MainPageWidget.setErrorMessage("No Subjects in profile!");
+					}
 					id = result.getId();
 					status = true;
 				}
@@ -254,9 +255,9 @@ public class ProfileWidget extends Composite implements ClickHandler {
 					&& (tbLocation.getText() != null)) {
 
 				ParticipantVO partVO = new ParticipantVO(id, tbName.getText(),
-						rbMale.isChecked() ? "M" : "F", tbEmailId.getText(), facebookId,
-						lData.getLatitude(), lData.getLongitude(), tbLocation
-								.getText(), lData.getRadius(), subWidgetHas
+						rbMale.isChecked() ? "M" : "F", tbEmailId.getText(),
+						facebookId, lData.getLatitude(), lData.getLongitude(),
+						tbLocation.getText(), lData.getRadius(), subWidgetHas
 								.getSubjects(), subWidgetNeed.getSubjects());
 				if (!status) {
 					service.create(partVO, new AsyncCallback<ParticipantVO>() {
@@ -294,8 +295,6 @@ public class ProfileWidget extends Composite implements ClickHandler {
 					});
 				}
 			}
-		} else {
-			MainPageWidget.msgToFbFriend();
 		}
 	}
 

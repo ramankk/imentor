@@ -89,6 +89,7 @@ public class SearchResponseWidget extends Composite {
 
 	public void showPage(int page) {
 		if (page < 0) {
+			MainPageWidget.setErrorMessage("Your subjects do not match with the neighbours");
 			return;
 		}
 		currentPage = page;
