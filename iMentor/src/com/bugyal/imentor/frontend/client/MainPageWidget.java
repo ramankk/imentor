@@ -107,11 +107,4 @@ public class MainPageWidget extends Composite {
 		msgTimer.schedule(5000);
 	}
 
-	public static native void msgToFbFriend()/*-{
-	 	$wnd.FB.ui({
-      		method: 'send',
-      		name: 'Imentor',
-      		link: 'http://www.test1.kawanan.com',
-      });
-}-*/;
 }
